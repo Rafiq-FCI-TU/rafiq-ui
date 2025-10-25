@@ -1,1 +1,9 @@
 @import "tailwindcss";
+@font-face {
+  font-family: "Noto Sans Arabic";
+  src: url("./assets/fonts/NotoSansArabic.ttf");
+}
+body {
+  font-family: "Noto Sans Arabic", sans-serif;
+  direction: rtl;
+}
