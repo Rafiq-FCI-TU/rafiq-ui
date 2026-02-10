@@ -6,12 +6,13 @@ import AuthLogo from '../components/AuthComponents/AuthLogo';
 import BrandingSection from '../components/AuthComponents/BrandingSection';
 import EmailInput from '../components/AuthComponents/EmailInput';
 import PasswordInput from '../components/AuthComponents/PasswordInput';
+import OtpInput from '../components/AuthComponents/OtpInput';
 
 export default function ForgotPassword() {
   const navigate = useNavigate();
-  const [step, setStep] = useState<'email' | 'reset'>('email');
+  const [step, setStep] = useState<'email' | 'otp' | 'reset'>('email');
   const [email, setEmail] = useState('');
-  const [errors, setErrors] = useState<{[key: string]: string}>({});
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const handleBackToLogin = () => {
     navigate('/login');
@@ -31,8 +32,17 @@ export default function ForgotPassword() {
       setErrors({ email: emailError });
       return;
     }
-    
+
     setEmail(values.email);
+    setErrors({});
+    setStep('otp');
+  };
+
+  const handleOtpSubmit = (otpValue: string) => {
+    if (otpValue.length !== 4) {
+      setErrors({ otp: 'الرجاء إدخال الرمز المكون من 4 أرقام' });
+      return;
+    }
     setErrors({});
     setStep('reset');
   };
@@ -50,21 +60,30 @@ export default function ForgotPassword() {
   };
 
   const handleResetSubmit = (values: { password: string; confirmPassword: string }) => {
-    const newErrors: {[key: string]: string} = {};
-    
+    const newErrors: { [key: string]: string } = {};
+
     const passwordError = validatePassword(values.password);
     if (passwordError) newErrors.password = passwordError;
-    
+
     const confirmPasswordError = validateConfirmPassword(values.password, values.confirmPassword);
     if (confirmPasswordError) newErrors.confirmPassword = confirmPasswordError;
-    
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
 
-    console.log('Password reset for:', email, 'New password:', values.password);
+
     navigate('/login');
+  };
+
+  const getStepTitle = () => {
+    switch (step) {
+      case 'email': return 'ادخل الايميل';
+      case 'otp': return 'ادخل رمز التحقق';
+      case 'reset': return 'ادخل كلمة المرور الجديدة';
+      default: return '';
+    }
   };
 
   return (
@@ -78,24 +97,24 @@ export default function ForgotPassword() {
             <ArrowLeft className="w-4 h-4 ml-1" />
             <span>العودة للصفحة الرئيسية</span>
           </button>
-          
+
           <AuthLogo />
-          
+
           <div className="text-center mb-6">
             <h1 className="text-2xl font-bold text-gray-800 mb-2">رفيق</h1>
             <p className="text-sm text-gray-600">
-              {step === 'email' ? 'ادخل الايميل' : 'ادخل كلمة المرور'}
+              {getStepTitle()}
             </p>
           </div>
 
-          {step === 'email' ? (
-            <Formik 
-              initialValues={{ email: '' }} 
+          {step === 'email' && (
+            <Formik
+              initialValues={{ email: '' }}
               onSubmit={handleEmailSubmit}
             >
               {() => (
                 <Form className="space-y-4">
-                  <EmailInput 
+                  <EmailInput
                     label="الايميل"
                     placeholder="ادخل الايميل الخاص بك"
                     error={errors.email}
@@ -120,21 +139,44 @@ export default function ForgotPassword() {
                 </Form>
               )}
             </Formik>
-          ) : (
-            <Formik 
-              initialValues={{ password: '', confirmPassword: '' }} 
+          )}
+
+          {step === 'otp' && (
+            <div className="space-y-6">
+              <div className="text-center text-sm text-gray-600 mb-4">
+                تم إرسال رمز التحقق إلى {email}
+              </div>
+
+              <OtpInput
+                length={4}
+                onComplete={handleOtpSubmit}
+                error={errors.otp}
+              />
+
+              <button
+                onClick={() => setStep('email')}
+                className="w-full text-green-600 hover:text-green-700 text-sm font-medium transition-colors"
+              >
+                تغيير البريد الإلكتروني
+              </button>
+            </div>
+          )}
+
+          {step === 'reset' && (
+            <Formik
+              initialValues={{ password: '', confirmPassword: '' }}
               onSubmit={handleResetSubmit}
             >
               {() => (
                 <Form className="space-y-4">
-                  <PasswordInput 
+                  <PasswordInput
                     label="كلمة المرور الجديدة"
                     placeholder="ادخل كلمة المرور الجديدة"
                     name="password"
                     error={errors.password}
                   />
 
-                  <PasswordInput 
+                  <PasswordInput
                     label="تأكيد كلمة المرور"
                     placeholder="تأكيد كلمة المرور"
                     name="confirmPassword"
