@@ -23,7 +23,7 @@ export default function AccountTypeCard({
       onClick={onClick}
     >
       <div className="flex items-start">
-        <div className={`w-16 h-16 ${iconBgColor} rounded-xl flex items-center justify-center mr-5 flex-shrink-0 shadow-md`}>
+        <div className={`w-16 h-16 ${iconBgColor} rounded-xl flex items-center justify-center mr-5 shrink-0 shadow-md`}>
           <Icon className={`w-8 h-8 ${iconColor}`} />
         </div>
         <div className="flex-1">
