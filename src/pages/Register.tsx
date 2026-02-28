@@ -19,12 +19,12 @@ export default function Register() {
   const [showChildForm, setShowChildForm] = useState(false);
   const [showConsentForm, setShowConsentForm] = useState(false);
   const [showAssessmentForm, setShowAssessmentForm] = useState(false);
-  
+
   const [familyData, setFamilyData] = useState<any>(null);
   const [childData, setChildData] = useState<any>(null);
   const [consentData, setConsentData] = useState<any>(null);
   const [assessmentData, setAssessmentData] = useState<any>(null);
-  
+
   const navigate = useNavigate();
 
   const handleAccountTypeSelect = (type: 'family' | 'specialist') => {
@@ -106,21 +106,21 @@ export default function Register() {
             className="mb-3 flex items-center text-gray-600 hover:text-green-600 transition-colors text-sm"
           >
             <ArrowLeft className="w-4 h-4 ml-1" />
-            <span>العودة للصفحة الرئيسية</span>
+            <span>Back to Home</span>
           </button>
-          
+
           <AuthLogo />
-          <AuthHeader title="مرحبا" subtitle="سجل لتبداء رحلتك الان" />
-          <AuthToggle 
-            activeTab="register" 
-            loginLabel="سجل الان" 
-            registerLabel="حساب جديد" 
+          <AuthHeader title="Welcome" subtitle="Register to start your journey now" />
+          <AuthToggle
+            activeTab="register"
+            loginLabel="Sign In"
+            registerLabel="New Account"
           />
 
           {(showFamilyForm || showSpecialistForm || showChildForm || showConsentForm || showAssessmentForm) && (
-            <ProgressBar 
-              currentStep={getCurrentStep()} 
-              totalSteps={4} 
+            <ProgressBar
+              currentStep={getCurrentStep()}
+              totalSteps={4}
               percentage={getProgressPercentage()}
             />
           )}
@@ -128,15 +128,15 @@ export default function Register() {
           {!showFamilyForm && !showSpecialistForm && !showChildForm && !showConsentForm && !showAssessmentForm ? (
             <AccountTypeSelector onSelectAccountType={handleAccountTypeSelect} />
           ) : showFamilyForm && !showChildForm && !showConsentForm && !showAssessmentForm ? (
-            <FamilyRegistrationForm 
-              onSubmit={handleFamilyFormSubmit} 
+            <FamilyRegistrationForm
+              onSubmit={handleFamilyFormSubmit}
               initialData={familyData}
             />
           ) : showSpecialistForm ? (
             <SpecialistRegistrationForm onSubmit={handleSpecialistFormSubmit} />
           ) : showChildForm && !showConsentForm && !showAssessmentForm ? (
-            <ChildDetailsForm 
-              onSubmit={handleChildFormSubmit} 
+            <ChildDetailsForm
+              onSubmit={handleChildFormSubmit}
               onBack={handleBackToFamilyForm}
               initialData={childData}
             />

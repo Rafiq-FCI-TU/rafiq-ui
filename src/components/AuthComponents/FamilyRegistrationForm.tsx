@@ -19,31 +19,31 @@ interface FamilyRegistrationFormProps {
 
 const validationSchema = {
   name: (value: string) => {
-    if (!value) return 'الاسم مطلوب';
-    if (value.length < 2) return 'الاسم يجب أن يكون حرفين على الأقل';
+    if (!value) return 'Name is required';
+    if (value.length < 2) return 'Name must be at least 2 characters';
     return null;
   },
   email: (value: string) => {
-    if (!value) return 'البريد الإلكتروني مطلوب';
+    if (!value) return 'Email is required';
     if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)) {
-      return 'البريد الإلكتروني غير صحيح';
+      return 'Invalid email address';
     }
     return null;
   },
   password: (value: string) => {
-    if (!value) return 'كلمة المرور مطلوبة';
-    if (value.length < 6) return 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
+    if (!value) return 'Password is required';
+    if (value.length < 6) return 'Password must be at least 6 characters';
     return null;
   },
   confirmPassword: (value: string, password: string) => {
-    if (!value) return 'تأكيد كلمة المرور مطلوب';
-    if (value !== password) return 'كلمة المرور غير متطابقة';
+    if (!value) return 'Confirm password is required';
+    if (value !== password) return 'Passwords do not match';
     return null;
   },
 };
 
 export default function FamilyRegistrationForm({ onSubmit, initialData }: FamilyRegistrationFormProps) {
-  const [errors, setErrors] = useState<{[key: string]: string}>({});
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const initialValues: FormValues = initialData || {
     name: '',
@@ -53,20 +53,20 @@ export default function FamilyRegistrationForm({ onSubmit, initialData }: Family
   };
 
   const validateForm = (values: FormValues) => {
-    const newErrors: {[key: string]: string} = {};
-    
+    const newErrors: { [key: string]: string } = {};
+
     const nameError = validationSchema.name(values.name);
     if (nameError) newErrors.name = nameError;
-    
+
     const emailError = validationSchema.email(values.email);
     if (emailError) newErrors.email = emailError;
-    
+
     const passwordError = validationSchema.password(values.password);
     if (passwordError) newErrors.password = passwordError;
-    
+
     const confirmPasswordError = validationSchema.confirmPassword(values.confirmPassword, values.password);
     if (confirmPasswordError) newErrors.confirmPassword = confirmPasswordError;
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -82,28 +82,28 @@ export default function FamilyRegistrationForm({ onSubmit, initialData }: Family
       {() => (
         <Form className="space-y-4">
           <TextInput
-            label="الاسم"
-            placeholder="من فضلك ادخل اسمك"
+            label="Name"
+            placeholder="Please enter your name"
             name="name"
             icon={User}
             error={errors.name}
           />
 
-          <EmailInput 
-            label="الايميل"
-            placeholder="ادخل الايميل الخاص بك"
+          <EmailInput
+            label="Email"
+            placeholder="Enter your email"
             error={errors.email}
           />
 
-          <PasswordInput 
-            label="كلمة المرور"
-            placeholder="ادخل كلمه المرور"
+          <PasswordInput
+            label="Password"
+            placeholder="Enter your password"
             error={errors.password}
           />
 
-          <PasswordInput 
-            label="تاكيد كلمه المرور"
-            placeholder="تاكيد كلمه المرور"
+          <PasswordInput
+            label="Confirm Password"
+            placeholder="Confirm your password"
             name="confirmPassword"
             error={errors.confirmPassword}
           />
@@ -113,7 +113,7 @@ export default function FamilyRegistrationForm({ onSubmit, initialData }: Family
             className="w-full bg-green-500 text-white py-2.5 px-4 rounded-lg font-medium hover:bg-green-600 transition-colors flex items-center justify-center"
           >
             <ArrowRight className="w-5 h-5 ml-2" />
-            التالي
+            Next
           </button>
         </Form>
       )}

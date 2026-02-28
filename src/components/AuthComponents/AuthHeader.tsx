@@ -5,9 +5,9 @@ interface AuthHeaderProps {
 
 export default function AuthHeader({ title, subtitle }: AuthHeaderProps) {
   return (
-    <div className="text-center mb-4">
-      <h1 className="text-2xl font-bold text-gray-800 mb-1">{title}</h1>
-      <p className="text-sm text-gray-600">{subtitle}</p>
+    <div className="text-center mb-8">
+      <h1 className="text-3xl font-extrabold text-gray-900 mb-2 tracking-tight">{title}</h1>
+      <p className="text-base text-gray-500 font-medium">{subtitle}</p>
     </div>
   );
 }

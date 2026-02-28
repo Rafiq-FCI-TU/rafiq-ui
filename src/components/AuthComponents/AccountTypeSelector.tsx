@@ -7,24 +7,28 @@ interface AccountTypeSelectorProps {
 
 export default function AccountTypeSelector({ onSelectAccountType }: AccountTypeSelectorProps) {
   return (
-    <div className="space-y-4">
-      <AccountTypeCard
-        icon={Users}
-        iconBgColor="bg-blue-100"
-        iconColor="text-blue-600"
-        title="العائلة"
-        description="الاولياء الأمور والمسؤلون عن الطفل"
-        onClick={() => onSelectAccountType('family')}
-      />
+    <div className="space-y-5">
+      <div className="group">
+        <AccountTypeCard
+          icon={Users}
+          iconBgColor="bg-blue-100"
+          iconColor="text-blue-600"
+          title="Family Account"
+          description="For parents and guardians responsible for the child's care and development"
+          onClick={() => onSelectAccountType('family')}
+        />
+      </div>
 
-      <AccountTypeCard
-        icon={Stethoscope}
-        iconBgColor="bg-yellow-100"
-        iconColor="text-yellow-600"
-        title="حساب خاص"
-        description="للاطباء والاخصائيين للمتابعة الطفل"
-        onClick={() => onSelectAccountType('specialist')}
-      />
+      <div className="group">
+        <AccountTypeCard
+          icon={Stethoscope}
+          iconBgColor="bg-purple-100"
+          iconColor="text-purple-600"
+          title="Specialist Account"
+          description="For doctors, therapists, and medical professionals providing specialized care"
+          onClick={() => onSelectAccountType('specialist')}
+        />
+      </div>
     </div>
   );
 }

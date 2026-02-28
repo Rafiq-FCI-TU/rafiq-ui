@@ -19,9 +19,9 @@ export default function ForgotPassword() {
   };
 
   const validateEmail = (emailValue: string) => {
-    if (!emailValue) return 'البريد الإلكتروني مطلوب';
+    if (!emailValue) return 'Email is required';
     if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(emailValue)) {
-      return 'البريد الإلكتروني غير صحيح';
+      return 'Invalid email address';
     }
     return null;
   };
@@ -40,7 +40,7 @@ export default function ForgotPassword() {
 
   const handleOtpSubmit = (otpValue: string) => {
     if (otpValue.length !== 4) {
-      setErrors({ otp: 'الرجاء إدخال الرمز المكون من 4 أرقام' });
+      setErrors({ otp: 'Please enter the 4-digit code' });
       return;
     }
     setErrors({});
@@ -48,14 +48,14 @@ export default function ForgotPassword() {
   };
 
   const validatePassword = (password: string) => {
-    if (!password) return 'كلمة المرور مطلوبة';
-    if (password.length < 6) return 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
+    if (!password) return 'Password is required';
+    if (password.length < 6) return 'Password must be at least 6 characters';
     return null;
   };
 
   const validateConfirmPassword = (password: string, confirmPassword: string) => {
-    if (!confirmPassword) return 'تأكيد كلمة المرور مطلوب';
-    if (password !== confirmPassword) return 'كلمات المرور غير متطابقة';
+    if (!confirmPassword) return 'Confirm password is required';
+    if (password !== confirmPassword) return 'Passwords do not match';
     return null;
   };
 
@@ -79,9 +79,9 @@ export default function ForgotPassword() {
 
   const getStepTitle = () => {
     switch (step) {
-      case 'email': return 'ادخل الايميل';
-      case 'otp': return 'ادخل رمز التحقق';
-      case 'reset': return 'ادخل كلمة المرور الجديدة';
+      case 'email': return 'Enter Email';
+      case 'otp': return 'Enter Verification Code';
+      case 'reset': return 'Enter New Password';
       default: return '';
     }
   };
@@ -95,13 +95,13 @@ export default function ForgotPassword() {
             className="mb-3 flex items-center text-gray-600 hover:text-green-600 transition-colors text-sm"
           >
             <ArrowLeft className="w-4 h-4 ml-1" />
-            <span>العودة للصفحة الرئيسية</span>
+            <span>Back to Home</span>
           </button>
 
           <AuthLogo />
 
           <div className="text-center mb-6">
-            <h1 className="text-2xl font-bold text-gray-800 mb-2">رفيق</h1>
+            <h1 className="text-2xl font-bold text-gray-800 mb-2">Rafiq</h1>
             <p className="text-sm text-gray-600">
               {getStepTitle()}
             </p>
@@ -115,8 +115,8 @@ export default function ForgotPassword() {
               {() => (
                 <Form className="space-y-4">
                   <EmailInput
-                    label="الايميل"
-                    placeholder="ادخل الايميل الخاص بك"
+                    label="Email"
+                    placeholder="Enter your email"
                     error={errors.email}
                   />
 
@@ -125,7 +125,7 @@ export default function ForgotPassword() {
                     className="w-full bg-green-500 text-white py-2.5 px-4 rounded-lg font-medium hover:bg-green-600 transition-colors flex items-center justify-center"
                   >
                     <ArrowRight className="w-5 h-5 ml-2" />
-                    ابحث
+                    Search
                   </button>
 
                   <button
@@ -134,7 +134,7 @@ export default function ForgotPassword() {
                     className="w-full bg-green-500 text-white py-2.5 px-4 rounded-lg font-medium hover:bg-green-600 transition-colors flex items-center justify-center"
                   >
                     <ArrowLeft className="w-5 h-5 ml-2" />
-                    العودة
+                    Back
                   </button>
                 </Form>
               )}
@@ -144,7 +144,7 @@ export default function ForgotPassword() {
           {step === 'otp' && (
             <div className="space-y-6">
               <div className="text-center text-sm text-gray-600 mb-4">
-                تم إرسال رمز التحقق إلى {email}
+                Verification code sent to {email}
               </div>
 
               <OtpInput
@@ -157,7 +157,7 @@ export default function ForgotPassword() {
                 onClick={() => setStep('email')}
                 className="w-full text-green-600 hover:text-green-700 text-sm font-medium transition-colors"
               >
-                تغيير البريد الإلكتروني
+                Change Email
               </button>
             </div>
           )}
@@ -170,15 +170,15 @@ export default function ForgotPassword() {
               {() => (
                 <Form className="space-y-4">
                   <PasswordInput
-                    label="كلمة المرور الجديدة"
-                    placeholder="ادخل كلمة المرور الجديدة"
+                    label="New Password"
+                    placeholder="Enter new password"
                     name="password"
                     error={errors.password}
                   />
 
                   <PasswordInput
-                    label="تأكيد كلمة المرور"
-                    placeholder="تأكيد كلمة المرور"
+                    label="Confirm Password"
+                    placeholder="Confirm your password"
                     name="confirmPassword"
                     error={errors.confirmPassword}
                   />
@@ -188,7 +188,7 @@ export default function ForgotPassword() {
                     className="w-full bg-green-500 text-white py-2.5 px-4 rounded-lg font-medium hover:bg-green-600 transition-colors flex items-center justify-center"
                   >
                     <ArrowRight className="w-5 h-5 ml-2" />
-                    سجل الآن
+                    Reset Password
                   </button>
                 </Form>
               )}

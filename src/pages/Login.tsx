@@ -22,15 +22,15 @@ export default function Login() {
             className="mb-3 flex items-center text-gray-600 hover:text-green-600 transition-colors text-sm"
           >
             <ArrowLeft className="w-4 h-4 ml-1" />
-            <span>العودة للصفحة الرئيسية</span>
+            <span>Back to Home</span>
           </button>
           
           <AuthLogo />
-          <AuthHeader title="مرحبا" subtitle="سجل الدخول للبدء بالرحلة" />
+          <AuthHeader title="Welcome" subtitle="Login to start the journey" />
           <AuthToggle 
             activeTab="login" 
-            loginLabel="سجل الآن" 
-            registerLabel="حساب جديد" 
+            loginLabel="Sign In" 
+            registerLabel="New Account" 
           />
           <LoginForm />
         </div>

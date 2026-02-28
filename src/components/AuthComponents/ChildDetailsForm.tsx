@@ -18,22 +18,22 @@ interface ChildDetailsFormProps {
 
 const childValidationSchema = {
   childName: (value: string) => {
-    if (!value) return 'اسم الطفل مطلوب';
-    if (value.length < 3) return 'اسم الطفل يجب أن يكون ثلاث احرف على الأقل';
+    if (!value) return 'Child name is required';
+    if (value.length < 3) return 'Child name must be at least 3 characters';
     return null;
   },
   birthDate: (value: string) => {
-    if (!value) return 'تاريخ الميلاد مطلوب';
+    if (!value) return 'Birth date is required';
     return null;
   },
   diagnosisDate: (value: string) => {
-    if (!value) return 'تاريخ التشخيص مطلوب';
+    if (!value) return 'Diagnosis date is required';
     return null;
   },
 };
 
 export default function ChildDetailsForm({ onSubmit, onBack, initialData }: ChildDetailsFormProps) {
-  const [errors, setErrors] = useState<{[key: string]: string}>({});
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const childInitialValues: ChildFormValues = initialData || {
     childName: '',
@@ -42,17 +42,17 @@ export default function ChildDetailsForm({ onSubmit, onBack, initialData }: Chil
   };
 
   const validateChildForm = (values: ChildFormValues) => {
-    const newErrors: {[key: string]: string} = {};
-    
+    const newErrors: { [key: string]: string } = {};
+
     const childNameError = childValidationSchema.childName(values.childName);
     if (childNameError) newErrors.childName = childNameError;
-    
+
     const birthDateError = childValidationSchema.birthDate(values.birthDate);
     if (birthDateError) newErrors.birthDate = birthDateError;
-    
+
     const diagnosisDateError = childValidationSchema.diagnosisDate(values.diagnosisDate);
     if (diagnosisDateError) newErrors.diagnosisDate = diagnosisDateError;
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -68,21 +68,21 @@ export default function ChildDetailsForm({ onSubmit, onBack, initialData }: Chil
       {() => (
         <Form className="space-y-4">
           <TextInput
-            label="اسم الطفل"
-            placeholder="من فضلك ادخل اسم الطفل"
+            label="Child Name"
+            placeholder="Please enter the child's name"
             name="childName"
             icon={User}
             error={errors.childName}
           />
 
           <DateInput
-            label="تاريخ الميلاد"
+            label="Birth Date"
             name="birthDate"
             error={errors.birthDate}
           />
 
           <DateInput
-            label="تاريخ التشخيص"
+            label="Diagnosis Date"
             name="diagnosisDate"
             error={errors.diagnosisDate}
           />
@@ -94,14 +94,14 @@ export default function ChildDetailsForm({ onSubmit, onBack, initialData }: Chil
               className="flex-1 bg-green-100 text-green-600 py-2.5 px-4 rounded-lg font-medium hover:bg-green-200 transition-colors flex items-center justify-center"
             >
               <ArrowLeft className="w-5 h-5 ml-2" />
-              العودة
+              <span>Back</span>
             </button>
             <button
               type="submit"
               className="flex-1 bg-green-500 text-white py-2.5 px-4 rounded-lg font-medium hover:bg-green-600 transition-colors flex items-center justify-center"
             >
               <ArrowRight className="w-5 h-5 ml-2" />
-              التالي
+              <span>Next</span>
             </button>
           </div>
         </Form>
