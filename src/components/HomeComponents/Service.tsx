@@ -2,7 +2,7 @@ import type { Feature } from "../../types/HomeCards";
 
 export default function Service({ title, description, img, bg }: Feature) {
   return (
-    <div className="flex gap-4 cursor-pointer hover:scale-105 transition-all items-start p-8 shadow-xl rounded-3xl bg-white">
+    <div className="flex gap-4 hover:scale-105 transition-all items-start p-8 shadow-xl rounded-3xl bg-white">
       <img
         src={img}
         alt={title}

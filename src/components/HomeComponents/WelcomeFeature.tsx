@@ -7,7 +7,7 @@ export default function WelcomeFeature({
   bg,
 }: Feature) {
   return (
-    <div className="cursor-pointer hover:scale-105 transition-all flex gap-3 flex-col p-10 shadow-2xl rounded-3xl bg-white">
+    <div className="hover:scale-105 transition-all flex gap-3 flex-col p-10 shadow-2xl rounded-3xl bg-white">
       <img
         src={img}
         alt={title}

@@ -55,7 +55,8 @@ export default function WelcomeSection() {
               Get Started
             </Link>
             <Link
-              to="/about"
+              to="https://ndss.org/about"
+              target="_blank"
               className="text-white border-2 border-white/30 text-center w-fit font-semibold text-lg not-lg:text-base bg-white/10 py-4 px-8 rounded-xl hover:bg-primary-light transition-all hover:scale-105"
             >
               Learn More
