@@ -36,6 +36,7 @@ export default function Care() {
           Connect with certified specialists who understand your child's unique
           needs
         </p>
+        
         <div className="container mx-auto space-y-4 ">
           {careFeature.map((feature) => (
             <CareFeature key={feature.number} {...feature} />
