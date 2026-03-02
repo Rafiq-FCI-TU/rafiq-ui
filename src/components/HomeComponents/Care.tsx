@@ -29,7 +29,7 @@ export default function Care() {
         <div className="absolute rounded-4xl w-11/12 h-11/12 inset-4 bg-green-300/10 rotate-1" />
       </div>
       <div className="w-10/12 lg:w-2/5 space-y-5 flex flex-col gap-5">
-        <h2 className=" not-lg:text-3xl  lg:text-4xl xl:text-5xl  font-semibold">
+        <h2 className=" not-lg:text-3xl  lg:text-4xl xl:text-5xl  font-bold">
           Professional Guidance & Care
         </h2>
         <p className="text-lg text-gray-600">
