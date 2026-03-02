@@ -1,17 +1,17 @@
-export default function Service({
-  icon,
-  title,
-  description,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-}) {
+import type { Feature } from "../../types/HomeCards";
+
+export default function Service({ title, description, img, bg }: Feature) {
   return (
-    <div className="text-center flex flex-col items-center gap-3 p-10 border border-[#E5E5E5] rounded-xl shadow-md hover:scale-102 shadow-green-200 transition-all">
-      <div className=" bg-[#00A63E] p-4 rounded-xl text-white shadow-lg">{icon}</div>
-      <h4 className="text-[#2D2D2D] text-3xl font-semibold">{title}</h4>
-      <p className="text-[#717182] text-lg">{description}</p>
+    <div className="flex gap-4 cursor-pointer hover:scale-105 transition-all items-start p-8 shadow-xl rounded-3xl bg-white">
+      <img
+        src={img}
+        alt={title}
+        className={`size-16 p-4 rounded-3xl ${bg} shadow-xl`}
+      />
+      <div className="space-y-4">
+        <h3 className="text-2xl font-bold">{title}</h3>
+        <p className="text-lg text-gray-600 leading-relaxed">{description}</p>
+      </div>
     </div>
   );
 }

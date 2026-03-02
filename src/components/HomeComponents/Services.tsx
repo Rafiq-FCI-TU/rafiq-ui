@@ -1,74 +1,72 @@
-import {
-  Users,
-  Award,
-  Shield,
-  Video,
-  CalendarClock,
-  PhoneCall,
-} from "lucide-react";
+import type { Feature } from "../../types/HomeCards";
 import Service from "./Service";
 export default function Services() {
-  const services = [
+  const services: Feature[] = [
     {
-      icon: <Users />,
-      title: "Family ",
+      img: "arrow.png",
+      title: "Personalized Assessments",
+      bg: "bg-red-100",
       description:
-        "Easy-to-use tools for caregivers, children, and specialists",
+        "Comprehensive evaluations across speech, motor, and cognitive domains",
     },
     {
-      icon: <Award />,
-      title: "Evidence-Based",
+      img: "controller.png",
+      title: "Interactive Games",
+      bg: "bg-purple-100",
       description:
-        "Research-backed therapy for speech, motor, and cognitive development",
+        "Engaging therapy activities designed for ages 6 months to 18 years",
     },
     {
-      icon: <Shield />,
-      title: "Secure & Private",
-      description: "HIPAA and COPPA compliant with data storage",
+      img: "chart.png",
+      title: "Progress Dashboard",
+      bg: "bg-orange-100",
+      description:
+        "Real-time tracking of milestones and developmental achievements",
     },
     {
-      icon: <Video />,
-      title: "Online session",
-      description:
-        "Connect with Rafiq which provide remotely via video consultations, with access to all your records during the call.",
+      img: "video.png",
+      title: "Video Consultations",
+      bg: "bg-gray-100",
+      description: "Secure, encrypted connections with certified specialists",
     },
     {
-      icon: <CalendarClock />,
-      title: "Appointment Scheduling",
+      img: "family.png",
+      title: "Multi-User Access",
+      bg: "bg-blue-100",
       description:
-        "Book appointments with Rafiq provide in real-time, choose your preferred time, and choose doctor which suitable for your case",
+        "Separate portals for families, therapists, and healthcare providers",
     },
     {
-      icon: <PhoneCall />,
-      title: "Secure Communication",
+      img: "Vector.png",
+      title: "User-Friendly Design",
+      bg: "bg-green-100",
       description:
-        "Stay in touch with your Rafiq provide via secure messaging, ensuring your data remains private and compliant",
+        "Intuitive interface with accessibility features for all users",
     },
   ];
   return (
-    <section className="container mx-auto not-sm:px-10 py-30">
-      <section className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mb-30">
-        {services.map((service, index) => (
-          <Service
-            key={index}
-            icon={service.icon}
-            title={service.title}
-            description={service.description}
-          />
-        ))}
-      </section>
-      <section className="flex justify-between not-lg:flex-col-reverse items-center gap-20 p-20 not-lg:p-0 not-lg:gap-15 relative">
-        <div className="flex flex-col gap-5">
-          <h3 className="text-3xl font-semibold text-green-800">
-            Sessions & Games
-          </h3>
-          <p className="text-2xl font-medium text-green-500">
-            Rafiq will help you understand how to better support my daughter and
-            improve her skills remotely by online sessions and games which can
-            find it easy
+    <section className="mx-auto bg-linear-to-b from-gray-50 to-white  py-30 lg:pt-100">
+      <section className="not-md:w-10/12 mx-auto">
+        <div className="space-y-5 text-center">
+          <h2 className="text-6xl not-lg:text-4xl font-semibold">
+            Everything You Need in One Place
+          </h2>
+          <p className="text-xl not-lg:text-lg text-gray-600">
+            Comprehensive tools designed for effective therapy and development
+            tracking
           </p>
         </div>
-        <img src="Group 9419.png" alt="games" className="lg:w-1/2" />
+        <section className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-x-30 p-20 not-md:px-0 ">
+          {services.map((service, index) => (
+            <Service
+              key={index}
+              img={service.img}
+              title={service.title}
+              description={service.description}
+              bg={service.bg}
+            />
+          ))}
+        </section>
       </section>
     </section>
   );

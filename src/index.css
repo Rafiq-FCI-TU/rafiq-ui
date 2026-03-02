@@ -3,6 +3,8 @@
   font-family: "Noto Sans Arabic";
   src: url("./assets/fonts/NotoSansArabic.ttf");
 }
-body {
-  font-family: "Noto Sans Arabic", sans-serif;
+@theme {
+  --color-primary-dark: #0a5a2f;
+  --color-primary: #0d6b38;
 }
+
