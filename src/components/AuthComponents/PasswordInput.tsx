@@ -19,7 +19,7 @@ export default function PasswordInput({
 
   return (
     <div className="mb-4">
-      <label htmlFor={name} className="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">
+      <label htmlFor={name} className="block text-[13px] font-semibold text-gray-700 mb-1.5 pl-1">
         {label}
       </label>
       <div className="relative">

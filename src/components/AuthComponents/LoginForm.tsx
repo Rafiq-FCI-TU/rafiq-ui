@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form } from 'formik';
 import { Link, useNavigate } from 'react-router';
-import { ArrowRight } from 'lucide-react';
 import { useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import EmailInput from './EmailInput';
@@ -83,30 +82,21 @@ export default function LoginForm() {
       {() => (
         <Form className="space-y-5">
           <EmailInput
-            label="Email"
-            placeholder="Enter your email"
+            label="Email Address"
+            placeholder="name@example.com"
             error={errors.email}
           />
 
           <PasswordInput
             label="Password"
-            placeholder="Enter your password"
+            placeholder="••••••••"
             error={errors.password}
           />
 
-          <div className="flex items-center justify-between mb-6">
-            <label className="flex items-center group cursor-pointer">
-              <Field
-                type="checkbox"
-                name="rememberMe"
-                className="w-4 h-4 text-gray-900 border-gray-300 rounded focus:ring-gray-900 transition-colors cursor-pointer"
-                required
-              />
-              <span className="ml-2 text-sm text-gray-600 group-hover:text-gray-900 transition-colors">Remember me</span>
-            </label>
+          <div className="flex justify-end mb-6">
             <Link
               to="/forgotPassword"
-              className="text-sm font-medium text-gray-900 hover:text-gray-600 transition-colors"
+              className="text-sm font-semibold text-[#188146] hover:text-[#116937] transition-colors"
             >
               Forgot password?
             </Link>
@@ -114,10 +104,9 @@ export default function LoginForm() {
 
           <button
             type="submit"
-            className="w-full bg-green-500 text-white py-3.5 px-4 rounded-xl font-semibold hover:bg-green-600 hover:-translate-y-0.5 shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center mb-4"
+            className="w-full bg-[#188147] text-white py-3.5 px-4 rounded-[12px] font-semibold hover:bg-[#116937] transition-all duration-200 shadow-sm flex items-center justify-center mb-4"
           >
             Sign In
-            <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
           </button>
 
           <div className="relative flex items-center justify-center my-6">
@@ -125,22 +114,14 @@ export default function LoginForm() {
             <span className="bg-white px-4 text-sm text-gray-500 absolute font-medium">Or continue with</span>
           </div>
 
-          <button
-            type="button"
-            onClick={() => handleGoogleLogin()}
-            className="w-full bg-white border border-gray-200 text-gray-700 py-3.5 px-4 rounded-xl font-medium hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 flex items-center justify-center shadow-sm"
-          >
-            <img src="/search.png" alt="Google" className='w-5 h-5 mr-3' />
-            Google
-          </button>
-
-          <div className="text-center mt-8 pt-4">
-            <p className="text-sm text-gray-600">
-              Don't have an account?{' '}
-              <Link to="/register" className="text-gray-900 hover:underline font-semibold">
-                Create new account
-              </Link>
-            </p>
+          <div className="flex gap-4">
+            <button
+              type="button"
+              onClick={() => handleGoogleLogin()}
+              className="flex-1 bg-white border border-gray-200 text-gray-700 py-3 px-4 rounded-[12px] font-semibold text-sm hover:bg-gray-50 transition-all duration-200 flex items-center justify-center shadow-sm"
+            >
+              Google
+            </button>
           </div>
         </Form>
       )}

@@ -1,13 +1,26 @@
+import { ArrowLeft } from 'lucide-react';
+
 interface AuthHeaderProps {
   title: string;
   subtitle: string;
+  onBack?: () => void;
 }
 
-export default function AuthHeader({ title, subtitle }: AuthHeaderProps) {
+export default function AuthHeader({ title, subtitle, onBack }: AuthHeaderProps) {
   return (
-    <div className="text-center mb-8">
-      <h1 className="text-3xl font-extrabold text-gray-900 mb-2 tracking-tight">{title}</h1>
-      <p className="text-base text-gray-500 font-medium">{subtitle}</p>
+    <div className="mb-8">
+      <div className="flex items-center justify-between mb-2">
+        <h1 className="text-3xl lg:text-[40px] font-bold text-gray-900 tracking-tight">{title}</h1>
+        {onBack && (
+          <button
+            onClick={onBack}
+            className="text-gray-900 hover:text-gray-600 transition-colors"
+          >
+            <ArrowLeft className="w-6 h-6" />
+          </button>
+        )}
+      </div>
+      <p className="text-sm font-medium text-gray-500">{subtitle}</p>
     </div>
   );
 }

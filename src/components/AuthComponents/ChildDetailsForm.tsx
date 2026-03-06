@@ -1,13 +1,14 @@
 import { useState } from 'react';
-import { Formik, Form } from 'formik';
-import { User, ArrowRight, ArrowLeft } from 'lucide-react';
+import { Formik, Form, Field } from 'formik';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import TextInput from './TextInput';
 import DateInput from './DateInput';
 
 interface ChildFormValues {
-  childName: string;
+  childFirstName: string;
+  childLastName: string;
   birthDate: string;
-  diagnosisDate: string;
+  gender: string;
 }
 
 interface ChildDetailsFormProps {
@@ -17,41 +18,37 @@ interface ChildDetailsFormProps {
 }
 
 const childValidationSchema = {
-  childName: (value: string) => {
-    if (!value) return 'Child name is required';
-    if (value.length < 3) return 'Child name must be at least 3 characters';
+  name: (value: string) => {
+    if (!value) return 'Required field';
     return null;
   },
   birthDate: (value: string) => {
     if (!value) return 'Birth date is required';
     return null;
   },
-  diagnosisDate: (value: string) => {
-    if (!value) return 'Diagnosis date is required';
+  gender: (value: string) => {
+    if (!value) return 'Gender is required';
     return null;
-  },
+  }
 };
 
 export default function ChildDetailsForm({ onSubmit, onBack, initialData }: ChildDetailsFormProps) {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const childInitialValues: ChildFormValues = initialData || {
-    childName: '',
+    childFirstName: '',
+    childLastName: '',
     birthDate: '',
-    diagnosisDate: '',
+    gender: ''
   };
 
   const validateChildForm = (values: ChildFormValues) => {
     const newErrors: { [key: string]: string } = {};
 
-    const childNameError = childValidationSchema.childName(values.childName);
-    if (childNameError) newErrors.childName = childNameError;
-
-    const birthDateError = childValidationSchema.birthDate(values.birthDate);
-    if (birthDateError) newErrors.birthDate = birthDateError;
-
-    const diagnosisDateError = childValidationSchema.diagnosisDate(values.diagnosisDate);
-    if (diagnosisDateError) newErrors.diagnosisDate = diagnosisDateError;
+    if (childValidationSchema.name(values.childFirstName)) newErrors.childFirstName = 'First Name is required';
+    if (childValidationSchema.name(values.childLastName)) newErrors.childLastName = 'Last Name is required';
+    if (childValidationSchema.birthDate(values.birthDate)) newErrors.birthDate = 'Birth date is required';
+    if (childValidationSchema.gender(values.gender)) newErrors.gender = 'Gender is required';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -64,48 +61,70 @@ export default function ChildDetailsForm({ onSubmit, onBack, initialData }: Chil
   };
 
   return (
-    <Formik initialValues={childInitialValues} onSubmit={handleSubmit}>
-      {() => (
-        <Form className="space-y-4">
-          <TextInput
-            label="Child Name"
-            placeholder="Please enter the child's name"
-            name="childName"
-            icon={User}
-            error={errors.childName}
-          />
+    <div className="w-full">
+      <button
+        onClick={onBack}
+        className="flex items-center text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors mb-6"
+      >
+        <ArrowLeft className="w-4 h-4 mr-1.5" />
+        Back
+      </button>
 
-          <DateInput
-            label="Birth Date"
-            name="birthDate"
-            error={errors.birthDate}
-          />
+      <div className="text-center mb-8">
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">Family Registration</h2>
+        <p className="text-sm font-medium text-gray-500">Add information of your child</p>
+      </div>
 
-          <DateInput
-            label="Diagnosis Date"
-            name="diagnosisDate"
-            error={errors.diagnosisDate}
-          />
+      <Formik initialValues={childInitialValues} onSubmit={handleSubmit}>
+        {() => (
+          <Form className="space-y-4">
+            <TextInput
+              label="Child's First Name *"
+              placeholder="Amira"
+              name="childFirstName"
+              error={errors.childFirstName}
+            />
 
-          <div className="flex gap-4">
-            <button
-              type="button"
-              onClick={onBack}
-              className="flex-1 bg-green-100 text-green-600 py-2.5 px-4 rounded-lg font-medium hover:bg-green-200 transition-colors flex items-center justify-center"
-            >
-              <ArrowLeft className="w-5 h-5 ml-2" />
-              <span>Back</span>
-            </button>
+            <TextInput
+              label="Child's Last Name *"
+              placeholder="Hassan"
+              name="childLastName"
+              error={errors.childLastName}
+            />
+
+            <DateInput
+              label="Date of Birth *"
+              name="birthDate"
+              error={errors.birthDate}
+            />
+
+            <div className="mb-4">
+              <label htmlFor="gender" className="block text-[13px] font-semibold text-gray-700 mb-1.5 pl-1">
+                Gender *
+              </label>
+              <Field
+                as="select"
+                id="gender"
+                name="gender"
+                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-[12px] focus:outline-none focus:ring-2 focus:ring-[#188147]/50 focus:border-[#188147] text-sm transition-all shadow-sm text-gray-700"
+              >
+                <option value="" disabled>Select gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </Field>
+              {errors.gender && <div className="text-red-500 text-xs mt-1.5 font-medium">{errors.gender}</div>}
+            </div>
+
             <button
               type="submit"
-              className="flex-1 bg-green-500 text-white py-2.5 px-4 rounded-lg font-medium hover:bg-green-600 transition-colors flex items-center justify-center"
+              className="w-full bg-[#188147] text-white py-3 px-4 rounded-[12px] font-semibold hover:bg-[#116937] transition-colors flex items-center justify-center mt-6"
             >
+              Next
               <ArrowRight className="w-5 h-5 ml-2" />
-              <span>Next</span>
             </button>
-          </div>
-        </Form>
-      )}
-    </Formik>
+          </Form>
+        )}
+      </Formik>
+    </div>
   );
 }

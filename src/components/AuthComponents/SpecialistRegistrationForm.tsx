@@ -1,80 +1,63 @@
 import { useState } from 'react';
-import { Formik, Form } from 'formik';
-import { User, ArrowRight, Stethoscope } from 'lucide-react';
+import { Formik, Form, Field } from 'formik';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import EmailInput from './EmailInput';
-import PasswordInput from './PasswordInput';
 import TextInput from './TextInput';
 
 interface SpecialistFormValues {
-  name: string;
-  specialty: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
   email: string;
-  password: string;
-  confirmPassword: string;
+  credentials: string;
+  specialty: string;
+  organization: string;
+  professionalBio: string;
+  gender: string;
 }
 
 interface SpecialistRegistrationFormProps {
   onSubmit: (values: SpecialistFormValues) => void;
+  onBack: () => void;
+  initialData?: SpecialistFormValues | null;
 }
 
 const validationSchema = {
   name: (value: string) => {
-    if (!value) return 'Name is required';
-    if (value.length < 2) return 'Name must be at least 2 characters';
-    return null;
-  },
-  specialty: (value: string) => {
-    if (!value) return 'Specialty is required';
-    if (value.length < 2) return 'Specialty must be at least 2 characters';
+    if (!value) return 'Required field';
     return null;
   },
   email: (value: string) => {
     if (!value) return 'Email is required';
     if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)) {
-      return 'Invalid email address';
+      return 'Invalid email';
     }
     return null;
-  },
-  password: (value: string) => {
-    if (!value) return 'Password is required';
-    if (value.length < 6) return 'Password must be at least 6 characters';
-    return null;
-  },
-  confirmPassword: (value: string, password: string) => {
-    if (!value) return 'Confirm password is required';
-    if (value !== password) return 'Passwords do not match';
-    return null;
-  },
+  }
 };
 
-export default function SpecialistRegistrationForm({ onSubmit }: SpecialistRegistrationFormProps) {
+export default function SpecialistRegistrationForm({ onSubmit, onBack, initialData }: SpecialistRegistrationFormProps) {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  const initialValues: SpecialistFormValues = {
-    name: '',
-    specialty: '',
+  const initialValues: SpecialistFormValues = initialData || {
+    firstName: '',
+    lastName: '',
+    phone: '',
     email: '',
-    password: '',
-    confirmPassword: '',
+    credentials: '',
+    specialty: '',
+    organization: '',
+    professionalBio: '',
+    gender: ''
   };
 
   const validateForm = (values: SpecialistFormValues) => {
     const newErrors: { [key: string]: string } = {};
 
-    const nameError = validationSchema.name(values.name);
-    if (nameError) newErrors.name = nameError;
-
-    const specialtyError = validationSchema.specialty(values.specialty);
-    if (specialtyError) newErrors.specialty = specialtyError;
-
+    if (validationSchema.name(values.firstName)) newErrors.firstName = 'First Name is required';
+    if (validationSchema.name(values.lastName)) newErrors.lastName = 'Last Name is required';
     const emailError = validationSchema.email(values.email);
     if (emailError) newErrors.email = emailError;
-
-    const passwordError = validationSchema.password(values.password);
-    if (passwordError) newErrors.password = passwordError;
-
-    const confirmPasswordError = validationSchema.confirmPassword(values.confirmPassword, values.password);
-    if (confirmPasswordError) newErrors.confirmPassword = confirmPasswordError;
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -87,53 +70,105 @@ export default function SpecialistRegistrationForm({ onSubmit }: SpecialistRegis
   };
 
   return (
-    <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-      {() => (
-        <Form className="space-y-4">
-          <TextInput
-            label="Name"
-            placeholder="Please enter your name"
-            name="name"
-            icon={User}
-            error={errors.name}
-          />
+    <div className="w-full">
+      <button
+        onClick={onBack}
+        className="flex items-center text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors mb-6"
+      >
+        <ArrowLeft className="w-4 h-4 mr-1.5" />
+        Back
+      </button>
 
-          <TextInput
-            label="Specialty"
-            placeholder="Enter your medical specialty"
-            name="specialty"
-            icon={Stethoscope}
-            error={errors.specialty}
-          />
+      <div className="text-center mb-8">
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">Specialist Registration</h2>
+        <p className="text-sm font-medium text-gray-500">Let's start with your information</p>
+      </div>
 
-          <EmailInput
-            label="Email"
-            placeholder="Enter your email"
-            error={errors.email}
-          />
+      <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+        {() => (
+          <Form className="space-y-4">
+            <TextInput
+              label="First Name *"
+              placeholder="Enter your first name"
+              name="firstName"
+              error={errors.firstName}
+            />
 
-          <PasswordInput
-            label="Password"
-            placeholder="Enter your password"
-            error={errors.password}
-          />
+            <TextInput
+              label="Last Name *"
+              placeholder="Enter your last name"
+              name="lastName"
+              error={errors.lastName}
+            />
 
-          <PasswordInput
-            label="Confirm Password"
-            placeholder="Confirm your password"
-            name="confirmPassword"
-            error={errors.confirmPassword}
-          />
+            <TextInput
+              label="Phone Number *"
+              placeholder="(555) 123-4567"
+              name="phone"
+              error={errors.phone}
+            />
 
-          <button
-            type="submit"
-            className="w-full bg-green-500 text-white py-2.5 px-4 rounded-lg font-medium hover:bg-green-600 transition-colors flex items-center justify-center"
-          >
-            <ArrowRight className="w-5 h-5 ml-2" />
-            Next
-          </button>
-        </Form>
-      )}
-    </Formik>
+            <EmailInput
+              label="Email Address"
+              placeholder="your.email@example.com"
+              error={errors.email}
+              showIcon={false}
+            />
+
+            <TextInput
+              label="Credentials *"
+              placeholder="MS, CCC-SLP"
+              name="credentials"
+              error={errors.credentials}
+            />
+
+            <TextInput
+              label="Specialty *"
+              placeholder=""
+              name="specialty"
+              error={errors.specialty}
+            />
+
+            <TextInput
+              label="Organization"
+              placeholder="Children's Development Center"
+              name="organization"
+              error={errors.organization}
+            />
+
+            <TextInput
+              label="Professional Bio"
+              placeholder=""
+              name="professionalBio"
+              error={errors.professionalBio}
+            />
+
+            <div className="mb-4">
+              <label htmlFor="gender" className="block text-[13px] font-semibold text-gray-700 mb-1.5 pl-1">
+                Gender
+              </label>
+              <Field
+                as="select"
+                id="gender"
+                name="gender"
+                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-[12px] focus:outline-none focus:ring-2 focus:ring-[#188147]/50 focus:border-[#188147] text-sm transition-all shadow-sm text-gray-700"
+              >
+                <option value="" disabled>Select gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </Field>
+            </div>
+
+            <button
+              type="submit"
+              className="w-full bg-[#188147] text-white py-3 px-4 rounded-[12px] font-semibold hover:bg-[#116937] transition-colors flex items-center justify-center mt-6"
+            >
+              Next
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </button>
+          </Form>
+        )}
+      </Formik>
+    </div>
   );
 }

@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Formik, Form } from 'formik';
-import AuthLogo from '../components/AuthComponents/AuthLogo';
+import AuthHeader from '../components/AuthComponents/AuthHeader';
 import BrandingSection from '../components/AuthComponents/BrandingSection';
 import EmailInput from '../components/AuthComponents/EmailInput';
 import PasswordInput from '../components/AuthComponents/PasswordInput';
@@ -87,117 +87,101 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="min-h-screen flex">
-      <div className="flex-1 bg-white flex flex-col justify-center items-center px-6 lg:px-12 py-4">
-        <div className="w-full max-w-md">
-          <button
-            onClick={handleBackToLogin}
-            className="mb-3 flex items-center text-gray-600 hover:text-green-600 transition-colors text-sm"
-          >
-            <ArrowLeft className="w-4 h-4 ml-1" />
-            <span>Back to Home</span>
-          </button>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 font-sans p-4 lg:p-8">
+      <div className="w-full max-w-5xl flex bg-white rounded-[32px] shadow-xl overflow-hidden min-h-[700px]">
+        {/* Left side: Branding */}
+        <BrandingSection imageSrc="/login_photo.jpeg" imageAlt="Child playing with blocks" />
 
-          <AuthLogo />
+        {/* Right side: Form */}
+        <div className="flex-1 flex flex-col justify-center px-8 lg:px-16 py-12">
+          <div className="w-full max-w-[400px] mx-auto">
+            <AuthHeader
+              title="Forgot Password"
+              subtitle={getStepTitle()}
+              onBack={handleBackToLogin}
+            />
 
-          <div className="text-center mb-6">
-            <h1 className="text-2xl font-bold text-gray-800 mb-2">Rafiq</h1>
-            <p className="text-sm text-gray-600">
-              {getStepTitle()}
-            </p>
-          </div>
-
-          {step === 'email' && (
-            <Formik
-              initialValues={{ email: '' }}
-              onSubmit={handleEmailSubmit}
-            >
-              {() => (
-                <Form className="space-y-4">
-                  <EmailInput
-                    label="Email"
-                    placeholder="Enter your email"
-                    error={errors.email}
-                  />
-
-                  <button
-                    type="submit"
-                    className="w-full bg-green-500 text-white py-2.5 px-4 rounded-lg font-medium hover:bg-green-600 transition-colors flex items-center justify-center"
-                  >
-                    <ArrowRight className="w-5 h-5 ml-2" />
-                    Search
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={handleBackToLogin}
-                    className="w-full bg-green-500 text-white py-2.5 px-4 rounded-lg font-medium hover:bg-green-600 transition-colors flex items-center justify-center"
-                  >
-                    <ArrowLeft className="w-5 h-5 ml-2" />
-                    Back
-                  </button>
-                </Form>
-              )}
-            </Formik>
-          )}
-
-          {step === 'otp' && (
-            <div className="space-y-6">
-              <div className="text-center text-sm text-gray-600 mb-4">
-                Verification code sent to {email}
-              </div>
-
-              <OtpInput
-                length={4}
-                onComplete={handleOtpSubmit}
-                error={errors.otp}
-              />
-
-              <button
-                onClick={() => setStep('email')}
-                className="w-full text-green-600 hover:text-green-700 text-sm font-medium transition-colors"
+            {step === 'email' && (
+              <Formik
+                initialValues={{ email: '' }}
+                onSubmit={handleEmailSubmit}
               >
-                Change Email
-              </button>
-            </div>
-          )}
+                {() => (
+                  <Form className="space-y-4">
+                    <EmailInput
+                      label="Email"
+                      placeholder="Enter your email"
+                      error={errors.email}
+                    />
 
-          {step === 'reset' && (
-            <Formik
-              initialValues={{ password: '', confirmPassword: '' }}
-              onSubmit={handleResetSubmit}
-            >
-              {() => (
-                <Form className="space-y-4">
-                  <PasswordInput
-                    label="New Password"
-                    placeholder="Enter new password"
-                    name="password"
-                    error={errors.password}
-                  />
+                    <button
+                      type="submit"
+                      className="w-full bg-[#188147] text-white py-3.5 px-4 rounded-[12px] font-semibold hover:bg-[#116937] transition-all duration-200 shadow-sm flex items-center justify-center mt-6"
+                    >
+                      <ArrowRight className="w-5 h-5 ml-2" />
+                      Search
+                    </button>
+                  </Form>
+                )}
+              </Formik>
+            )}
 
-                  <PasswordInput
-                    label="Confirm Password"
-                    placeholder="Confirm your password"
-                    name="confirmPassword"
-                    error={errors.confirmPassword}
-                  />
+            {step === 'otp' && (
+              <div className="space-y-6">
+                <div className="text-sm text-gray-600 mb-4 mt-6">
+                  Verification code sent to {email}
+                </div>
 
-                  <button
-                    type="submit"
-                    className="w-full bg-green-500 text-white py-2.5 px-4 rounded-lg font-medium hover:bg-green-600 transition-colors flex items-center justify-center"
-                  >
-                    <ArrowRight className="w-5 h-5 ml-2" />
-                    Reset Password
-                  </button>
-                </Form>
-              )}
-            </Formik>
-          )}
+                <OtpInput
+                  length={4}
+                  onComplete={handleOtpSubmit}
+                  error={errors.otp}
+                />
+
+                <button
+                  onClick={() => setStep('email')}
+                  className="w-full text-[#188147] hover:text-[#116937] text-sm font-medium transition-colors"
+                >
+                  Change Email
+                </button>
+              </div>
+            )}
+
+            {step === 'reset' && (
+              <Formik
+                initialValues={{ password: '', confirmPassword: '' }}
+                onSubmit={handleResetSubmit}
+              >
+                {() => (
+                  <Form className="space-y-4">
+                    <PasswordInput
+                      label="New Password"
+                      placeholder="Enter new password"
+                      name="password"
+                      error={errors.password}
+                    />
+
+                    <PasswordInput
+                      label="Confirm Password"
+                      placeholder="Confirm your password"
+                      name="confirmPassword"
+                      error={errors.confirmPassword}
+                    />
+
+                    <button
+                      type="submit"
+                      className="w-full bg-[#188147] text-white py-3.5 px-4 rounded-[12px] font-semibold hover:bg-[#116937] transition-all duration-200 shadow-sm flex items-center justify-center mt-6"
+                    >
+                      <ArrowRight className="w-5 h-5 ml-2" />
+                      Reset Password
+                    </button>
+                  </Form>
+                )}
+              </Formik>
+            )}
+          </div>
         </div>
       </div>
-
-      <BrandingSection imageSrc="/loginphoto.png" imageAlt="Children" />
     </div>
   );
 }

@@ -8,28 +8,28 @@ interface AuthToggleProps {
 
 export default function AuthToggle({ activeTab, loginLabel, registerLabel }: AuthToggleProps) {
   return (
-    <div className="flex bg-gray-100/80 p-1 mb-8 rounded-xl backdrop-blur-sm shadow-inner border border-gray-200/50">
+    <div className="flex bg-[#F3F4F6] p-1.5 mb-8 rounded-[14px]">
       {activeTab === 'login' ? (
-        <div className="flex-1 py-2 px-3 rounded-lg text-sm font-semibold transition-all bg-white text-gray-900 text-center shadow-sm">
+        <div className="flex-1 py-3 px-3 rounded-[10px] text-sm font-semibold transition-all bg-white text-gray-900 text-center shadow-sm">
           {loginLabel}
         </div>
       ) : (
         <Link
           to="/login"
-          className="flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all text-gray-500 hover:text-gray-900 text-center hover:bg-gray-200/50"
+          className="flex-1 py-3 px-3 rounded-[10px] text-sm font-semibold transition-all text-gray-500 hover:text-gray-900 text-center"
         >
           {loginLabel}
         </Link>
       )}
 
       {activeTab === 'register' ? (
-        <div className="flex-1 py-2 px-3 rounded-lg text-sm font-semibold transition-all bg-white text-gray-900 text-center shadow-sm">
+        <div className="flex-1 py-3 px-3 rounded-[10px] text-sm font-semibold transition-all bg-white text-gray-900 text-center shadow-sm">
           {registerLabel}
         </div>
       ) : (
         <Link
           to="/register"
-          className="flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all text-gray-500 hover:text-gray-900 text-center hover:bg-gray-200/50"
+          className="flex-1 py-3 px-3 rounded-[10px] text-sm font-semibold transition-all text-gray-500 hover:text-gray-900 text-center"
         >
           {registerLabel}
         </Link>

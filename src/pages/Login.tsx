@@ -1,6 +1,4 @@
 import { useNavigate } from 'react-router';
-import { ArrowLeft } from 'lucide-react';
-import AuthLogo from '../components/AuthComponents/AuthLogo';
 import AuthHeader from '../components/AuthComponents/AuthHeader';
 import AuthToggle from '../components/AuthComponents/AuthToggle';
 import LoginForm from '../components/AuthComponents/LoginForm';
@@ -14,29 +12,28 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex">
-      <div className="flex-1 bg-white flex flex-col justify-center items-center px-6 lg:px-12 py-4">
-        <div className="w-full max-w-md">
-          <button
-            onClick={handleBackToHome}
-            className="mb-3 flex items-center text-gray-600 hover:text-green-600 transition-colors text-sm"
-          >
-            <ArrowLeft className="w-4 h-4 ml-1" />
-            <span>Back to Home</span>
-          </button>
-          
-          <AuthLogo />
-          <AuthHeader title="Welcome" subtitle="Login to start the journey" />
-          <AuthToggle 
-            activeTab="login" 
-            loginLabel="Sign In" 
-            registerLabel="New Account" 
-          />
-          <LoginForm />
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 font-sans p-4 lg:p-8">
+      <div className="w-full max-w-5xl flex bg-white rounded-[32px] shadow-xl overflow-hidden min-h-[700px]">
+        {/* Left side: Branding */}
+        <BrandingSection imageSrc="/login_photo.jpeg" imageAlt="Child playing with blocks" />
+
+        {/* Right side: Form */}
+        <div className="flex-1 flex flex-col justify-center px-8 lg:px-16 py-12">
+          <div className="w-full max-w-[400px] mx-auto">
+            <AuthHeader
+              title="Sign In"
+              subtitle="Enter your details to access your account"
+              onBack={handleBackToHome}
+            />
+            <AuthToggle
+              activeTab="login"
+              loginLabel="Sign In"
+              registerLabel="Register"
+            />
+            <LoginForm />
+          </div>
         </div>
       </div>
-
-      <BrandingSection imageSrc="/loginphoto.png" imageAlt="Children" />
     </div>
   );
 }
