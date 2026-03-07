@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Formik, Form, Field } from 'formik';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Loader2 } from 'lucide-react';
+import axios from 'axios';
 import EmailInput from './EmailInput';
 import TextInput from './TextInput';
 
@@ -13,6 +14,7 @@ interface FormValues {
   address: string;
   emergencyContactName: string;
   emergencyContactPhone: string;
+  token?: string;
 }
 
 interface FamilyRegistrationFormProps {
@@ -61,9 +63,43 @@ export default function FamilyRegistrationForm({ onSubmit, onBack, initialData }
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (values: FormValues) => {
+  const handleSubmit = async (values: FormValues) => {
     if (validateForm(values)) {
-      onSubmit(values);
+      setErrors({});
+      try {
+        const payload = {
+          firstName: values.firstName,
+          lastName: values.lastName,
+          email: values.email,
+          phoneNumber: values.phone,
+          relationship: values.relationship,
+          address: values.address,
+          emergencyContactName: values.emergencyContactName,
+          emergencyContactPhone: values.emergencyContactPhone
+        };
+
+        const response = await axios.post('https://rafiq-d2bygkb4bkfrgkd2.germanywestcentral-01.azurewebsites.net/api/FamilyRegistration/step1', payload);
+
+        // Extract token depending on variation of the payload
+        let receivedToken = response.data?.data?.token || response.data?.token || "";
+
+        if (!receivedToken && response.request?.responseURL) {
+          const url = new URL(response.request.responseURL);
+          receivedToken = url.searchParams.get("token") || "";
+        }
+
+        onSubmit({ ...values, token: receivedToken });
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+          const msg = error.response.data?.message ||
+            error.response.data?.detail ||
+            error.response.data?.title ||
+            (typeof error.response.data === 'string' ? error.response.data : 'Registration failed');
+          setErrors({ api: msg });
+        } else {
+          setErrors({ api: 'An unexpected error occurred. Please try again later.' });
+        }
+      }
     }
   };
 
@@ -83,8 +119,13 @@ export default function FamilyRegistrationForm({ onSubmit, onBack, initialData }
       </div>
 
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-        {() => (
+        {({ isSubmitting }) => (
           <Form className="space-y-4">
+            {errors.api && (
+              <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-[12px]">
+                {errors.api}
+              </div>
+            )}
             <TextInput
               label="First Name *"
               placeholder="Enter your first name"
@@ -124,9 +165,9 @@ export default function FamilyRegistrationForm({ onSubmit, onBack, initialData }
                 className="w-full px-4 py-3 bg-white border border-gray-200 rounded-[12px] focus:outline-none focus:ring-2 focus:ring-[#188147]/50 focus:border-[#188147] text-sm transition-all shadow-sm text-gray-700"
               >
                 <option value="" disabled>Select relationship</option>
-                <option value="parent">Parent</option>
-                <option value="guardian">Legal Guardian</option>
-                <option value="other">Other Relative</option>
+                <option value="Father">Father</option>
+                <option value="Mother">Mother</option>
+                <option value="Other">Other</option>
               </Field>
             </div>
 
@@ -153,10 +194,20 @@ export default function FamilyRegistrationForm({ onSubmit, onBack, initialData }
 
             <button
               type="submit"
-              className="w-full bg-[#188147] text-white py-3 px-4 rounded-[12px] font-semibold hover:bg-[#116937] transition-colors flex items-center justify-center mt-6"
+              disabled={isSubmitting}
+              className="w-full bg-[#188147] text-white py-3 px-4 rounded-[12px] font-semibold hover:bg-[#116937] transition-colors flex items-center justify-center mt-6 disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              Next
-              <ArrowRight className="w-5 h-5 ml-2" />
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                <>
+                  Next
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </>
+              )}
             </button>
           </Form>
         )}

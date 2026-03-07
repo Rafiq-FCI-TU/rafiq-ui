@@ -161,12 +161,14 @@ export default function Register() {
                 onSubmit={handleChildFormSubmit}
                 onBack={handleBackToFamilyForm}
                 initialData={childData}
+                token={familyData?.token}
               />
             )}
             {showFamilyPasswordForm && !showConsentForm && !showAssessmentForm && (
               <FamilyPasswordForm
                 onSubmit={handleFamilyPasswordSubmit}
                 onBack={handleBackToChildForm}
+                token={familyData?.token}
               />
             )}
 
@@ -182,6 +184,7 @@ export default function Register() {
               <SpecialistPasswordForm
                 onSubmit={handleSpecialistPasswordSubmit}
                 onBack={handleBackToSpecialistForm}
+                token={specialistData?.token}
               />
             )}
 

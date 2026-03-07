@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Formik, Form } from 'formik';
 import { Link, useNavigate } from 'react-router';
 import { useGoogleLogin } from '@react-oauth/google';
+import { Loader2 } from 'lucide-react';
 import axios from 'axios';
 import EmailInput from './EmailInput';
 import PasswordInput from './PasswordInput';
@@ -50,10 +51,40 @@ export default function LoginForm() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (values: FormValues) => {
+  const handleSubmit = async (values: FormValues) => {
     if (validateForm(values)) {
-      console.log('Form submitted:', values);
-      navigate('/dashboard');
+      setErrors({});
+      try {
+        const response = await axios.post('https://rafiq-d2bygkb4bkfrgkd2.germanywestcentral-01.azurewebsites.net/api/Auth/login', {
+          email: values.email,
+          password: values.password,
+        });
+
+        // The API returns { success: true, message: "OK", data: { isAuthenticated: true, token: "...", refreshToken: "..." } }
+        const responseData = response.data?.data || response.data;
+
+        if (responseData?.isAuthenticated || response.data?.success) {
+          // Store tokens securely (localStorage used here for simplicity)
+          localStorage.setItem('token', responseData.token);
+          localStorage.setItem('refreshToken', responseData.refreshToken);
+
+          console.log('Login success:', response.data);
+          navigate('/dashboard');
+        } else {
+          setErrors({ api: 'Login failed' });
+        }
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+          // Extract specific message based on API response
+          const msg = error.response.data?.message ||
+            error.response.data?.detail ||
+            error.response.data?.title ||
+            (typeof error.response.data === 'string' ? error.response.data : 'Invalid credentials');
+          setErrors({ api: msg });
+        } else {
+          setErrors({ api: 'An unexpected error occurred. Please try again later.' });
+        }
+      }
     }
   };
 
@@ -79,7 +110,7 @@ export default function LoginForm() {
 
   return (
     <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-      {() => (
+      {({ isSubmitting }) => (
         <Form className="space-y-5">
           <EmailInput
             label="Email Address"
@@ -93,6 +124,12 @@ export default function LoginForm() {
             error={errors.password}
           />
 
+          {errors.api && (
+            <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-[12px] mt-2">
+              {errors.api}
+            </div>
+          )}
+
           <div className="flex justify-end mb-6">
             <Link
               to="/forgotPassword"
@@ -104,9 +141,17 @@ export default function LoginForm() {
 
           <button
             type="submit"
-            className="w-full bg-[#188147] text-white py-3.5 px-4 rounded-[12px] font-semibold hover:bg-[#116937] transition-all duration-200 shadow-sm flex items-center justify-center mb-4"
+            disabled={isSubmitting}
+            className="w-full bg-[#188147] text-white py-3.5 px-4 rounded-[12px] font-semibold hover:bg-[#116937] transition-all duration-200 shadow-sm flex items-center justify-center mb-4 disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            Sign In
+            {isSubmitting ? (
+              <>
+                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                Processing...
+              </>
+            ) : (
+              'Sign In'
+            )}
           </button>
 
           <div className="relative flex items-center justify-center my-6">

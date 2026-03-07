@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Formik, Form, Field } from 'formik';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Loader2 } from 'lucide-react';
+import axios from 'axios';
 import TextInput from './TextInput';
 import DateInput from './DateInput';
 
@@ -9,12 +10,14 @@ interface ChildFormValues {
   childLastName: string;
   birthDate: string;
   gender: string;
+  token?: string;
 }
 
 interface ChildDetailsFormProps {
   onSubmit: (values: ChildFormValues) => void;
   onBack: () => void;
   initialData?: ChildFormValues | null;
+  token?: string;
 }
 
 const childValidationSchema = {
@@ -32,7 +35,7 @@ const childValidationSchema = {
   }
 };
 
-export default function ChildDetailsForm({ onSubmit, onBack, initialData }: ChildDetailsFormProps) {
+export default function ChildDetailsForm({ onSubmit, onBack, initialData, token }: ChildDetailsFormProps) {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const childInitialValues: ChildFormValues = initialData || {
@@ -54,9 +57,48 @@ export default function ChildDetailsForm({ onSubmit, onBack, initialData }: Chil
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (values: ChildFormValues) => {
+  const handleSubmit = async (values: ChildFormValues) => {
     if (validateChildForm(values)) {
-      onSubmit(values);
+      setErrors({});
+      try {
+        let dateOfBirthIso = "";
+        try {
+          dateOfBirthIso = new Date(values.birthDate).toISOString();
+        } catch (e) {
+          dateOfBirthIso = new Date().toISOString(); // Fallback date if parsing fails
+        }
+
+        const payload = {
+          token: token || "",
+          firstName: values.childFirstName,
+          lastName: values.childLastName,
+          dateOfBirth: dateOfBirthIso,
+          gender: values.gender
+        };
+
+        const response = await axios.post('https://rafiq-d2bygkb4bkfrgkd2.germanywestcentral-01.azurewebsites.net/api/FamilyRegistration/step2', payload);
+
+        // Extract the newly generated token from Step 2
+        let receivedToken = response.data?.data?.token || response.data?.token || "";
+
+        if (!receivedToken && response.request?.responseURL) {
+          const url = new URL(response.request.responseURL);
+          receivedToken = url.searchParams.get("token") || "";
+        }
+
+        // Pass this new token along to Step 3
+        onSubmit({ ...values, token: receivedToken || token || "" });
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+          const msg = error.response.data?.message ||
+            error.response.data?.detail ||
+            error.response.data?.title ||
+            (typeof error.response.data === 'string' ? error.response.data : 'Registration failed');
+          setErrors({ api: msg });
+        } else {
+          setErrors({ api: 'An unexpected error occurred. Please try again later.' });
+        }
+      }
     }
   };
 
@@ -76,8 +118,13 @@ export default function ChildDetailsForm({ onSubmit, onBack, initialData }: Chil
       </div>
 
       <Formik initialValues={childInitialValues} onSubmit={handleSubmit}>
-        {() => (
+        {({ isSubmitting }) => (
           <Form className="space-y-4">
+            {errors.api && (
+              <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-[12px]">
+                {errors.api}
+              </div>
+            )}
             <TextInput
               label="Child's First Name *"
               placeholder="Amira"
@@ -117,10 +164,20 @@ export default function ChildDetailsForm({ onSubmit, onBack, initialData }: Chil
 
             <button
               type="submit"
-              className="w-full bg-[#188147] text-white py-3 px-4 rounded-[12px] font-semibold hover:bg-[#116937] transition-colors flex items-center justify-center mt-6"
+              disabled={isSubmitting}
+              className="w-full bg-[#188147] text-white py-3 px-4 rounded-[12px] font-semibold hover:bg-[#116937] transition-colors flex items-center justify-center mt-6 disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              Next
-              <ArrowRight className="w-5 h-5 ml-2" />
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                <>
+                  Next
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </>
+              )}
             </button>
           </Form>
         )}

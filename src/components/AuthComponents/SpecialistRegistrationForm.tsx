@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Formik, Form, Field } from 'formik';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Loader2 } from 'lucide-react';
+import axios from 'axios';
 import EmailInput from './EmailInput';
 import TextInput from './TextInput';
 
@@ -14,6 +15,7 @@ interface SpecialistFormValues {
   organization: string;
   professionalBio: string;
   gender: string;
+  token?: string;
 }
 
 interface SpecialistRegistrationFormProps {
@@ -63,9 +65,40 @@ export default function SpecialistRegistrationForm({ onSubmit, onBack, initialDa
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (values: SpecialistFormValues) => {
+  const handleSubmit = async (values: SpecialistFormValues) => {
     if (validateForm(values)) {
-      onSubmit(values);
+      setErrors({});
+      try {
+        const payload = {
+          firstName: values.firstName,
+          lastName: values.lastName,
+          email: values.email,
+          phone: values.phone,
+          credentials: values.credentials,
+          specialty: values.specialty,
+          organization: values.organization,
+          professionalBio: values.professionalBio,
+          gender: values.gender
+        };
+
+        const response = await axios.post('https://rafiq-d2bygkb4bkfrgkd2.germanywestcentral-01.azurewebsites.net/api/SpecialistRegistration/step1', payload);
+
+        // Extract token from response.data.data.token as per the actual API response
+        const receivedToken = response.data?.data?.token || response.data?.token || "";
+
+        // Advance to next step
+        onSubmit({ ...values, token: receivedToken });
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+          const msg = error.response.data?.message ||
+            error.response.data?.detail ||
+            error.response.data?.title ||
+            (typeof error.response.data === 'string' ? error.response.data : 'Registration failed');
+          setErrors({ api: msg });
+        } else {
+          setErrors({ api: 'An unexpected error occurred. Please try again later.' });
+        }
+      }
     }
   };
 
@@ -85,8 +118,14 @@ export default function SpecialistRegistrationForm({ onSubmit, onBack, initialDa
       </div>
 
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-        {() => (
+        {({ isSubmitting }) => (
           <Form className="space-y-4">
+            {errors.api && (
+              <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-[12px]">
+                {errors.api}
+              </div>
+            )}
+
             <TextInput
               label="First Name *"
               placeholder="Enter your first name"
@@ -161,10 +200,20 @@ export default function SpecialistRegistrationForm({ onSubmit, onBack, initialDa
 
             <button
               type="submit"
-              className="w-full bg-[#188147] text-white py-3 px-4 rounded-[12px] font-semibold hover:bg-[#116937] transition-colors flex items-center justify-center mt-6"
+              disabled={isSubmitting}
+              className="w-full bg-[#188147] text-white py-3 px-4 rounded-[12px] font-semibold hover:bg-[#116937] transition-colors flex items-center justify-center mt-6 disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              Next
-              <ArrowRight className="w-5 h-5 ml-2" />
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                <>
+                  Next
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </>
+              )}
             </button>
           </Form>
         )}
