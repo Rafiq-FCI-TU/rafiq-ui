@@ -6,6 +6,7 @@ import { Loader2 } from 'lucide-react';
 import axios from 'axios';
 import EmailInput from './EmailInput';
 import PasswordInput from './PasswordInput';
+import { useAuth } from '../../contexts/AuthContext';
 
 const validationSchema = {
   email: (value: string) => {
@@ -31,6 +32,7 @@ interface FormValues {
 export default function LoginForm() {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const initialValues: FormValues = {
     email: '',
@@ -64,12 +66,18 @@ export default function LoginForm() {
         const responseData = response.data?.data || response.data;
 
         if (responseData?.isAuthenticated || response.data?.success) {
-          // Store tokens securely (localStorage used here for simplicity)
-          localStorage.setItem('token', responseData.token);
-          localStorage.setItem('refreshToken', responseData.refreshToken);
+          login(responseData, responseData.token, responseData.refreshToken);
 
           console.log('Login success:', response.data);
-          navigate('/dashboard');
+
+          const roles = responseData.roles || [];
+          const hasAssessment = responseData.hasAssessment === true;
+
+          if (roles.includes('Family') && !hasAssessment) {
+            navigate('/assessment');
+          } else {
+            navigate('/dashboard');
+          }
         } else {
           setErrors({ api: 'Login failed' });
         }
@@ -125,7 +133,7 @@ export default function LoginForm() {
           />
 
           {errors.api && (
-            <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-[12px] mt-2">
+            <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl mt-2">
               {errors.api}
             </div>
           )}
@@ -142,7 +150,7 @@ export default function LoginForm() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-[#188147] text-white py-3.5 px-4 rounded-[12px] font-semibold hover:bg-[#116937] transition-all duration-200 shadow-sm flex items-center justify-center mb-4 disabled:opacity-70 disabled:cursor-not-allowed"
+            className="w-full bg-[#188147] text-white py-3.5 px-4 rounded-xl font-semibold hover:bg-[#116937] transition-all duration-200 shadow-sm flex items-center justify-center mb-4 disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {isSubmitting ? (
               <>
@@ -163,7 +171,7 @@ export default function LoginForm() {
             <button
               type="button"
               onClick={() => handleGoogleLogin()}
-              className="flex-1 bg-white border border-gray-200 text-gray-700 py-3 px-4 rounded-[12px] font-semibold text-sm hover:bg-gray-50 transition-all duration-200 flex items-center justify-center shadow-sm"
+              className="flex-1 bg-white border border-gray-200 text-gray-700 py-3 px-4 rounded-xl font-semibold text-sm hover:bg-gray-50 transition-all duration-200 flex items-center justify-center shadow-sm"
             >
               Google
             </button>

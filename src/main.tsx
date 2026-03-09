@@ -7,8 +7,9 @@ import Home from "./pages/Home.tsx";
 import Login from "./pages/Login.tsx";
 import Register from "./pages/Register.tsx";
 import ForgotPassword from "./pages/ForgotPassword.tsx";
+import Assessment from "./pages/Assessment.tsx";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-
+import { AuthProvider } from "./contexts/AuthContext.tsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -32,12 +33,18 @@ const router = createBrowserRouter([
     path: "/forgotPassword",
     element: <ForgotPassword />,
   },
+  {
+    path: "/assessment",
+    element: <Assessment />,
+  },
 ]);
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <GoogleOAuthProvider clientId={"Client_Id"}>
-      <RouterProvider router={router} />
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
     </GoogleOAuthProvider>
   </StrictMode>
 );

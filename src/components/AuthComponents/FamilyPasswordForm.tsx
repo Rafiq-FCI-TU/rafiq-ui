@@ -7,6 +7,7 @@ import PasswordInput from './PasswordInput';
 interface FormValues {
     password: string;
     confirmPassword: string;
+    patientId?: number;
 }
 
 interface FamilyPasswordFormProps {
@@ -59,9 +60,13 @@ export default function FamilyPasswordForm({ onSubmit, onBack, token }: FamilyPa
                     confirmPassword: values.confirmPassword
                 };
 
-                await axios.post('https://rafiq-d2bygkb4bkfrgkd2.germanywestcentral-01.azurewebsites.net/api/FamilyRegistration/step3', payload);
+                const response = await axios.post('https://rafiq-d2bygkb4bkfrgkd2.germanywestcentral-01.azurewebsites.net/api/FamilyRegistration/step3', payload);
 
-                onSubmit(values);
+                console.log("Step 3 Response Body:", response.data);
+
+               const patientId = response.data?.data;
+                console.log("Extracted Patient ID:", patientId);
+                onSubmit({ ...values, patientId });
             } catch (error) {
                 if (axios.isAxiosError(error) && error.response) {
                     const msg = error.response.data?.message ||
@@ -95,7 +100,7 @@ export default function FamilyPasswordForm({ onSubmit, onBack, token }: FamilyPa
                 {({ isSubmitting }) => (
                     <Form className="space-y-4">
                         {errors.api && (
-                            <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-[12px]">
+                            <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl">
                                 {errors.api}
                             </div>
                         )}
@@ -115,7 +120,7 @@ export default function FamilyPasswordForm({ onSubmit, onBack, token }: FamilyPa
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="w-full bg-[#188147] text-white py-3 px-4 rounded-[12px] font-semibold hover:bg-[#116937] transition-colors flex items-center justify-center mt-6 disabled:opacity-70 disabled:cursor-not-allowed"
+                            className="w-full bg-[#188147] text-white py-3 px-4 rounded-xl font-semibold hover:bg-[#116937] transition-colors flex items-center justify-center mt-6 disabled:opacity-70 disabled:cursor-not-allowed"
                         >
                             {isSubmitting ? (
                                 <>
