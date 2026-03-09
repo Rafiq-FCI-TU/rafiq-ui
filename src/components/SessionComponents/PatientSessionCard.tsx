@@ -2,7 +2,7 @@ import type { Session, SessionType } from "../../types/Session";
 import { Lock, Clock, CalendarDays, Video } from "lucide-react";
 import { Link } from "react-router";
 import { format } from "date-fns";
-export default function SessionCard({
+export default function PatientSessionCard({
   session,
   type,
 }: {

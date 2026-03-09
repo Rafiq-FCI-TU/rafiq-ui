@@ -1,7 +1,6 @@
 import type { Session, SessionType } from "../../types/Session";
-import SessionCard from "./SessionCard";
+import SessionCard from "./PatientSessionCard";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import { XCircle, LoaderCircle } from "lucide-react";
 export default function ActiveTab({
   activeTab,
@@ -9,20 +8,18 @@ export default function ActiveTab({
   activeTab: SessionType | "notes";
 }) {
   const { data, error, isPending } = useQuery({
-    queryKey: ["sessions", activeTab],
+    queryKey: ["sessions"],
     queryFn: async () => {
-      const response = await axios.get(
-        `https://rafiq-d2bygkb4bkfrgkd2.germanywestcentral-01.azurewebsites.net/api/Session/patient/6/sessions?status=${activeTab === "not-allowed" ? "not-allowed" : "allowed"}`,
+      const response = await fetch(
+        `https://rafiq-d2bygkb4bkfrgkd2.germanywestcentral-01.azurewebsites.net/api/Session/patient/1/sessions?status=${activeTab === "not-allowed" ? "not-allowed" : "allowed"}`,
       );
-      return response.data;
+      return response.json();
     },
-    // select: (data) => data.data,
   });
-  console.log(data);
-  console.log(error);
+
   return (
     <div
-      className={`p-10 not-md:p-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 relative ${!data && "justify-center items-center min-h-[400px]"}`}
+      className={`p-10 not-md:p-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 relative ${!data?.data && "justify-center items-center min-h-[400px]"}`}
     >
       {isPending ? (
         <div className="col-span-full flex items-center justify-center">
@@ -31,9 +28,11 @@ export default function ActiveTab({
       ) : error ? (
         <div className="col-span-full flex items-center justify-center">
           <XCircle className="text-red-500 size-10" />
-          <span className="text-red-500 ml-2 text-lg font-bold">{error.message}</span>
+          <span className="text-red-500 ml-2 text-lg font-bold">
+            {error.message}
+          </span>
         </div>
-      ) : data?.length !== 0 ? (
+      ) : data.data?.length !== 0 ? (
         data.data?.map((session: Session) => (
           <SessionCard
             key={session.id}
