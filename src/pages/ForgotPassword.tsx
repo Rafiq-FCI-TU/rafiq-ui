@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Loader2 } from 'lucide-react';
 import { Formik, Form } from 'formik';
+import axios from 'axios';
 import AuthHeader from '../components/AuthComponents/AuthHeader';
 import BrandingSection from '../components/AuthComponents/BrandingSection';
 import EmailInput from '../components/AuthComponents/EmailInput';
@@ -12,7 +13,9 @@ export default function ForgotPassword() {
   const navigate = useNavigate();
   const [step, setStep] = useState<'email' | 'otp' | 'reset'>('email');
   const [email, setEmail] = useState('');
+  const [otp, setOtp] = useState('');
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleBackToLogin = () => {
     navigate('/login');
@@ -26,25 +29,68 @@ export default function ForgotPassword() {
     return null;
   };
 
-  const handleEmailSubmit = (values: { email: string }) => {
+  const handleEmailSubmit = async (values: { email: string }) => {
     const emailError = validateEmail(values.email);
     if (emailError) {
       setErrors({ email: emailError });
       return;
     }
 
-    setEmail(values.email);
     setErrors({});
-    setStep('otp');
+    setIsLoading(true);
+
+    try {
+      await axios.post('https://rafiq-d2bygkb4bkfrgkd2.germanywestcentral-01.azurewebsites.net/api/Auth/forgot-password', {
+        email: values.email
+      });
+
+      setEmail(values.email);
+      setStep('otp');
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        const msg = error.response.data?.message ||
+          error.response.data?.detail ||
+          error.response.data?.title ||
+          'Error sending reset link';
+        setErrors({ email: msg });
+      } else {
+        setErrors({ email: 'An unexpected error occurred. Please try again later.' });
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleOtpSubmit = (otpValue: string) => {
+  const handleOtpSubmit = async (otpValue: string) => {
     if (otpValue.length !== 4) {
       setErrors({ otp: 'Please enter the 4-digit code' });
       return;
     }
+
     setErrors({});
-    setStep('reset');
+    setIsLoading(true);
+
+    try {
+      await axios.post('https://rafiq-d2bygkb4bkfrgkd2.germanywestcentral-01.azurewebsites.net/api/Auth/verify-otp', {
+        email: email,
+        otp: otpValue
+      });
+
+      setOtp(otpValue);
+      setStep('reset');
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        const msg = error.response.data?.message ||
+          error.response.data?.detail ||
+          error.response.data?.title ||
+          'Invalid verification code';
+        setErrors({ otp: msg });
+      } else {
+        setErrors({ otp: 'An unexpected error occurred.' });
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const validatePassword = (password: string) => {
@@ -59,7 +105,7 @@ export default function ForgotPassword() {
     return null;
   };
 
-  const handleResetSubmit = (values: { password: string; confirmPassword: string }) => {
+  const handleResetSubmit = async (values: { password: string; confirmPassword: string }) => {
     const newErrors: { [key: string]: string } = {};
 
     const passwordError = validatePassword(values.password);
@@ -73,8 +119,31 @@ export default function ForgotPassword() {
       return;
     }
 
+    setErrors({});
+    setIsLoading(true);
 
-    navigate('/login');
+    try {
+      await axios.post('https://rafiq-d2bygkb4bkfrgkd2.germanywestcentral-01.azurewebsites.net/api/Auth/reset-password', {
+        email: email,
+        otp: otp,
+        newPassword: values.password,
+        confirmPassword: values.confirmPassword
+      });
+
+      navigate('/login');
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        const msg = error.response.data?.message ||
+          error.response.data?.detail ||
+          error.response.data?.title ||
+          'Failed to reset password';
+        setErrors({ api: msg });
+      } else {
+        setErrors({ api: 'An unexpected error occurred.' });
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const getStepTitle = () => {
@@ -116,10 +185,20 @@ export default function ForgotPassword() {
 
                     <button
                       type="submit"
-                      className="w-full bg-[#188147] text-white py-3.5 px-4 rounded-[12px] font-semibold hover:bg-[#116937] transition-all duration-200 shadow-sm flex items-center justify-center mt-6"
+                      disabled={isLoading}
+                      className="w-full bg-[#188147] text-white py-3.5 px-4 rounded-[12px] font-semibold hover:bg-[#116937] transition-all duration-200 shadow-sm flex items-center justify-center mt-6 disabled:opacity-70 disabled:cursor-not-allowed"
                     >
-                      <ArrowRight className="w-5 h-5 ml-2" />
-                      Search
+                      {isLoading ? (
+                        <>
+                          <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                          Processing...
+                        </>
+                      ) : (
+                        <>
+                          Search
+                          <ArrowRight className="w-5 h-5 ml-2" />
+                        </>
+                      )}
                     </button>
                   </Form>
                 )}
@@ -132,6 +211,16 @@ export default function ForgotPassword() {
                   Verification code sent to {email}
                 </div>
 
+                <div className="flex justify-center mb-2">
+                  {isLoading && <Loader2 className="w-6 h-6 animate-spin text-[#188147]" />}
+                </div>
+
+                {errors.otp && (
+                  <div className="text-sm text-red-600 bg-red-50 p-3 rounded-lg border border-red-200 text-center mb-4">
+                    {errors.otp}
+                  </div>
+                )}
+
                 <OtpInput
                   length={4}
                   onComplete={handleOtpSubmit}
@@ -140,7 +229,8 @@ export default function ForgotPassword() {
 
                 <button
                   onClick={() => setStep('email')}
-                  className="w-full text-[#188147] hover:text-[#116937] text-sm font-medium transition-colors"
+                  disabled={isLoading}
+                  className="w-full text-[#188147] hover:text-[#116937] text-sm font-medium transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
                 >
                   Change Email
                 </button>
@@ -154,6 +244,12 @@ export default function ForgotPassword() {
               >
                 {() => (
                   <Form className="space-y-4">
+                    {errors.api && (
+                      <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-[12px] mb-4">
+                        {errors.api}
+                      </div>
+                    )}
+
                     <PasswordInput
                       label="New Password"
                       placeholder="Enter new password"
@@ -170,10 +266,20 @@ export default function ForgotPassword() {
 
                     <button
                       type="submit"
-                      className="w-full bg-[#188147] text-white py-3.5 px-4 rounded-[12px] font-semibold hover:bg-[#116937] transition-all duration-200 shadow-sm flex items-center justify-center mt-6"
+                      disabled={isLoading}
+                      className="w-full bg-[#188147] text-white py-3.5 px-4 rounded-[12px] font-semibold hover:bg-[#116937] transition-all duration-200 shadow-sm flex items-center justify-center mt-6 disabled:opacity-70 disabled:cursor-not-allowed"
                     >
-                      <ArrowRight className="w-5 h-5 ml-2" />
-                      Reset Password
+                      {isLoading ? (
+                        <>
+                          <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                          Processing...
+                        </>
+                      ) : (
+                        <>
+                          Reset Password
+                          <ArrowRight className="w-5 h-5 ml-2" />
+                        </>
+                      )}
                     </button>
                   </Form>
                 )}

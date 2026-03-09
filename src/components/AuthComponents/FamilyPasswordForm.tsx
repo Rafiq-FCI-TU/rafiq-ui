@@ -1,16 +1,19 @@
 import { useState } from 'react';
 import { Formik, Form } from 'formik';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Loader2 } from 'lucide-react';
+import axios from 'axios';
 import PasswordInput from './PasswordInput';
 
 interface FormValues {
     password: string;
     confirmPassword: string;
+    patientId?: number;
 }
 
 interface FamilyPasswordFormProps {
     onSubmit: (values: FormValues) => void;
     onBack: () => void;
+    token?: string;
 }
 
 const validationSchema = {
@@ -26,7 +29,7 @@ const validationSchema = {
     },
 };
 
-export default function FamilyPasswordForm({ onSubmit, onBack }: FamilyPasswordFormProps) {
+export default function FamilyPasswordForm({ onSubmit, onBack, token }: FamilyPasswordFormProps) {
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
     const initialValues: FormValues = {
@@ -47,9 +50,34 @@ export default function FamilyPasswordForm({ onSubmit, onBack }: FamilyPasswordF
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = (values: FormValues) => {
+    const handleSubmit = async (values: FormValues) => {
         if (validateForm(values)) {
-            onSubmit(values);
+            setErrors({});
+            try {
+                const payload = {
+                    token: token || "",
+                    password: values.password,
+                    confirmPassword: values.confirmPassword
+                };
+
+                const response = await axios.post('https://rafiq-d2bygkb4bkfrgkd2.germanywestcentral-01.azurewebsites.net/api/FamilyRegistration/step3', payload);
+
+                console.log("Step 3 Response Body:", response.data);
+
+               const patientId = response.data?.data;
+                console.log("Extracted Patient ID:", patientId);
+                onSubmit({ ...values, patientId });
+            } catch (error) {
+                if (axios.isAxiosError(error) && error.response) {
+                    const msg = error.response.data?.message ||
+                        error.response.data?.detail ||
+                        error.response.data?.title ||
+                        (typeof error.response.data === 'string' ? error.response.data : 'Registration failed');
+                    setErrors({ api: msg });
+                } else {
+                    setErrors({ api: 'An unexpected error occurred. Please try again later.' });
+                }
+            }
         }
     };
 
@@ -69,8 +97,13 @@ export default function FamilyPasswordForm({ onSubmit, onBack }: FamilyPasswordF
             </div>
 
             <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-                {() => (
+                {({ isSubmitting }) => (
                     <Form className="space-y-4">
+                        {errors.api && (
+                            <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl">
+                                {errors.api}
+                            </div>
+                        )}
                         <PasswordInput
                             label="Password"
                             placeholder="Create a strong password"
@@ -86,10 +119,20 @@ export default function FamilyPasswordForm({ onSubmit, onBack }: FamilyPasswordF
 
                         <button
                             type="submit"
-                            className="w-full bg-[#188147] text-white py-3 px-4 rounded-[12px] font-semibold hover:bg-[#116937] transition-colors flex items-center justify-center mt-6"
+                            disabled={isSubmitting}
+                            className="w-full bg-[#188147] text-white py-3 px-4 rounded-xl font-semibold hover:bg-[#116937] transition-colors flex items-center justify-center mt-6 disabled:opacity-70 disabled:cursor-not-allowed"
                         >
-                            Continue to Assessment
-                            <ArrowRight className="w-5 h-5 ml-2" />
+                            {isSubmitting ? (
+                                <>
+                                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                                    Processing...
+                                </>
+                            ) : (
+                                <>
+                                    Continue to Assessment
+                                    <ArrowRight className="w-5 h-5 ml-2" />
+                                </>
+                            )}
                         </button>
                     </Form>
                 )}
