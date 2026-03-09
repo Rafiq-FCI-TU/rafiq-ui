@@ -4,11 +4,12 @@ import type { Session } from "../../types/Session";
 import { LoaderCircle, Video, XCircle } from "lucide-react";
 import SpecialistSessionCard from "./SpecialistSessionCard";
 export default function SpecialistSessions() {
+  const specialistId = "e5c04f7c-0982-4b7a-9295-7c5313b2f0fb";
   const { data, isPending, error } = useQuery({
     queryKey: ["sessions"],
     queryFn: () =>
       fetch(
-        `https://rafiq-d2bygkb4bkfrgkd2.germanywestcentral-01.azurewebsites.net/api/Session/specialist/${"e5c04f7c-0982-4b7a-9295-7c5313b2f0fb"}`,
+        `https://rafiq-d2bygkb4bkfrgkd2.germanywestcentral-01.azurewebsites.net/api/Session/specialist/${specialistId}`,
       ).then((res) => res.json()),
   });
   return (
