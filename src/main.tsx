@@ -13,16 +13,27 @@ import Sessions from "./pages/Sessions.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./contexts/AuthContext.tsx";
 import Session from "./pages/Session.tsx";
+import ProtectedRoute from "./routes/ProtectedRoute.tsx";
+import PublicRoute from "./routes/PublicRoute.tsx";
+
 const router = createBrowserRouter([
   {
     path: "/",
     children: [
       {
         index: true,
-        element: <Home />,
+        element: (
+          <PublicRoute>
+            <Home />
+          </PublicRoute>
+        ),
       },
       {
-        element: <Layout />,
+        element: (
+          <ProtectedRoute>
+          <Layout />
+        </ProtectedRoute>
+        ),
         children: [
           {
             path: "sessions",
@@ -38,19 +49,35 @@ const router = createBrowserRouter([
   },
   {
     path: "/login",
-    element: <Login />,
+    element: (
+      <PublicRoute>
+        <Login />
+      </PublicRoute>
+    ),
   },
   {
     path: "/register",
-    element: <Register />,
+    element: (
+      <PublicRoute>
+        <Register />
+      </PublicRoute>
+    ),
   },
   {
     path: "/forgotPassword",
-    element: <ForgotPassword />,
+    element: (
+      <PublicRoute>
+        <ForgotPassword />
+      </PublicRoute>
+    ),
   },
   {
     path: "/assessment",
-    element: <Assessment />,
+    element: (
+      <ProtectedRoute>
+        <Assessment />
+      </ProtectedRoute>
+    ),
   },
 ]);
 
