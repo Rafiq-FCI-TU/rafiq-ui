@@ -9,6 +9,8 @@ export default function ActiveTab({
 }) {
   const { data, error, isPending } = useQuery({
     queryKey: ["sessions"],
+    staleTime: 0,
+    gcTime: 0,
     queryFn: async () => {
       const response = await fetch(
         `https://rafiq-d2bygkb4bkfrgkd2.germanywestcentral-01.azurewebsites.net/api/Session/patient/1/sessions?status=${activeTab === "not-allowed" ? "not-allowed" : "allowed"}`,
@@ -32,29 +34,31 @@ export default function ActiveTab({
             {error.message}
           </span>
         </div>
-      ) : data.data?.length !== 0 ? (
-        data.data?.map((session: Session) => (
-          <SessionCard
-            key={session.id}
-            session={session}
-            type={activeTab === "notes" ? "allowed" : activeTab}
-          />
-        ))
-      ) : (
-        <div className="col-span-full flex items-center justify-center">
-          <div className="text-center">
-            <div className="text-6xl mb-4">📭</div>
-            <h3 className="text-xl font-semibold text-gray-700 mb-2">
-              No sessions found
-            </h3>
-            <p className="text-gray-500">
-              {activeTab === "not-allowed"
-                ? "You don't have any upcoming sessions yet."
-                : "You don't have any available sessions yet."}
-            </p>
+      ) : 
+        !data?.success &&
+        data?.message === "No sessions found" ? (
+          <div className="col-span-full flex items-center justify-center">
+            <div className="text-center">
+              <div className="text-6xl mb-4">📭</div>
+              <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                No sessions found
+              </h3>
+              <p className="text-gray-500">
+                {activeTab === "not-allowed"
+                  ? "You don't have any upcoming sessions yet."
+                  : "You don't have any available sessions yet."}
+              </p>
+            </div>
           </div>
-        </div>
-      )}
+        ) : (
+          data?.data?.map((session: Session) => (
+            <SessionCard
+              key={session.id}
+              session={session}
+              type={activeTab === "notes" ? "allowed" : activeTab}
+            />
+          ))
+        )}
     </div>
   );
 }

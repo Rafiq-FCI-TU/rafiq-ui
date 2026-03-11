@@ -28,6 +28,7 @@ export default function PatientSessions() {
   ]);
   const { data, isPending } = useQuery({
     queryKey: ["sessions"],
+    staleTime: 0,
     queryFn: async () => {
       const response = await fetch(
         `https://rafiq-d2bygkb4bkfrgkd2.germanywestcentral-01.azurewebsites.net/api/Session/patient/1/sessions?status=not-allowed`,
@@ -42,7 +43,7 @@ export default function PatientSessions() {
         <LoaderCircle className="animate-spin size-20 text-primary" />
       </main>
     );
-  } else if (!data.success) {
+  } else if (!data.success && data.message === "No sessions found. Please select a specialist first.") {
     return (
       <div className="flex justify-center items-center p-10">
         <div className="max-w-xl w-full bg-white rounded-3xl border border-primary/20 shadow-sm p-12 flex flex-col items-center text-center">

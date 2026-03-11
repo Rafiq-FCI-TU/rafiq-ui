@@ -7,6 +7,7 @@ export default function SpecialistSessions() {
   const specialistId = "e5c04f7c-0982-4b7a-9295-7c5313b2f0fb";
   const { data, isPending, error } = useQuery({
     queryKey: ["sessions"],
+    staleTime:  0,
     queryFn: () =>
       fetch(
         `https://rafiq-d2bygkb4bkfrgkd2.germanywestcentral-01.azurewebsites.net/api/Session/specialist/${specialistId}`,
@@ -30,7 +31,7 @@ export default function SpecialistSessions() {
             {error.message}
           </span>
         </div>
-      ) : data.data.length === 0 ? (
+      ) : data?.data?.length === 0 ? (
         <div className="h-[calc(100vh-300px)] flex items-center justify-center">
           <div className="text-center">
             <div className="text-6xl mb-4">📭</div>
