@@ -10,7 +10,7 @@ export default function PatientSessionCard({
   type: SessionType;
 }) {
   return (
-    <div className="flex flex-col hover:scale-102 transition-all shadow-md border border-gray-200 rounded-3xl">
+    <div className="flex flex-col  hover:scale-102 transition-all shadow-md border border-gray-200 rounded-3xl">
       <div className="relative">
         <img
           className="w-full object-cover aspect-video rounded-t-3xl"
@@ -36,7 +36,7 @@ export default function PatientSessionCard({
           </span>
         )}
       </div>
-      <div className="p-5 space-y-5">
+      <div className="p-5 flex flex-col justify-between h-full gap-5">
         <h3 className="font-semibold text-lg">{session.title}</h3>
         <p className="text-md text-gray-600">{session.description}</p>
         <p className="text-md text-gray-500 flex items-center gap-2 border-t border-gray-200 pt-2">

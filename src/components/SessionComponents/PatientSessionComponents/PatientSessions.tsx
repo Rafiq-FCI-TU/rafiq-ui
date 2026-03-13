@@ -87,7 +87,7 @@ export default function PatientSessions() {
               <li className="flex items-start gap-4">
                 <CheckCircle2 className="w-6 h-6 text-primary shrink-0 mt-0.5" />
                 <span className="text-gray-700 font-medium">
-                  Track progress with points and unlockable content
+                  Track progress with points and unlocked content
                 </span>
               </li>
             </ul>
@@ -105,7 +105,7 @@ export default function PatientSessions() {
   } else {
     return (
       <main>
-        <section className="p-10 not-md:p-2 border-b border-gray-200 shadow-md">
+        <section className="p-10 not-md:p-2 border-b border-gray-200 shadow-md bg-white">
           <div className="flex justify-between items-start  mb-6">
             <div className="space-y-4 max-w-lg not-sm:flex-2  flex-4">
               <h1 className="text-4xl font-bold">
@@ -116,7 +116,7 @@ export default function PatientSessions() {
                 review clinical feedback directly from your doctor.
               </p>
             </div>
-            <div className="border-3 border-white shadow-xl shadow-green-100 rounded-2xl px-4 py-3 not-md:p-2  flex items-center text-center gap-4 not-md:flex-col not-md:flex-1">
+            <div className="border-3 border-white shadow-xl shadow-green-100 rounded-2xl px-4 py-3 not-md:p-2  flex items-center text-center gap-4 not-md:flex-col not-md:flex-0.5">
               <Star className="size-12 text-yellow-400 fill-yellow-400" />
               <div>
                 <div className="text-sm font-extrabold text-primary uppercase tracking-wide">

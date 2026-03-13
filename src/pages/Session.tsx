@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 
 export default function Session() {
-  const role: "patient" | "specialist" = "patient";
+  const [role] = useState<"patient" | "specialist">("specialist");
   const { sessionId } = useParams();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
