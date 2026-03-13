@@ -9,10 +9,12 @@ export interface Session {
   publishedAt: string;
   thumbnailUrl: string;
   specialistProfileId: string;
+  specialistName?: string;
+  notes?: string;
 }
 
 export interface Tab {
-  name: "Upcoming Sessions" | "Recordings" | "Clinical Notes";
+  name: "Upcoming Sessions" | "Available Sessions" | "Clinical Notes";
   active: boolean;
   icon: React.ReactNode;
   type: SessionType | "notes";

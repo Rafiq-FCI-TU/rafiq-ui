@@ -1,12 +1,9 @@
-import { useState } from "react";
-import PatientSessions from "../components/SessionComponents/PatientSessions";
-import SpecialistSessions from "../components/SessionComponents/SpecialistSession";
+import PatientSessions from "../components/SessionComponents/PatientSessionComponents/PatientSessions";
+import SpecialistSessions from "../components/SessionComponents/SpecialistSessionComponents/SpecialistSessions";
 export default function Sessions() {
-  const [role, setRole] = useState<"patient" | "specialist">("patient");
-
+  const role: "patient" | "specialist" = "specialist";
   if (role === "specialist") {
     return <SpecialistSessions />;
-    setRole("patient");
   } else {
     return <PatientSessions />;
   }

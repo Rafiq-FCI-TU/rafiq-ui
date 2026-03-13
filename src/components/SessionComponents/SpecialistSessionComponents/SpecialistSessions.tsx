@@ -1,24 +1,29 @@
+import type { Session } from "../../../types/Session";
 import { useQuery } from "@tanstack/react-query";
-import UploadSession from "./UploadSession";
-import type { Session } from "../../types/Session";
 import { LoaderCircle, Video, XCircle } from "lucide-react";
 import SpecialistSessionCard from "./SpecialistSessionCard";
+import UploadSession from "./UploadSession";
 export default function SpecialistSessions() {
   const specialistId = "e5c04f7c-0982-4b7a-9295-7c5313b2f0fb";
   const { data, isPending, error } = useQuery({
-    queryKey: ["sessions"],
-    staleTime:  0,
+    queryKey: ["SpecialistSessions"],
+    staleTime: 0,
     queryFn: () =>
       fetch(
         `https://rafiq-d2bygkb4bkfrgkd2.germanywestcentral-01.azurewebsites.net/api/Session/specialist/${specialistId}`,
       ).then((res) => res.json()),
   });
   return (
-    <main className="p-10 not-md:p-2 flex flex-col gap-4">
-      <UploadSession />
-      <h2 className="text-xl font-semibold flex items-center gap-2">
-        <Video className="text-primary" /> Uploaded Sessions
-      </h2>
+    <main className="p-10 not-md:p-5 flex flex-col gap-4">
+      <UploadSession specialistId={specialistId} />
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-semibold flex items-center gap-2">
+          <Video className="text-primary" /> Uploaded Sessions
+        </h2>
+        <span className="text-xs bg-gray-100 px-2 py-1 rounded-full text-gray-500">
+          {data?.data?.length || 0} Sessions
+        </span>
+      </div>
 
       {isPending ? (
         <div className="h-[calc(100vh-300px)] flex items-center justify-center">

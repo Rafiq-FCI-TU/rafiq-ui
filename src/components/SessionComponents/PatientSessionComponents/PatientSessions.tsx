@@ -1,33 +1,35 @@
 import { useQuery } from "@tanstack/react-query";
-import { CalendarDays, Video, MessageCircle, LoaderCircle, Stethoscope, CheckCircle2, Star } from "lucide-react";
+import {
+  CalendarDays,
+  Video,
+  LoaderCircle,
+  Stethoscope,
+  CheckCircle2,
+  Star,
+} from "lucide-react";
 import { useState } from "react";
-import type { Tab } from "../../types/Session";
+import type { Tab } from "../../../types/Session";
 import ActiveTab from "./ActiveTab";
 import TapButton from "./TapButton";
+import { Link } from "react-router";
 
 export default function PatientSessions() {
   const [tabs, setTabs] = useState<Tab[]>([
     {
       name: "Upcoming Sessions",
       active: true,
-      icon: <CalendarDays className="size-5 not-sm:hidden" />,
+      icon: <CalendarDays className="size-5 not-sm:size-4" />,
       type: "not-allowed",
     },
     {
-      name: "Recordings",
+      name: "Available Sessions",
       active: false,
-      icon: <Video className="size-5 not-sm:hidden" />,
+      icon: <Video className="size-5 not-sm:size-4" />,
       type: "allowed",
-    },
-    {
-      name: "Clinical Notes",
-      active: false,
-      icon: <MessageCircle className="size-5 not-sm:hidden" />,
-      type: "notes",
     },
   ]);
   const { data, isPending } = useQuery({
-    queryKey: ["sessions"],
+    queryKey: ["PatientSessions"],
     staleTime: 0,
     queryFn: async () => {
       const response = await fetch(
@@ -36,14 +38,16 @@ export default function PatientSessions() {
       return response.json();
     },
   });
-  console.log(data);
   if (isPending) {
     return (
       <main className="min-h-screen flex items-center justify-center">
         <LoaderCircle className="animate-spin size-20 text-primary" />
       </main>
     );
-  } else if (!data.success && data.message === "No sessions found. Please select a specialist first.") {
+  } else if (
+    !data.success &&
+    data.message === "No sessions found. Please select a specialist first."
+  ) {
     return (
       <div className="flex justify-center items-center p-10">
         <div className="max-w-xl w-full bg-white rounded-3xl border border-primary/20 shadow-sm p-12 flex flex-col items-center text-center">
@@ -88,10 +92,13 @@ export default function PatientSessions() {
               </li>
             </ul>
           </div>
-          <button className="bg-primary text-white px-8 py-4 rounded-xl font-bold flex items-center gap-3 hover:bg-primary/90 transition-all shadow-lg shadow-primary/20">
+          <Link
+            to={"/doctor"}
+            className="bg-primary text-white px-8 py-4 rounded-xl font-bold flex items-center gap-3 hover:scale-105 transition-all shadow-lg shadow-primary/20"
+          >
             <Stethoscope className="w-5 h-5" />
             Book Your Doctor Now
-          </button>
+          </Link>
         </div>
       </div>
     );
@@ -122,7 +129,7 @@ export default function PatientSessions() {
             </div>
           </div>
 
-          <div className="flex items-center gap-4 not-sm:gap-1 bg-white rounded-full shadow-sm border border-gray-200 p-4 not-sm:p-2 mb-6">
+          <div className="flex w-fit items-center gap-4 not-sm:gap-1 bg-white rounded-full shadow-sm border border-gray-200 p-4 not-sm:p-2 mb-6">
             {tabs.map((tab) => (
               <TapButton key={tab.name} tab={tab} setTabs={setTabs} />
             ))}

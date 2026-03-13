@@ -1,5 +1,5 @@
 import { CalendarDays } from "lucide-react";
-import type { Session } from "../../types/Session";
+import type { Session } from "../../../types/Session";
 import { format } from "date-fns";
 import { Link } from "react-router";
 
@@ -11,7 +11,7 @@ export default function SpecialistSessionCard({
   return (
     <Link
       to={`/sessions/${session.id}`}
-      className="flex not-md:flex-col gap-5 shadow-md border hover:scale-105 transition-all border-gray-200 rounded-2xl p-4"
+      className="flex not-md:flex-col gap-5 shadow-md border hover:scale-102 transition-all border-gray-200 rounded-2xl p-4"
     >
       <img
         src={session.thumbnailUrl || "cards.png"}
@@ -22,7 +22,7 @@ export default function SpecialistSessionCard({
         <h3 className="text-lg font-semibold">{session.title}</h3>
         <p className="text-sm text-gray-600">{session.description}</p>
         <span className="text-xs w-fit text-gray-500 flex items-center justify-between gap-2 bg-gray-100 px-2 py-1 rounded-full">
-          <CalendarDays className="size-4" />{" "}
+          <CalendarDays className="size-4" /> Uploaded:{" "}
           {format(new Date(session.publishedAt), "MMMM d, yyyy")}
         </span>
       </div>
