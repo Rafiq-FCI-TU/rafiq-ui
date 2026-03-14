@@ -12,8 +12,9 @@ import type { Tab } from "../../../types/Session";
 import ActiveTab from "./ActiveTab";
 import TapButton from "./TapButton";
 import { Link } from "react-router";
-
+import { useAuth } from "../../../contexts/AuthContext";
 export default function PatientSessions() {
+  const { user } = useAuth();
   const [tabs, setTabs] = useState<Tab[]>([
     {
       name: "Upcoming Sessions",
@@ -29,18 +30,20 @@ export default function PatientSessions() {
     },
   ]);
   const { data, isPending } = useQuery({
-    queryKey: ["PatientSessions"],
+    queryKey: ["PatientSessions", user?.patientid],
     staleTime: 0,
     queryFn: async () => {
       const response = await fetch(
-        `https://rafiq-d2bygkb4bkfrgkd2.germanywestcentral-01.azurewebsites.net/api/Session/patient/1/sessions?status=not-allowed`,
+        `https://rafiq-d2bygkb4bkfrgkd2.germanywestcentral-01.azurewebsites.net/api/Session/patient/${
+          user?.patientid
+        }/sessions?status=not-allowed`,
       );
       return response.json();
     },
   });
   if (isPending) {
     return (
-      <main className="min-h-screen flex items-center justify-center">
+      <main className="h-[calc(100vh-150px)] flex items-center justify-center">
         <LoaderCircle className="animate-spin size-20 text-primary" />
       </main>
     );
@@ -93,11 +96,11 @@ export default function PatientSessions() {
             </ul>
           </div>
           <Link
-            to={"/doctor"}
-            className="bg-primary text-white px-8 py-4 rounded-xl font-bold flex items-center gap-3 hover:scale-105 transition-all shadow-lg shadow-primary/20"
+            to={"/specialist"}
+            className="bg-linear-to-r from-primary-dark to-primary text-white px-8 py-4 rounded-xl font-bold flex items-center gap-3 hover:scale-105 transition-all shadow-lg shadow-primary/20"
           >
             <Stethoscope className="w-5 h-5" />
-            Book Your Doctor Now
+            Book Your Specialist Now
           </Link>
         </div>
       </div>
@@ -108,8 +111,8 @@ export default function PatientSessions() {
         <section className="p-10 not-md:p-2 border-b border-gray-200 shadow-md bg-white">
           <div className="flex justify-between items-start  mb-6">
             <div className="space-y-4 max-w-lg not-sm:flex-2  flex-4">
-              <h1 className="text-4xl font-bold">
-                Emma's <span className="text-primary">Therapy Sessions</span>
+              <h1 className="text-4xl font-bold text-primary">
+                Therapy Sessions
               </h1>
               <p className="text-gray-600 text-lg max-w-2xl">
                 Track your child's progress, record prescribed exercises, and

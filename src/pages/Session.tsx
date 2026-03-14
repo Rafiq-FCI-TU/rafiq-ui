@@ -9,11 +9,13 @@ import {
   UploadCloud,
   XCircle,
 } from "lucide-react";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Session() {
-  const [role] = useState<"patient" | "specialist">("specialist");
+  const { user } = useAuth();
   const { sessionId } = useParams();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const isFamily: boolean = user?.roles?.includes("Family") ?? false;
 
   const { data, isPending, error } = useQuery({
     queryKey: ["session", sessionId],
@@ -33,7 +35,7 @@ export default function Session() {
 
   if (isPending) {
     return (
-      <main className="h-[calc(100vh-300px)] flex items-center justify-center">
+      <main className="h-[calc(100vh-150px)] flex items-center justify-center">
         <LoaderCircle className="animate-spin size-16 text-primary" />
       </main>
     );
@@ -41,7 +43,7 @@ export default function Session() {
 
   if (error || !data?.data) {
     return (
-      <main className="h-[calc(100vh-300px)] flex items-center justify-center px-4">
+      <main className="h-[calc(100vh-150px)] flex items-center justify-center px-4">
         <div className="max-w-md w-full bg-white rounded-3xl shadow-lg border border-red-100 p-8 text-center space-y-4">
           <div className="flex justify-center">
             <XCircle className="size-12 text-red-500" />
@@ -121,7 +123,7 @@ export default function Session() {
           </div>
         </div>
       </section>
-      {role === "patient" && (
+      {isFamily && (
         <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
             <div className="lg:col-span-2 bg-white rounded-3xl shadow-md border border-gray-100 p-6 sm:p-9">

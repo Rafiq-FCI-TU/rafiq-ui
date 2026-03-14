@@ -1,14 +1,10 @@
-import {
-  Upload,
-  FileVideo,
-  ImageIcon,
-  Loader2,
-} from "lucide-react";
+import { Upload, FileVideo, ImageIcon, Loader2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage, type FormikHelpers } from "formik";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import * as Yup from "yup";
+import { useAuth } from "../../../contexts/AuthContext";
 const validationSchema = Yup.object().shape({
   title: Yup.string().required("Title is required"),
   description: Yup.string().required("Description is required"),
@@ -17,11 +13,8 @@ const validationSchema = Yup.object().shape({
   thumbnail: Yup.mixed().required("Thumbnail is required"),
   score: Yup.number().min(0).max(100).required(),
 });
-export default function UploadSession({
-  specialistId,
-}: {
-  specialistId: string;
-}) {
+export default function UploadSession() {
+  const { user } = useAuth();
   const [uploadFormToggle, setUploadFormToggle] = useState<boolean>(false);
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -51,11 +44,10 @@ export default function UploadSession({
     title: "",
     description: "",
     notes: "",
-    sequence: 0,
     media: null as File | null,
     thumbnail: null as File | null,
     score: 0,
-    specialistId: specialistId,
+    specialistId: user?.id || "",
   };
   const handleSubmit = async (
     values: typeof initialValues,
@@ -65,7 +57,6 @@ export default function UploadSession({
     formData.append("title", values.title);
     formData.append("description", values.description);
     formData.append("notes", values.notes);
-    formData.append("sequence", values.sequence.toString());
     formData.append("media", values.media as File);
     formData.append("thumbnail", values.thumbnail as File);
     formData.append("score", values.score.toString());

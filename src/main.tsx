@@ -1,7 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import Layout from "./layouts/AppLayout.tsx";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import Home from "./pages/Home.tsx";
 import Login from "./pages/Login.tsx";
@@ -15,6 +14,7 @@ import { AuthProvider } from "./contexts/AuthContext.tsx";
 import Session from "./pages/Session.tsx";
 import ProtectedRoute from "./routes/ProtectedRoute.tsx";
 import PublicRoute from "./routes/PublicRoute.tsx";
+import AppLayout from "./layouts/AppLayout.tsx";
 
 const router = createBrowserRouter([
   {
@@ -30,10 +30,12 @@ const router = createBrowserRouter([
       },
       {
         element: (
-
-          <Layout />
+          <ProtectedRoute>
+            <AppLayout />
+          </ProtectedRoute>
         ),
         children: [
+          { path: "dashboard", element: <h1>dashboard</h1> },
           {
             path: "sessions",
             element: <Sessions />,

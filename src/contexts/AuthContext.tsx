@@ -7,7 +7,7 @@ export interface User {
     roles: string[];
     hasAssessment: boolean;
     assessmentId: string | null;
-    patientid?: string | null;
+    patientid?: number | null;
     isAuthenticated: boolean;
 }
 
