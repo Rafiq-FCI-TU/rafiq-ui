@@ -64,9 +64,13 @@ export default function FamilyPasswordForm({ onSubmit, onBack, token }: FamilyPa
 
                 console.log("Step 3 Response Body:", response.data);
 
-               const patientId = response.data?.data;
-                console.log("Extracted Patient ID:", patientId);
-                onSubmit({ ...values, patientId });
+                if (response.data?.success) {
+                    const patientId = response.data?.data?.patientId;
+                    console.log("Extracted Patient ID:", patientId);
+                    onSubmit({ ...values, patientId });
+                } else {
+                    setErrors({ api: response.data?.message || 'Registration failed' });
+                }
             } catch (error) {
                 if (axios.isAxiosError(error) && error.response) {
                     const msg = error.response.data?.message ||

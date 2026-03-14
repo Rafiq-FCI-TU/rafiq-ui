@@ -62,24 +62,29 @@ export default function LoginForm() {
           password: values.password,
         });
 
-        // The API returns { success: true, message: "OK", data: { isAuthenticated: true, token: "...", refreshToken: "..." } }
-        const responseData = response.data?.data || response.data;
+        const responseBody = response.data;
 
-        if (responseData?.isAuthenticated || response.data?.success) {
-          login(responseData, responseData.token, responseData.refreshToken);
+        if (responseBody?.success && responseBody?.data) {
+          const responseData = responseBody.data;
+          
+          if (responseData.isAuthenticated) {
+            login(responseData, responseData.token, responseData.refreshToken);
 
-          console.log('Login success:', response.data);
+            console.log('Login success:', responseBody);
 
-          const roles = responseData.roles || [];
-          const hasAssessment = responseData.hasAssessment === true;
+            const roles = responseData.roles || [];
+            const hasAssessment = responseData.hasAssessment === true;
 
-          if (roles.includes('Family') && !hasAssessment) {
-            navigate('/assessment');
+            if (roles.includes('Family') && !hasAssessment) {
+              navigate('/assessment');
+            } else {
+              navigate('/dashboard');
+            }
           } else {
-            navigate('/dashboard');
+            setErrors({ api: responseBody.message || 'Authentication failed' });
           }
         } else {
-          setErrors({ api: 'Login failed' });
+          setErrors({ api: responseBody?.message || 'Login failed' });
         }
       } catch (error) {
         if (axios.isAxiosError(error) && error.response) {

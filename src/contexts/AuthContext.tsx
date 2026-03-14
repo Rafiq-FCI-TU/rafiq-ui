@@ -1,12 +1,13 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
 export interface User {
-    id: number;
+    id: string;
     username: string;
     email: string;
     roles: string[];
     hasAssessment: boolean;
-    assessmentId: number | null;
+    assessmentId: string | null;
+    patientid?: string | null;
     isAuthenticated: boolean;
 }
 
@@ -50,6 +51,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             roles: userData.roles || [],
             hasAssessment: userData.hasAssessment || false,
             assessmentId: userData.assessmentId || null,
+            patientid: userData.patientid || null,
             isAuthenticated: true
         };
 

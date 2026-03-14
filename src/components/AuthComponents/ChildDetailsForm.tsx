@@ -78,16 +78,15 @@ export default function ChildDetailsForm({ onSubmit, onBack, initialData, token 
 
         const response = await axios.post('https://rafiq-d2bygkb4bkfrgkd2.germanywestcentral-01.azurewebsites.net/api/FamilyRegistration/step2', payload);
 
-        // Extract the newly generated token from Step 2
-        let receivedToken = response.data?.data?.token || response.data?.token || "";
-
-        if (!receivedToken && response.request?.responseURL) {
-          const url = new URL(response.request.responseURL);
-          receivedToken = url.searchParams.get("token") || "";
+        if (response.data?.success) {
+          // Extract the newly generated token from Step 2
+          const receivedToken = response.data?.data?.token || "";
+          
+          // Pass this new token along to Step 3
+          onSubmit({ ...values, token: receivedToken || token || "" });
+        } else {
+          setErrors({ api: response.data?.message || 'Registration failed' });
         }
-
-        // Pass this new token along to Step 3
-        onSubmit({ ...values, token: receivedToken || token || "" });
       } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
           const msg = error.response.data?.message ||

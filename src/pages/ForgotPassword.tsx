@@ -40,12 +40,16 @@ export default function ForgotPassword() {
     setIsLoading(true);
 
     try {
-      await axios.post('https://rafiq-d2bygkb4bkfrgkd2.germanywestcentral-01.azurewebsites.net/api/Auth/forgot-password', {
+      const response = await axios.post('https://rafiq-d2bygkb4bkfrgkd2.germanywestcentral-01.azurewebsites.net/api/Auth/forgot-password', {
         email: values.email
       });
 
-      setEmail(values.email);
-      setStep('otp');
+      if (response.data?.success) {
+        setEmail(values.email);
+        setStep('otp');
+      } else {
+        setErrors({ email: response.data?.message || 'Error sending reset link' });
+      }
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         const msg = error.response.data?.message ||
@@ -62,8 +66,8 @@ export default function ForgotPassword() {
   };
 
   const handleOtpSubmit = async (otpValue: string) => {
-    if (otpValue.length !== 4) {
-      setErrors({ otp: 'Please enter the 4-digit code' });
+    if (otpValue.length !== 6) {
+      setErrors({ otp: 'Please enter the 6-digit code' });
       return;
     }
 
@@ -71,13 +75,17 @@ export default function ForgotPassword() {
     setIsLoading(true);
 
     try {
-      await axios.post('https://rafiq-d2bygkb4bkfrgkd2.germanywestcentral-01.azurewebsites.net/api/Auth/verify-otp', {
+      const response = await axios.post('https://rafiq-d2bygkb4bkfrgkd2.germanywestcentral-01.azurewebsites.net/api/Auth/verify-otp', {
         email: email,
         otp: otpValue
       });
 
-      setOtp(otpValue);
-      setStep('reset');
+      if (response.data?.success) {
+        setOtp(otpValue);
+        setStep('reset');
+      } else {
+        setErrors({ otp: response.data?.message || 'Invalid verification code' });
+      }
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         const msg = error.response.data?.message ||
@@ -123,14 +131,18 @@ export default function ForgotPassword() {
     setIsLoading(true);
 
     try {
-      await axios.post('https://rafiq-d2bygkb4bkfrgkd2.germanywestcentral-01.azurewebsites.net/api/Auth/reset-password', {
+      const response = await axios.post('https://rafiq-d2bygkb4bkfrgkd2.germanywestcentral-01.azurewebsites.net/api/Auth/reset-password', {
         email: email,
         otp: otp,
         newPassword: values.password,
         confirmPassword: values.confirmPassword
       });
 
-      navigate('/login');
+      if (response.data?.success) {
+        navigate('/login');
+      } else {
+        setErrors({ api: response.data?.message || 'Failed to reset password' });
+      }
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         const msg = error.response.data?.message ||
@@ -222,7 +234,7 @@ export default function ForgotPassword() {
                 )}
 
                 <OtpInput
-                  length={4}
+                  length={6}
                   onComplete={handleOtpSubmit}
                   error={errors.otp}
                 />
