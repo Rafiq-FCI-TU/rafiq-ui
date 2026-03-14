@@ -6,7 +6,7 @@ export interface User {
     email: string;
     roles: string[];
     hasAssessment: boolean;
-    assessmentId: string | null;
+    assessmentId: number | null;
     patientid?: number | null;
     isAuthenticated: boolean;
 }
@@ -50,7 +50,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             email: userData.email,
             roles: userData.roles || [],
             hasAssessment: userData.hasAssessment || false,
-            assessmentId: userData.assessmentId || null,
+            assessmentId: userData.assessmentId ? userData.assessmentId : null,
             patientid: userData.patientid || null,
             isAuthenticated: true
         };

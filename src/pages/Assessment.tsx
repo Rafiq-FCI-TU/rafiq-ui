@@ -55,7 +55,8 @@ export default function Assessment() {
                     <AssessmentQuestionnaire
                         onSubmit={handleAssessmentComplete}
                         onBack={handleBack}
-                        initialAssessmentId={user.id}
+                        patientId={user.patientid}
+                        initialAssessmentId={user.assessmentId}
                     />
                 </div>
             </div>
