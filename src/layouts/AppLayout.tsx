@@ -108,7 +108,7 @@ export default function AppLayout() {
       <div className="lg:ml-64">
         {/* Navbar */}
         <header className="bg-white/80 backdrop-blur-md sticky top-0 z-30 border-b border-gray-100 shadow-sm">
-          <div className="px-6 py-[13.8px]">
+          <div className="px-6 py-[13.74px]">
             <div className="flex items-center lg:justify-end justify-between gap-4">
               <button
                 onClick={() => setSidebarOpen(true)}
@@ -118,7 +118,7 @@ export default function AppLayout() {
               </button>
 
               <div className="flex items-center gap-3 ">
-                <button className="relative p-2.5 text-gray-500 hover:bg-gray-50 rounded-xl transition-all group">
+                <button className="relative p-2.5 cursor-pointer text-gray-500 hover:bg-gray-50 rounded-xl transition-all group">
                   <Bell className="w-5 h-5 group-hover:rotate-12 transition-transform" />
                   <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white shadow-sm"></span>
                 </button>

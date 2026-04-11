@@ -15,6 +15,7 @@ import Session from "./pages/Session.tsx";
 import ProtectedRoute from "./routes/ProtectedRoute.tsx";
 import PublicRoute from "./routes/PublicRoute.tsx";
 import AppLayout from "./layouts/AppLayout.tsx";
+import Specialist from "./pages/Specialist.tsx";
 
 const router = createBrowserRouter([
   {
@@ -44,6 +45,7 @@ const router = createBrowserRouter([
             path: "sessions/:sessionId",
             element: <Session />,
           },
+          { path: "specialist", element: <Specialist /> },
         ],
       },
     ],

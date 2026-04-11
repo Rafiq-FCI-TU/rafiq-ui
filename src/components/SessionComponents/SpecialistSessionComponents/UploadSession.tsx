@@ -138,7 +138,7 @@ export default function UploadSession() {
                       <div className="space-y-4">
                         <div className="space-y-1.5">
                           <label className="block text-sm font-semibold text-gray-700 pl-1">
-                            Title
+                            Title <span className="text-red-500">*</span>
                           </label>
                           <Field
                             as="input"
@@ -160,7 +160,7 @@ export default function UploadSession() {
 
                         <div className="space-y-1.5">
                           <label className="block text-sm font-semibold text-gray-700 pl-1">
-                            Description
+                            Description <span className="text-red-500">*</span>
                           </label>
                           <Field
                             as="textarea"
@@ -177,13 +177,13 @@ export default function UploadSession() {
 
                         <div className="space-y-1.5">
                           <label className="block text-sm font-semibold text-gray-700 pl-1">
-                            Notes
+                            Notes <span className="text-red-500">*</span>
                           </label>
                           <Field
                             as="textarea"
                             name="notes"
                             placeholder="Additional notes..."
-                            className={`w-full px-4 py-3 bg-white border ${touched.description && errors.description ? "border-red-500" : "border-gray-200"} rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all shadow-sm min-h-[100px] resize-none`}
+                            className={`w-full px-4 py-3 bg-white border ${touched.notes && errors.notes ? "border-red-500" : "border-gray-200"} rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all shadow-sm min-h-[100px] resize-none`}
                           />
                           <ErrorMessage
                             name="notes"
@@ -197,7 +197,7 @@ export default function UploadSession() {
                         {/* Video Upload */}
                         <div className="space-y-2">
                           <label className="block text-sm font-semibold text-gray-700 pl-1">
-                            Video
+                            Video <span className="text-red-500">*</span>
                           </label>
                           <div
                             onClick={() => fileInputRef.current?.click()}
@@ -249,7 +249,7 @@ export default function UploadSession() {
                         {/* Thumbnail Upload */}
                         <div className="space-y-2">
                           <label className="block text-sm font-semibold text-gray-700 pl-1">
-                            Thumbnail
+                            Thumbnail <span className="text-red-500">*</span>
                           </label>
                           <div
                             onClick={() => thumbInputRef.current?.click()}
@@ -311,7 +311,7 @@ export default function UploadSession() {
 
                     <div className="space-y-2">
                       <label className="block text-sm font-semibold text-gray-700 pl-1">
-                        Score (0-100)
+                        Score (0-100) <span className="text-red-500">*</span>
                       </label>
                       <Field
                         type="number"
