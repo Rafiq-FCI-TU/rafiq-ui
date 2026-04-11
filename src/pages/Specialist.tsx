@@ -1,9 +1,9 @@
 import { useState, useMemo } from "react";
 import { Search } from "lucide-react";
-import SpecialistCard from "../components/SpecialistCard";
-import type { Specialist } from "../types/Specialist";
+import SpecialistCard from "../components/SpecialistComponents/SpecialistCard";
+import type { SpecialistCard as SpecialistCardType } from "../types/Specialist";
 
-const MOCK_SPECIALISTS: Specialist[] = [
+const MOCK_SPECIALISTS: SpecialistCardType[] = [
   {
     id: "1",
     fullname: "Sarah Mitchell",

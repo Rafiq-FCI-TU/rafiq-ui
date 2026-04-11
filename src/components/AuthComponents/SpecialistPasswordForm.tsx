@@ -1,139 +1,158 @@
-import { useState } from 'react';
-import { Formik, Form } from 'formik';
-import { ArrowLeft, ArrowRight, Loader2 } from 'lucide-react';
-import axios from 'axios';
-import PasswordInput from './PasswordInput';
+import { useState } from "react";
+import { Formik, Form } from "formik";
+import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
+import axios from "axios";
+import PasswordInput from "./PasswordInput";
 
 interface FormValues {
-    password: string;
-    confirmPassword: string;
+  password: string;
+  confirmPassword: string;
 }
 
 interface SpecialistPasswordFormProps {
-    onSubmit: (values: FormValues) => void;
-    onBack: () => void;
-    token?: string;
+  onSubmit: (values: FormValues) => void;
+  onBack: () => void;
+  token?: string;
 }
 
 const validationSchema = {
-    password: (value: string) => {
-        if (!value) return 'Password is required';
-        if (value.length < 6) return 'Password must be at least 6 characters';
-        return null;
-    },
-    confirmPassword: (value: string, password: string) => {
-        if (!value) return 'Confirm password is required';
-        if (value !== password) return 'Passwords do not match';
-        return null;
-    },
+  password: (value: string) => {
+    if (!value) return "Password is required";
+    if (value.length < 6) return "Password must be at least 6 characters";
+    return null;
+  },
+  confirmPassword: (value: string, password: string) => {
+    if (!value) return "Confirm password is required";
+    if (value !== password) return "Passwords do not match";
+    return null;
+  },
 };
 
-export default function SpecialistPasswordForm({ onSubmit, onBack, token }: SpecialistPasswordFormProps) {
-    const [errors, setErrors] = useState<{ [key: string]: string }>({});
+export default function SpecialistPasswordForm({
+  onSubmit,
+  onBack,
+  token,
+}: SpecialistPasswordFormProps) {
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-    const initialValues: FormValues = {
-        password: '',
-        confirmPassword: '',
-    };
+  const initialValues: FormValues = {
+    password: "",
+    confirmPassword: "",
+  };
 
-    const validateForm = (values: FormValues) => {
-        const newErrors: { [key: string]: string } = {};
+  const validateForm = (values: FormValues) => {
+    const newErrors: { [key: string]: string } = {};
 
-        const passwordError = validationSchema.password(values.password);
-        if (passwordError) newErrors.password = passwordError;
+    const passwordError = validationSchema.password(values.password);
+    if (passwordError) newErrors.password = passwordError;
 
-        const confirmPasswordError = validationSchema.confirmPassword(values.confirmPassword, values.password);
-        if (confirmPasswordError) newErrors.confirmPassword = confirmPasswordError;
-
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    };
-
-    const handleSubmit = async (values: FormValues) => {
-        if (validateForm(values)) {
-            setErrors({});
-            try {
-                // If token is missing, we still attempt the request, but normally we'd expect it to be passed from step 1
-                const payload = {
-                    token: token || "",
-                    password: values.password,
-                    confirmPassword: values.confirmPassword
-                };
-
-                await axios.post('https://rafiq-d2bygkb4bkfrgkd2.germanywestcentral-01.azurewebsites.net/api/SpecialistRegistration/step2', payload);
-
-                // Advance to success / dashboard
-                onSubmit(values);
-            } catch (error) {
-                if (axios.isAxiosError(error) && error.response) {
-                    const msg = error.response.data?.message ||
-                        error.response.data?.detail ||
-                        error.response.data?.title ||
-                        (typeof error.response.data === 'string' ? error.response.data : 'Registration failed');
-                    setErrors({ api: msg });
-                } else {
-                    setErrors({ api: 'An unexpected error occurred. Please try again later.' });
-                }
-            }
-        }
-    };
-
-    return (
-        <div className="w-full">
-            <button
-                onClick={onBack}
-                className="flex items-center text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors mb-6"
-            >
-                <ArrowLeft className="w-4 h-4 mr-1.5" />
-                Back
-            </button>
-
-            <div className="text-center mb-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">Specialist Registration</h2>
-                <p className="text-sm font-medium text-gray-500">Let's start with your information</p>
-            </div>
-
-            <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-                {({ isSubmitting }) => (
-                    <Form className="space-y-4">
-                        {errors.api && (
-                            <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-[12px]">
-                                {errors.api}
-                            </div>
-                        )}
-                        <PasswordInput
-                            label="Password *"
-                            placeholder="Create a strong password"
-                            error={errors.password}
-                        />
-
-                        <PasswordInput
-                            label="Confirm Password *"
-                            placeholder="Create a strong password"
-                            name="confirmPassword"
-                            error={errors.confirmPassword}
-                        />
-
-                        <button
-                            type="submit"
-                            disabled={isSubmitting}
-                            className="w-full bg-[#188147] text-white py-3 px-4 rounded-[12px] font-semibold hover:bg-[#116937] transition-colors flex items-center justify-center mt-6 disabled:opacity-70 disabled:cursor-not-allowed"
-                        >
-                            {isSubmitting ? (
-                                <>
-                                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                                    Processing...
-                                </>
-                            ) : (
-                                <>
-                                    Complete Registration
-                                    <ArrowRight className="w-5 h-5 ml-2" />
-                                </>
-                            )}
-                        </button>
-                    </Form>
-                )}
-            </Formik>
-        </div>
+    const confirmPasswordError = validationSchema.confirmPassword(
+      values.confirmPassword,
+      values.password,
     );
+    if (confirmPasswordError) newErrors.confirmPassword = confirmPasswordError;
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (values: FormValues) => {
+    if (validateForm(values)) {
+      setErrors({});
+      try {
+        // If token is missing, we still attempt the request, but normally we'd expect it to be passed from step 1
+        const payload = {
+          token: token || "",
+          password: values.password,
+          confirmPassword: values.confirmPassword,
+        };
+
+        await axios.post(
+          "https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/SpecialistRegistration/step2",
+          payload,
+        );
+
+        // Advance to success / dashboard
+        onSubmit(values);
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+          const msg =
+            error.response.data?.message ||
+            error.response.data?.detail ||
+            error.response.data?.title ||
+            (typeof error.response.data === "string"
+              ? error.response.data
+              : "Registration failed");
+          setErrors({ api: msg });
+        } else {
+          setErrors({
+            api: "An unexpected error occurred. Please try again later.",
+          });
+        }
+      }
+    }
+  };
+
+  return (
+    <div className="w-full">
+      <button
+        onClick={onBack}
+        className="flex items-center text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors mb-6"
+      >
+        <ArrowLeft className="w-4 h-4 mr-1.5" />
+        Back
+      </button>
+
+      <div className="text-center mb-8">
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          Specialist Registration
+        </h2>
+        <p className="text-sm font-medium text-gray-500">
+          Let's start with your information
+        </p>
+      </div>
+
+      <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+        {({ isSubmitting }) => (
+          <Form className="space-y-4">
+            {errors.api && (
+              <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-[12px]">
+                {errors.api}
+              </div>
+            )}
+            <PasswordInput
+              label="Password *"
+              placeholder="Create a strong password"
+              error={errors.password}
+            />
+
+            <PasswordInput
+              label="Confirm Password *"
+              placeholder="Create a strong password"
+              name="confirmPassword"
+              error={errors.confirmPassword}
+            />
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full bg-[#188147] text-white py-3 px-4 rounded-[12px] font-semibold hover:bg-[#116937] transition-colors flex items-center justify-center mt-6 disabled:opacity-70 disabled:cursor-not-allowed"
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                <>
+                  Complete Registration
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </>
+              )}
+            </button>
+          </Form>
+        )}
+      </Formik>
+    </div>
+  );
 }

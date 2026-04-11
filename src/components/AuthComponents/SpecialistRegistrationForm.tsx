@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { Formik, Form, Field } from 'formik';
-import { ArrowLeft, ArrowRight, Loader2 } from 'lucide-react';
-import axios from 'axios';
-import EmailInput from './EmailInput';
-import TextInput from './TextInput';
+import { useState } from "react";
+import { Formik, Form, Field } from "formik";
+import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
+import axios from "axios";
+import EmailInput from "./EmailInput";
+import TextInput from "./TextInput";
 
 interface SpecialistFormValues {
   firstName: string;
@@ -26,38 +26,44 @@ interface SpecialistRegistrationFormProps {
 
 const validationSchema = {
   name: (value: string) => {
-    if (!value) return 'Required field';
+    if (!value) return "Required field";
     return null;
   },
   email: (value: string) => {
-    if (!value) return 'Email is required';
+    if (!value) return "Email is required";
     if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)) {
-      return 'Invalid email';
+      return "Invalid email";
     }
     return null;
-  }
+  },
 };
 
-export default function SpecialistRegistrationForm({ onSubmit, onBack, initialData }: SpecialistRegistrationFormProps) {
+export default function SpecialistRegistrationForm({
+  onSubmit,
+  onBack,
+  initialData,
+}: SpecialistRegistrationFormProps) {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const initialValues: SpecialistFormValues = initialData || {
-    firstName: '',
-    lastName: '',
-    phone: '',
-    email: '',
-    credentials: '',
-    specialty: '',
-    organization: '',
-    professionalBio: '',
-    gender: ''
+    firstName: "",
+    lastName: "",
+    phone: "",
+    email: "",
+    credentials: "",
+    specialty: "",
+    organization: "",
+    professionalBio: "",
+    gender: "",
   };
 
   const validateForm = (values: SpecialistFormValues) => {
     const newErrors: { [key: string]: string } = {};
 
-    if (validationSchema.name(values.firstName)) newErrors.firstName = 'First Name is required';
-    if (validationSchema.name(values.lastName)) newErrors.lastName = 'Last Name is required';
+    if (validationSchema.name(values.firstName))
+      newErrors.firstName = "First Name is required";
+    if (validationSchema.name(values.lastName))
+      newErrors.lastName = "Last Name is required";
     const emailError = validationSchema.email(values.email);
     if (emailError) newErrors.email = emailError;
 
@@ -78,25 +84,34 @@ export default function SpecialistRegistrationForm({ onSubmit, onBack, initialDa
           specialty: values.specialty,
           organization: values.organization,
           professionalBio: values.professionalBio,
-          gender: values.gender
+          gender: values.gender,
         };
 
-        const response = await axios.post('https://rafiq-d2bygkb4bkfrgkd2.germanywestcentral-01.azurewebsites.net/api/SpecialistRegistration/step1', payload);
+        const response = await axios.post(
+          "https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/SpecialistRegistration/step1",
+          payload,
+        );
 
         // Extract token from response.data.data.token as per the actual API response
-        const receivedToken = response.data?.data?.token || response.data?.token || "";
+        const receivedToken =
+          response.data?.data?.token || response.data?.token || "";
 
         // Advance to next step
         onSubmit({ ...values, token: receivedToken });
       } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
-          const msg = error.response.data?.message ||
+          const msg =
+            error.response.data?.message ||
             error.response.data?.detail ||
             error.response.data?.title ||
-            (typeof error.response.data === 'string' ? error.response.data : 'Registration failed');
+            (typeof error.response.data === "string"
+              ? error.response.data
+              : "Registration failed");
           setErrors({ api: msg });
         } else {
-          setErrors({ api: 'An unexpected error occurred. Please try again later.' });
+          setErrors({
+            api: "An unexpected error occurred. Please try again later.",
+          });
         }
       }
     }
@@ -113,8 +128,12 @@ export default function SpecialistRegistrationForm({ onSubmit, onBack, initialDa
       </button>
 
       <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Specialist Registration</h2>
-        <p className="text-sm font-medium text-gray-500">Let's start with your information</p>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          Specialist Registration
+        </h2>
+        <p className="text-sm font-medium text-gray-500">
+          Let's start with your information
+        </p>
       </div>
 
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
@@ -183,7 +202,10 @@ export default function SpecialistRegistrationForm({ onSubmit, onBack, initialDa
             />
 
             <div className="mb-4">
-              <label htmlFor="gender" className="block text-[13px] font-semibold text-gray-700 mb-1.5 pl-1">
+              <label
+                htmlFor="gender"
+                className="block text-[13px] font-semibold text-gray-700 mb-1.5 pl-1"
+              >
                 Gender
               </label>
               <Field
@@ -192,7 +214,9 @@ export default function SpecialistRegistrationForm({ onSubmit, onBack, initialDa
                 name="gender"
                 className="w-full px-4 py-3 bg-white border border-gray-200 rounded-[12px] focus:outline-none focus:ring-2 focus:ring-[#188147]/50 focus:border-[#188147] text-sm transition-all shadow-sm text-gray-700"
               >
-                <option value="" disabled>Select gender</option>
+                <option value="" disabled>
+                  Select gender
+                </option>
                 <option value="male">Male</option>
                 <option value="female">Female</option>
               </Field>

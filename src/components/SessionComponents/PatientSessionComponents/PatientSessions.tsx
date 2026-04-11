@@ -34,7 +34,7 @@ export default function PatientSessions() {
     staleTime: 0,
     queryFn: async () => {
       const response = await fetch(
-        `https://rafiq-d2bygkb4bkfrgkd2.germanywestcentral-01.azurewebsites.net/api/Session/patient/${
+        `https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/Session/patient/${
           user?.patientid
         }/sessions?status=not-allowed`,
       );

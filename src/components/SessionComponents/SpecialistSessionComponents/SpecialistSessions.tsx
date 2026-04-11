@@ -7,11 +7,11 @@ import { useAuth } from "../../../contexts/AuthContext";
 export default function SpecialistSessions() {
   const { user } = useAuth();
   const { data, isPending, error } = useQuery({
-    queryKey: ["SpecialistSessions",user?.id],
+    queryKey: ["SpecialistSessions", user?.id],
     staleTime: 0,
     queryFn: () =>
       fetch(
-        `https://rafiq-d2bygkb4bkfrgkd2.germanywestcentral-01.azurewebsites.net/api/Session/specialist/${user?.id}`,
+        `https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/Session/specialist/${user?.id}`,
       ).then((res) => res.json()),
   });
   return (

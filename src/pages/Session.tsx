@@ -22,7 +22,7 @@ export default function Session() {
     enabled: Boolean(sessionId),
     queryFn: async () => {
       const response = await fetch(
-        `https://rafiq-d2bygkb4bkfrgkd2.germanywestcentral-01.azurewebsites.net/api/Session/SessionDetails/${sessionId}`,
+        `https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/Session/SessionDetails/${sessionId}`,
       );
 
       if (!response.ok) {

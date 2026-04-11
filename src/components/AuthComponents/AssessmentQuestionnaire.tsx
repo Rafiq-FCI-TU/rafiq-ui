@@ -1,13 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { ArrowLeft, ArrowRight, Loader2 } from 'lucide-react';
-import axios from 'axios';
+import React, { useState, useEffect, useCallback } from "react";
+import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
+import axios from "axios";
 
-const API_BASE = 'https://rafiq-d2bygkb4bkfrgkd2.germanywestcentral-01.azurewebsites.net/api';
+const API_BASE =
+  "https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api";
 
 const apiClient = axios.create({
   baseURL: API_BASE,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
@@ -55,10 +56,10 @@ export default function AssessmentQuestionnaire({
           setSelectedAnswer(null);
         }
       } else {
-        setError('Failed to load question.');
+        setError("Failed to load question.");
       }
     } catch (err: any) {
-      setError(formatError('Fetch Error', err));
+      setError(formatError("Fetch Error", err));
     } finally {
       setLoading(false);
     }
@@ -67,7 +68,7 @@ export default function AssessmentQuestionnaire({
   const initializeAssessment = useCallback(async () => {
     const pid = Number(patientId);
     if (!pid || isNaN(pid)) {
-      setError('Patient ID is missing or invalid. Cannot start assessment.');
+      setError("Patient ID is missing or invalid. Cannot start assessment.");
       setLoading(false);
       return;
     }
@@ -76,24 +77,26 @@ export default function AssessmentQuestionnaire({
     setLoading(true);
 
     try {
-      console.log('[Assessment] Initializing with patientId:', pid);
+      console.log("[Assessment] Initializing with patientId:", pid);
 
       const response = await apiClient.get(`/Assessment`, {
         params: { patientId: pid },
       });
 
-      console.log('[Assessment] Init response:', response.data);
+      console.log("[Assessment] Init response:", response.data);
 
       const data = response.data?.data;
       if (data?.id) {
         setAssessmentId(data.id);
         await fetchQuestion(data.id);
       } else {
-        setError('Could not initialize assessment. Invalid response structure.');
+        setError(
+          "Could not initialize assessment. Invalid response structure.",
+        );
         setLoading(false);
       }
     } catch (err: any) {
-      setError(formatError('Connection Error', err));
+      setError(formatError("Connection Error", err));
       setLoading(false);
     }
   }, [patientId]);
@@ -116,13 +119,18 @@ export default function AssessmentQuestionnaire({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (selectedAnswer === null || !assessmentId || !questionData?.currentCategory?.question) return;
+    if (
+      selectedAnswer === null ||
+      !assessmentId ||
+      !questionData?.currentCategory?.question
+    )
+      return;
 
     try {
       setSubmitting(true);
       setError(null);
 
-      const res = await apiClient.post('/Assessment/answer', {
+      const res = await apiClient.post("/Assessment/answer", {
         assessmentId,
         questionId: questionData.currentCategory.question.questionId,
         answerValue: selectedAnswer,
@@ -142,7 +150,7 @@ export default function AssessmentQuestionnaire({
         await fetchQuestion(assessmentId);
       }
     } catch (err: any) {
-      setError(formatError('Submit Error', err));
+      setError(formatError("Submit Error", err));
     } finally {
       setSubmitting(false);
     }
@@ -162,7 +170,9 @@ export default function AssessmentQuestionnaire({
           </div>
         ) : error ? (
           <div className="flex flex-col items-center justify-center h-64">
-            <div className="p-4 bg-red-50 text-red-600 rounded-xl mb-4 text-center">{error}</div>
+            <div className="p-4 bg-red-50 text-red-600 rounded-xl mb-4 text-center">
+              {error}
+            </div>
             <div className="flex gap-4">
               <button
                 onClick={initializeAssessment}
@@ -182,7 +192,8 @@ export default function AssessmentQuestionnaire({
           <form className="flex flex-col h-full" onSubmit={handleSubmit}>
             <div className="flex justify-between items-center mb-4">
               <span className="text-gray-500 font-medium text-sm">
-                Question {questionData.currentCategory.assessmentCurrentQuestion} of{' '}
+                Question{" "}
+                {questionData.currentCategory.assessmentCurrentQuestion} of{" "}
                 {questionData.currentCategory.assessmentTotalQuestions}
               </span>
               <div className="bg-[#E8F5EE] text-[#188147] px-3 py-1 rounded-full text-xs font-semibold">
@@ -194,16 +205,21 @@ export default function AssessmentQuestionnaire({
               <div
                 className="bg-[#188147] h-1.5 rounded-full transition-all duration-300"
                 style={{
-                  width: `${((questionData.currentCategory.assessmentCurrentQuestion - 1) /
-                    (questionData.currentCategory.assessmentTotalQuestions || 1)) *
+                  width: `${
+                    ((questionData.currentCategory.assessmentCurrentQuestion -
+                      1) /
+                      (questionData.currentCategory.assessmentTotalQuestions ||
+                        1)) *
                     100
-                    }%`,
+                  }%`,
                 }}
               />
             </div>
 
             <div className="mb-8">
-              <h2 className="text-[20px] font-bold text-gray-900 mb-2">Child Assessment</h2>
+              <h2 className="text-[20px] font-bold text-gray-900 mb-2">
+                Child Assessment
+              </h2>
               <p className="text-gray-500 text-[14px]">
                 {questionData.currentCategory.assessmentCategoryDescription ||
                   "Help us understand your child's development"}
@@ -215,36 +231,44 @@ export default function AssessmentQuestionnaire({
             </h3>
 
             <div className="space-y-3 mb-8">
-              {questionData.currentCategory.question.options?.map((opt: any) => {
-                const isSelected = selectedAnswer === opt.value;
-                return (
-                  <label
-                    key={opt.value}
-                    className={`flex items-center p-4 rounded-xl cursor-pointer border transition-all duration-200 ${isSelected
-                      ? 'border-[#188147] bg-[#F5FEF8] shadow-[0_0_0_1px_#188147]'
-                      : 'border-gray-200 bg-white hover:border-gray-300'
+              {questionData.currentCategory.question.options?.map(
+                (opt: any) => {
+                  const isSelected = selectedAnswer === opt.value;
+                  return (
+                    <label
+                      key={opt.value}
+                      className={`flex items-center p-4 rounded-xl cursor-pointer border transition-all duration-200 ${
+                        isSelected
+                          ? "border-[#188147] bg-[#F5FEF8] shadow-[0_0_0_1px_#188147]"
+                          : "border-gray-200 bg-white hover:border-gray-300"
                       }`}
-                  >
-                    <div
-                      className={`w-5 h-5 rounded-full border-2 flex items-center justify-center mr-4 transition-colors ${isSelected ? 'border-[#188147]' : 'border-gray-300'
-                        }`}
                     >
-                      {isSelected && <div className="w-2.5 h-2.5 bg-[#188147] rounded-full" />}
-                    </div>
-                    <span className={`text-[15px] ${isSelected ? 'font-medium text-gray-900' : 'text-gray-700'}`}>
-                      {opt.label}
-                    </span>
-                    <input
-                      type="radio"
-                      name="answerValue"
-                      value={opt.value}
-                      checked={isSelected}
-                      onChange={() => setSelectedAnswer(opt.value)}
-                      className="hidden"
-                    />
-                  </label>
-                );
-              })}
+                      <div
+                        className={`w-5 h-5 rounded-full border-2 flex items-center justify-center mr-4 transition-colors ${
+                          isSelected ? "border-[#188147]" : "border-gray-300"
+                        }`}
+                      >
+                        {isSelected && (
+                          <div className="w-2.5 h-2.5 bg-[#188147] rounded-full" />
+                        )}
+                      </div>
+                      <span
+                        className={`text-[15px] ${isSelected ? "font-medium text-gray-900" : "text-gray-700"}`}
+                      >
+                        {opt.label}
+                      </span>
+                      <input
+                        type="radio"
+                        name="answerValue"
+                        value={opt.value}
+                        checked={isSelected}
+                        onChange={() => setSelectedAnswer(opt.value)}
+                        className="hidden"
+                      />
+                    </label>
+                  );
+                },
+              )}
             </div>
 
             <div className="flex gap-4 mt-auto">
@@ -261,13 +285,20 @@ export default function AssessmentQuestionnaire({
               <button
                 type="submit"
                 disabled={submitting || selectedAnswer === null}
-                className={`flex-1 py-3.5 px-4 bg-[#188147] text-white rounded-xl font-medium hover:bg-[#116937] transition-colors flex items-center justify-center text-[15px] shadow-sm ${selectedAnswer === null || submitting ? 'opacity-50 cursor-not-allowed' : ''
-                  }`}
+                className={`flex-1 py-3.5 px-4 bg-[#188147] text-white rounded-xl font-medium hover:bg-[#116937] transition-colors flex items-center justify-center text-[15px] shadow-sm ${
+                  selectedAnswer === null || submitting
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                }`}
               >
                 {submitting ? (
-                  <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> Saving...</>
+                  <>
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" /> Saving...
+                  </>
                 ) : (
-                  <>Next <ArrowRight className="w-5 h-5 ml-2" /></>
+                  <>
+                    Next <ArrowRight className="w-5 h-5 ml-2" />
+                  </>
                 )}
               </button>
             </div>
@@ -281,9 +312,9 @@ export default function AssessmentQuestionnaire({
 function formatError(label: string, err: any): string {
   if (axios.isAxiosError(err)) {
     const status = err.response?.status;
-    let detail = '';
+    let detail = "";
 
-    if (typeof err.response?.data === 'string') {
+    if (typeof err.response?.data === "string") {
       detail = err.response.data;
     } else {
       detail = JSON.stringify(err.response?.data) || err.message;

@@ -8,14 +8,14 @@ export default function ActiveTab({
 }: {
   activeTab: SessionType | "notes";
 }) {
-    const { user } = useAuth();
+  const { user } = useAuth();
   const { data, error, isPending } = useQuery({
-    queryKey: ["PatientSessions", activeTab,user?.patientid],
+    queryKey: ["PatientSessions", activeTab, user?.patientid],
     staleTime: 0,
     gcTime: 0,
     queryFn: async () => {
       const response = await fetch(
-        `https://rafiq-d2bygkb4bkfrgkd2.germanywestcentral-01.azurewebsites.net/api/Session/patient/${user?.patientid}/sessions?status=${activeTab === "not-allowed" ? "not-allowed" : "allowed"}`,
+        `https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/Session/patient/${user?.patientid}/sessions?status=${activeTab === "not-allowed" ? "not-allowed" : "allowed"}`,
       );
       return response.json();
     },

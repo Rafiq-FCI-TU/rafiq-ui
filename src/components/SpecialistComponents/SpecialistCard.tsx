@@ -1,9 +1,9 @@
 import { Star } from "lucide-react";
-import type { Specialist } from "../types/Specialist";
+import type { SpecialistCard } from "../../types/Specialist";
 import { Link } from "react-router";
 
 interface SpecialistCardProps {
-  specialist: Specialist;
+  specialist: SpecialistCard;
 }
 
 export default function SpecialistCard({ specialist }: SpecialistCardProps) {

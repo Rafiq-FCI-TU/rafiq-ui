@@ -1,24 +1,24 @@
-import { useState } from 'react';
-import { Formik, Form } from 'formik';
-import { Link, useNavigate } from 'react-router';
-import { useGoogleLogin } from '@react-oauth/google';
-import { Loader2 } from 'lucide-react';
-import axios from 'axios';
-import EmailInput from './EmailInput';
-import PasswordInput from './PasswordInput';
-import { useAuth } from '../../contexts/AuthContext';
+import { useState } from "react";
+import { Formik, Form } from "formik";
+import { Link, useNavigate } from "react-router";
+import { useGoogleLogin } from "@react-oauth/google";
+import { Loader2 } from "lucide-react";
+import axios from "axios";
+import EmailInput from "./EmailInput";
+import PasswordInput from "./PasswordInput";
+import { useAuth } from "../../contexts/AuthContext";
 
 const validationSchema = {
   email: (value: string) => {
-    if (!value) return 'Email is required';
+    if (!value) return "Email is required";
     if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)) {
-      return 'Invalid email address';
+      return "Invalid email address";
     }
     return null;
   },
   password: (value: string) => {
-    if (!value) return 'Password is required';
-    if (value.length < 6) return 'Password must be at least 6 characters';
+    if (!value) return "Password is required";
+    if (value.length < 6) return "Password must be at least 6 characters";
     return null;
   },
 };
@@ -35,8 +35,8 @@ export default function LoginForm() {
   const { login } = useAuth();
 
   const initialValues: FormValues = {
-    email: '',
-    password: '',
+    email: "",
+    password: "",
     rememberMe: false,
   };
 
@@ -57,45 +57,53 @@ export default function LoginForm() {
     if (validateForm(values)) {
       setErrors({});
       try {
-        const response = await axios.post('https://rafiq-d2bygkb4bkfrgkd2.germanywestcentral-01.azurewebsites.net/api/Auth/login', {
-          email: values.email,
-          password: values.password,
-        });
+        const response = await axios.post(
+          "https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/Auth/login",
+          {
+            email: values.email,
+            password: values.password,
+          },
+        );
 
         const responseBody = response.data;
 
         if (responseBody?.success && responseBody?.data) {
           const responseData = responseBody.data;
-          
+
           if (responseData.isAuthenticated) {
             login(responseData, responseData.token, responseData.refreshToken);
 
-            console.log('Login success:', responseBody);
+            console.log("Login success:", responseBody);
 
             const roles = responseData.roles || [];
             const hasAssessment = responseData.hasAssessment === true;
 
-            if (roles.includes('Family') && !hasAssessment) {
-              navigate('/assessment');
+            if (roles.includes("Family") && !hasAssessment) {
+              navigate("/assessment");
             } else {
-              navigate('/dashboard');
+              navigate("/dashboard");
             }
           } else {
-            setErrors({ api: responseBody.message || 'Authentication failed' });
+            setErrors({ api: responseBody.message || "Authentication failed" });
           }
         } else {
-          setErrors({ api: responseBody?.message || 'Login failed' });
+          setErrors({ api: responseBody?.message || "Login failed" });
         }
       } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
           // Extract specific message based on API response
-          const msg = error.response.data?.message ||
+          const msg =
+            error.response.data?.message ||
             error.response.data?.detail ||
             error.response.data?.title ||
-            (typeof error.response.data === 'string' ? error.response.data : 'Invalid credentials');
+            (typeof error.response.data === "string"
+              ? error.response.data
+              : "Invalid credentials");
           setErrors({ api: msg });
         } else {
-          setErrors({ api: 'An unexpected error occurred. Please try again later.' });
+          setErrors({
+            api: "An unexpected error occurred. Please try again later.",
+          });
         }
       }
     }
@@ -105,19 +113,21 @@ export default function LoginForm() {
     onSuccess: async (tokenResponse) => {
       try {
         const userInfo = await axios.get(
-          'https://www.googleapis.com/oauth2/v3/userinfo',
-          { headers: { Authorization: `Bearer ${tokenResponse.access_token}` } }
+          "https://www.googleapis.com/oauth2/v3/userinfo",
+          {
+            headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
+          },
         );
 
-        console.log('Google login success:', userInfo.data);
+        console.log("Google login success:", userInfo.data);
 
-        navigate('/dashboard');
+        navigate("/dashboard");
       } catch (error) {
-        console.error('Error fetching user info:', error);
+        console.error("Error fetching user info:", error);
       }
     },
     onError: (error) => {
-      console.error('Google login failed:', error);
+      console.error("Google login failed:", error);
     },
   });
 
@@ -163,13 +173,15 @@ export default function LoginForm() {
                 Processing...
               </>
             ) : (
-              'Sign In'
+              "Sign In"
             )}
           </button>
 
           <div className="relative flex items-center justify-center my-6">
             <div className="border-t border-gray-200 w-full"></div>
-            <span className="bg-white px-4 text-sm text-gray-500 absolute font-medium">Or continue with</span>
+            <span className="bg-white px-4 text-sm text-gray-500 absolute font-medium">
+              Or continue with
+            </span>
           </div>
 
           <div className="flex gap-4">

@@ -1,4 +1,4 @@
-export interface Specialist {
+export interface SpecialistCard {
   id: string;
   fullname: string;
   specialty: string;
