@@ -20,19 +20,30 @@ interface ChildDetailsFormProps {
   token?: string;
 }
 
-const childValidationSchema = {
-  name: (value: string) => {
-    if (!value) return "Required field";
-    return null;
-  },
-  birthDate: (value: string) => {
-    if (!value) return "Birth date is required";
-    return null;
-  },
-  gender: (value: string) => {
-    if (!value) return "Gender is required";
-    return null;
-  },
+const validateChildForm = (values: ChildFormValues) => {
+  const errors: { [key: string]: string } = {};
+
+  if (!values.childFirstName) {
+    errors.childFirstName = "First Name is required";
+  } else if (values.childFirstName.length < 2 || values.childFirstName.length > 50) {
+    errors.childFirstName = "First Name must be at least 2 characters";
+  }
+
+  if (!values.childLastName) {
+    errors.childLastName = "Last Name is required";
+  } else if (values.childLastName.length < 2 || values.childLastName.length > 50) {
+    errors.childLastName = "Last Name must be at least 2 characters";
+  }
+
+  if (!values.birthDate) {
+    errors.birthDate = "Birth date is required";
+  }
+
+  if (!values.gender) {
+    errors.gender = "Gender is required";
+  }
+
+  return errors;
 };
 
 export default function ChildDetailsForm({
@@ -41,8 +52,7 @@ export default function ChildDetailsForm({
   initialData,
   token,
 }: ChildDetailsFormProps) {
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
-
+  const [apiError, setApiError] = useState<string | null>(null);
   const childInitialValues: ChildFormValues = initialData || {
     childFirstName: "",
     childLastName: "",
@@ -50,26 +60,9 @@ export default function ChildDetailsForm({
     gender: "",
   };
 
-  const validateChildForm = (values: ChildFormValues) => {
-    const newErrors: { [key: string]: string } = {};
-
-    if (childValidationSchema.name(values.childFirstName))
-      newErrors.childFirstName = "First Name is required";
-    if (childValidationSchema.name(values.childLastName))
-      newErrors.childLastName = "Last Name is required";
-    if (childValidationSchema.birthDate(values.birthDate))
-      newErrors.birthDate = "Birth date is required";
-    if (childValidationSchema.gender(values.gender))
-      newErrors.gender = "Gender is required";
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
   const handleSubmit = async (values: ChildFormValues) => {
-    if (validateChildForm(values)) {
-      setErrors({});
-      try {
+    setApiError(null);
+    try {
         let dateOfBirthIso = "";
         try {
           dateOfBirthIso = new Date(values.birthDate).toISOString();
@@ -97,7 +90,7 @@ export default function ChildDetailsForm({
           // Pass this new token along to Step 3
           onSubmit({ ...values, token: receivedToken || token || "" });
         } else {
-          setErrors({ api: response.data?.message || "Registration failed" });
+          setApiError(response.data?.message || "Registration failed");
         }
       } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
@@ -108,21 +101,18 @@ export default function ChildDetailsForm({
             (typeof error.response.data === "string"
               ? error.response.data
               : "Registration failed");
-          setErrors({ api: msg });
+          setApiError(msg);
         } else {
-          setErrors({
-            api: "An unexpected error occurred. Please try again later.",
-          });
+          setApiError("An unexpected error occurred. Please try again later.");
         }
       }
-    }
   };
 
   return (
     <div className="w-full">
       <button
         onClick={onBack}
-        className="flex items-center text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors mb-6"
+        className="flex items-center text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors mb-6 cursor-pointer"
       >
         <ArrowLeft className="w-4 h-4 mr-1.5" />
         Back
@@ -137,32 +127,32 @@ export default function ChildDetailsForm({
         </p>
       </div>
 
-      <Formik initialValues={childInitialValues} onSubmit={handleSubmit}>
-        {({ isSubmitting }) => (
+      <Formik initialValues={childInitialValues} validate={validateChildForm} onSubmit={handleSubmit}>
+        {({ isSubmitting, errors, touched }) => (
           <Form className="space-y-4">
-            {errors.api && (
+            {apiError && (
               <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-[12px]">
-                {errors.api}
+                {apiError}
               </div>
             )}
             <TextInput
               label="Child's First Name *"
               placeholder="Amira"
               name="childFirstName"
-              error={errors.childFirstName}
+              error={touched.childFirstName && errors.childFirstName ? errors.childFirstName : undefined}
             />
 
             <TextInput
               label="Child's Last Name *"
               placeholder="Hassan"
               name="childLastName"
-              error={errors.childLastName}
+              error={touched.childLastName && errors.childLastName ? errors.childLastName : undefined}
             />
 
             <DateInput
               label="Date of Birth *"
               name="birthDate"
-              error={errors.birthDate}
+              error={touched.birthDate && errors.birthDate ? errors.birthDate : undefined}
             />
 
             <div className="mb-4">
@@ -184,7 +174,7 @@ export default function ChildDetailsForm({
                 <option value="male">Male</option>
                 <option value="female">Female</option>
               </Field>
-              {errors.gender && (
+              {touched.gender && errors.gender && (
                 <div className="text-red-500 text-xs mt-1.5 font-medium">
                   {errors.gender}
                 </div>
@@ -194,7 +184,7 @@ export default function ChildDetailsForm({
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-[#188147] text-white py-3 px-4 rounded-[12px] font-semibold hover:bg-[#116937] transition-colors flex items-center justify-center mt-6 disabled:opacity-70 disabled:cursor-not-allowed"
+              className="w-full bg-[#188147] text-white py-3 px-4 rounded-[12px] font-semibold hover:bg-[#116937] transition-colors flex items-center justify-center mt-6 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
             >
               {isSubmitting ? (
                 <>

@@ -16,8 +16,8 @@ export default function AccountTypeSelector({ onSelectAccountType }: AccountType
       <div className="group">
         <AccountTypeCard
           icon={Users}
-          iconBgColor="bg-blue-100/50"
-          iconColor="text-blue-200"
+          iconBgColor="bg-blue-200/50"
+          iconColor="text-blue-400"
           title="Family Account"
           description="For parents and guardians managing care for their child"
           onClick={() => onSelectAccountType('family')}
@@ -27,8 +27,8 @@ export default function AccountTypeSelector({ onSelectAccountType }: AccountType
       <div className="group">
         <AccountTypeCard
           icon={Stethoscope}
-          iconBgColor="bg-green-100/50"
-          iconColor="text-green-200"
+          iconBgColor="bg-green-200/50"
+          iconColor="text-green-400"
           title="Specialist Account"
           description="For healthcare professionals providing therapy and care"
           onClick={() => onSelectAccountType('specialist')}

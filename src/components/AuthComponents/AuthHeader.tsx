@@ -14,7 +14,7 @@ export default function AuthHeader({ title, subtitle, onBack }: AuthHeaderProps)
         {onBack && (
           <button
             onClick={onBack}
-            className="text-gray-900 hover:text-gray-600 transition-colors"
+            className="text-gray-900 hover:text-gray-600 transition-colors cursor-pointer"
           >
             <ArrowLeft className="w-6 h-6" />
           </button>

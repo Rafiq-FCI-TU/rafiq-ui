@@ -24,18 +24,56 @@ interface SpecialistRegistrationFormProps {
   initialData?: SpecialistFormValues | null;
 }
 
-const validationSchema = {
-  name: (value: string) => {
-    if (!value) return "Required field";
-    return null;
-  },
-  email: (value: string) => {
-    if (!value) return "Email is required";
-    if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)) {
-      return "Invalid email";
-    }
-    return null;
-  },
+const validateForm = (values: SpecialistFormValues) => {
+  const errors: { [key: string]: string } = {};
+
+  if (!values.firstName) {
+    errors.firstName = "First Name is required";
+  } else if (values.firstName.length < 2 || values.firstName.length > 50) {
+    errors.firstName = "First Name must be at least 2 characters";
+  }
+
+  if (!values.lastName) {
+    errors.lastName = "Last Name is required";
+  } else if (values.lastName.length < 2 || values.lastName.length > 50) {
+    errors.lastName = "Last Name must be at least 2 characters";
+  }
+
+  if (!values.email) {
+    errors.email = "Email is required";
+  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
+    errors.email = "Invalid email";
+  }
+
+  if (!values.phone) {
+    errors.phone = "Phone is required";
+  } else if (!/^(\+?\d{10,15})$/.test(values.phone)) {
+    errors.phone = "Phone must be 10-15 digits";
+  }
+
+  if (!values.specialty) {
+    errors.specialty = "Specialty is required";
+  } else if (values.specialty.length < 2 || values.specialty.length > 50) {
+    errors.specialty = "Specialty must be at least 2 characters";
+  }
+
+  if (!values.organization) {
+    errors.organization = "Organization is required";
+  } else if (values.organization.length < 2 || values.organization.length > 100) {
+    errors.organization = "Organization must be at least 2 characters";
+  }
+
+  if (!values.professionalBio) {
+    errors.professionalBio = "Professional Bio is required";
+  } else if (values.professionalBio.length < 20 || values.professionalBio.length > 1000) {
+    errors.professionalBio = "Professional Bio must be at least 20 characters";
+  }
+
+  if (!values.gender) {
+    errors.gender = "Gender is required";
+  }
+
+  return errors;
 };
 
 export default function SpecialistRegistrationForm({
@@ -43,8 +81,7 @@ export default function SpecialistRegistrationForm({
   onBack,
   initialData,
 }: SpecialistRegistrationFormProps) {
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
-
+  const [apiError, setApiError] = useState<string | null>(null);
   const initialValues: SpecialistFormValues = initialData || {
     firstName: "",
     lastName: "",
@@ -57,24 +94,9 @@ export default function SpecialistRegistrationForm({
     gender: "",
   };
 
-  const validateForm = (values: SpecialistFormValues) => {
-    const newErrors: { [key: string]: string } = {};
-
-    if (validationSchema.name(values.firstName))
-      newErrors.firstName = "First Name is required";
-    if (validationSchema.name(values.lastName))
-      newErrors.lastName = "Last Name is required";
-    const emailError = validationSchema.email(values.email);
-    if (emailError) newErrors.email = emailError;
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
   const handleSubmit = async (values: SpecialistFormValues) => {
-    if (validateForm(values)) {
-      setErrors({});
-      try {
+    setApiError(null);
+    try {
         const payload = {
           firstName: values.firstName,
           lastName: values.lastName,
@@ -107,21 +129,18 @@ export default function SpecialistRegistrationForm({
             (typeof error.response.data === "string"
               ? error.response.data
               : "Registration failed");
-          setErrors({ api: msg });
+          setApiError(msg);
         } else {
-          setErrors({
-            api: "An unexpected error occurred. Please try again later.",
-          });
+          setApiError("An unexpected error occurred. Please try again later.");
         }
       }
-    }
   };
 
   return (
     <div className="w-full">
       <button
         onClick={onBack}
-        className="flex items-center text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors mb-6"
+        className="flex items-center text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors mb-6 cursor-pointer"
       >
         <ArrowLeft className="w-4 h-4 mr-1.5" />
         Back
@@ -136,12 +155,12 @@ export default function SpecialistRegistrationForm({
         </p>
       </div>
 
-      <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-        {({ isSubmitting }) => (
+      <Formik initialValues={initialValues} validate={validateForm} onSubmit={handleSubmit}>
+        {({ isSubmitting, errors, touched }) => (
           <Form className="space-y-4">
-            {errors.api && (
+            {apiError && (
               <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-[12px]">
-                {errors.api}
+                {apiError}
               </div>
             )}
 
@@ -149,56 +168,56 @@ export default function SpecialistRegistrationForm({
               label="First Name *"
               placeholder="Enter your first name"
               name="firstName"
-              error={errors.firstName}
+              error={touched.firstName && errors.firstName ? errors.firstName : undefined}
             />
 
             <TextInput
               label="Last Name *"
               placeholder="Enter your last name"
               name="lastName"
-              error={errors.lastName}
+              error={touched.lastName && errors.lastName ? errors.lastName : undefined}
             />
 
             <TextInput
               label="Phone Number *"
               placeholder="(555) 123-4567"
               name="phone"
-              error={errors.phone}
+              error={touched.phone && errors.phone ? errors.phone : undefined}
             />
 
             <EmailInput
-              label="Email Address"
+              label="Email Address *"
               placeholder="your.email@example.com"
-              error={errors.email}
+              error={touched.email && errors.email ? errors.email : undefined}
               showIcon={false}
             />
 
             <TextInput
-              label="Credentials *"
+              label="Credentials"
               placeholder="MS, CCC-SLP"
               name="credentials"
-              error={errors.credentials}
+              error={touched.credentials && errors.credentials ? errors.credentials : undefined}
             />
 
             <TextInput
               label="Specialty *"
               placeholder=""
               name="specialty"
-              error={errors.specialty}
+              error={touched.specialty && errors.specialty ? errors.specialty : undefined}
             />
 
             <TextInput
-              label="Organization"
+              label="Organization *"
               placeholder="Children's Development Center"
               name="organization"
-              error={errors.organization}
+              error={touched.organization && errors.organization ? errors.organization : undefined}
             />
 
             <TextInput
-              label="Professional Bio"
+              label="Professional Bio *"
               placeholder=""
               name="professionalBio"
-              error={errors.professionalBio}
+              error={touched.professionalBio && errors.professionalBio ? errors.professionalBio : undefined}
             />
 
             <div className="mb-4">
@@ -220,12 +239,17 @@ export default function SpecialistRegistrationForm({
                 <option value="male">Male</option>
                 <option value="female">Female</option>
               </Field>
+              {touched.gender && errors.gender && (
+                <div className="text-red-500 text-xs mt-1.5 font-medium">
+                  {errors.gender}
+                </div>
+              )}
             </div>
 
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-[#188147] text-white py-3 px-4 rounded-[12px] font-semibold hover:bg-[#116937] transition-colors flex items-center justify-center mt-6 disabled:opacity-70 disabled:cursor-not-allowed"
+              className="w-full bg-[#188147] text-white py-3 px-4 rounded-[12px] font-semibold hover:bg-[#116937] transition-colors flex items-center justify-center mt-6 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
             >
               {isSubmitting ? (
                 <>

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Formik, Form } from "formik";
 import { Link, useNavigate } from "react-router";
-import { useGoogleLogin } from "@react-oauth/google";
 import { Loader2 } from "lucide-react";
 import axios from "axios";
 import EmailInput from "./EmailInput";
@@ -109,28 +108,6 @@ export default function LoginForm() {
     }
   };
 
-  const handleGoogleLogin = useGoogleLogin({
-    onSuccess: async (tokenResponse) => {
-      try {
-        const userInfo = await axios.get(
-          "https://www.googleapis.com/oauth2/v3/userinfo",
-          {
-            headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
-          },
-        );
-
-        console.log("Google login success:", userInfo.data);
-
-        navigate("/dashboard");
-      } catch (error) {
-        console.error("Error fetching user info:", error);
-      }
-    },
-    onError: (error) => {
-      console.error("Google login failed:", error);
-    },
-  });
-
   return (
     <Formik initialValues={initialValues} onSubmit={handleSubmit}>
       {({ isSubmitting }) => (
@@ -165,7 +142,7 @@ export default function LoginForm() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-[#188147] text-white py-3.5 px-4 rounded-xl font-semibold hover:bg-[#116937] transition-all duration-200 shadow-sm flex items-center justify-center mb-4 disabled:opacity-70 disabled:cursor-not-allowed"
+            className="w-full bg-[#188147] text-white py-3.5 px-4 rounded-xl font-semibold hover:bg-[#116937] transition-all duration-200 shadow-sm flex items-center justify-center mb-4 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
           >
             {isSubmitting ? (
               <>
@@ -176,23 +153,6 @@ export default function LoginForm() {
               "Sign In"
             )}
           </button>
-
-          <div className="relative flex items-center justify-center my-6">
-            <div className="border-t border-gray-200 w-full"></div>
-            <span className="bg-white px-4 text-sm text-gray-500 absolute font-medium">
-              Or continue with
-            </span>
-          </div>
-
-          <div className="flex gap-4">
-            <button
-              type="button"
-              onClick={() => handleGoogleLogin()}
-              className="flex-1 bg-white border border-gray-200 text-gray-700 py-3 px-4 rounded-xl font-semibold text-sm hover:bg-gray-50 transition-all duration-200 flex items-center justify-center shadow-sm"
-            >
-              Google
-            </button>
-          </div>
         </Form>
       )}
     </Formik>

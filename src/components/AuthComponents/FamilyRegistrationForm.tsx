@@ -23,18 +23,56 @@ interface FamilyRegistrationFormProps {
   initialData?: FormValues | null;
 }
 
-const validationSchema = {
-  name: (value: string) => {
-    if (!value) return "Required field";
-    return null;
-  },
-  email: (value: string) => {
-    if (!value) return "Email is required";
-    if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)) {
-      return "Invalid email";
-    }
-    return null;
-  },
+const validateForm = (values: FormValues) => {
+  const errors: { [key: string]: string } = {};
+
+  if (!values.firstName) {
+    errors.firstName = "First Name is required";
+  } else if (values.firstName.length < 2 || values.firstName.length > 50) {
+    errors.firstName = "First Name must be at least 2 characters";
+  }
+
+  if (!values.lastName) {
+    errors.lastName = "Last Name is required";
+  } else if (values.lastName.length < 2 || values.lastName.length > 50) {
+    errors.lastName = "Last Name must be at least 2 characters";
+  }
+
+  if (!values.email) {
+    errors.email = "Email is required";
+  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
+    errors.email = "Invalid email";
+  }
+
+  if (!values.phone) {
+    errors.phone = "Phone is required";
+  } else if (!/^(\+?\d{10,15})$/.test(values.phone)) {
+    errors.phone = "Phone must be 10-15 digits";
+  }
+
+  if (!values.relationship) {
+    errors.relationship = "Relationship is required";
+  }
+
+  if (!values.address) {
+    errors.address = "Address is required";
+  } else if (values.address.length < 5 || values.address.length > 100) {
+    errors.address = "Address must be at least 5 characters";
+  }
+
+  if (!values.emergencyContactName) {
+    errors.emergencyContactName = "Emergency Contact Name is required";
+  } else if (values.emergencyContactName.length < 2 || values.emergencyContactName.length > 50) {
+    errors.emergencyContactName = "Name must be at least 2 characters";
+  }
+
+  if (!values.emergencyContactPhone) {
+    errors.emergencyContactPhone = "Emergency Contact Phone is required";
+  } else if (!/^(\+?\d{10,15})$/.test(values.emergencyContactPhone)) {
+    errors.emergencyContactPhone = "Phone must be 10-15 digits";
+  }
+
+  return errors;
 };
 
 export default function FamilyRegistrationForm({
@@ -42,8 +80,7 @@ export default function FamilyRegistrationForm({
   onBack,
   initialData,
 }: FamilyRegistrationFormProps) {
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
-
+  const [apiError, setApiError] = useState<string | null>(null);
   const initialValues: FormValues = initialData || {
     firstName: "",
     lastName: "",
@@ -55,24 +92,9 @@ export default function FamilyRegistrationForm({
     emergencyContactPhone: "",
   };
 
-  const validateForm = (values: FormValues) => {
-    const newErrors: { [key: string]: string } = {};
-
-    if (validationSchema.name(values.firstName))
-      newErrors.firstName = "First Name is required";
-    if (validationSchema.name(values.lastName))
-      newErrors.lastName = "Last Name is required";
-    const emailError = validationSchema.email(values.email);
-    if (emailError) newErrors.email = emailError;
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
   const handleSubmit = async (values: FormValues) => {
-    if (validateForm(values)) {
-      setErrors({});
-      try {
+    setApiError(null);
+    try {
         const payload = {
           firstName: values.firstName,
           lastName: values.lastName,
@@ -93,7 +115,7 @@ export default function FamilyRegistrationForm({
           const receivedToken = response.data?.data?.token || "";
           onSubmit({ ...values, token: receivedToken });
         } else {
-          setErrors({ api: response.data?.message || "Registration failed" });
+          setApiError(response.data?.message || "Registration failed");
         }
       } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
@@ -104,21 +126,18 @@ export default function FamilyRegistrationForm({
             (typeof error.response.data === "string"
               ? error.response.data
               : "Registration failed");
-          setErrors({ api: msg });
+          setApiError(msg);
         } else {
-          setErrors({
-            api: "An unexpected error occurred. Please try again later.",
-          });
+          setApiError("An unexpected error occurred. Please try again later.");
         }
       }
-    }
   };
 
   return (
     <div className="w-full">
       <button
         onClick={onBack}
-        className="flex items-center text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors mb-6"
+        className="flex items-center text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors mb-6 cursor-pointer"
       >
         <ArrowLeft className="w-4 h-4 mr-1.5" />
         Back
@@ -133,32 +152,32 @@ export default function FamilyRegistrationForm({
         </p>
       </div>
 
-      <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-        {({ isSubmitting }) => (
+      <Formik initialValues={initialValues} validate={validateForm} onSubmit={handleSubmit}>
+        {({ isSubmitting, errors, touched }) => (
           <Form className="space-y-4">
-            {errors.api && (
+            {apiError && (
               <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-[12px]">
-                {errors.api}
+                {apiError}
               </div>
             )}
             <TextInput
               label="First Name *"
               placeholder="Enter your first name"
               name="firstName"
-              error={errors.firstName}
+              error={touched.firstName && errors.firstName ? errors.firstName : undefined}
             />
 
             <TextInput
               label="Last Name *"
               placeholder="Enter your last name"
               name="lastName"
-              error={errors.lastName}
+              error={touched.lastName && errors.lastName ? errors.lastName : undefined}
             />
 
             <EmailInput
-              label="Email Address"
+              label="Email Address *"
               placeholder="your.email@example.com"
-              error={errors.email}
+              error={touched.email && errors.email ? errors.email : undefined}
               showIcon={false}
             />
 
@@ -166,7 +185,7 @@ export default function FamilyRegistrationForm({
               label="Phone Number *"
               placeholder="(555) 123-4567"
               name="phone"
-              error={errors.phone}
+              error={touched.phone && errors.phone ? errors.phone : undefined}
             />
 
             <div className="mb-4">
@@ -189,33 +208,38 @@ export default function FamilyRegistrationForm({
                 <option value="Mother">Mother</option>
                 <option value="Other">Other</option>
               </Field>
+              {touched.relationship && errors.relationship && (
+                <div className="text-red-500 text-xs mt-1.5 font-medium">
+                  {errors.relationship}
+                </div>
+              )}
             </div>
 
             <TextInput
-              label="Address"
+              label="Address *"
               placeholder="Enter your address"
               name="address"
-              error={errors.address}
+              error={touched.address && errors.address ? errors.address : undefined}
             />
 
             <TextInput
               label="Emergency Contact Name *"
               placeholder="Enter full name"
               name="emergencyContactName"
-              error={errors.emergencyContactName}
+              error={touched.emergencyContactName && errors.emergencyContactName ? errors.emergencyContactName : undefined}
             />
 
             <TextInput
               label="Emergency Contact Phone *"
               placeholder="(555) 123-4567"
               name="emergencyContactPhone"
-              error={errors.emergencyContactPhone}
+              error={touched.emergencyContactPhone && errors.emergencyContactPhone ? errors.emergencyContactPhone : undefined}
             />
 
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-[#188147] text-white py-3 px-4 rounded-[12px] font-semibold hover:bg-[#116937] transition-colors flex items-center justify-center mt-6 disabled:opacity-70 disabled:cursor-not-allowed"
+              className="w-full bg-[#188147] text-white py-3 px-4 rounded-[12px] font-semibold hover:bg-[#116937] transition-colors flex items-center justify-center mt-6 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
             >
               {isSubmitting ? (
                 <>
