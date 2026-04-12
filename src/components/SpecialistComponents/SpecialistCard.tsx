@@ -1,4 +1,4 @@
-import { Star } from "lucide-react";
+import { User,Award} from "lucide-react";
 import type { Specialist } from "../../types/Specialist";
 import { Link } from "react-router";
 
@@ -25,16 +25,19 @@ export default function SpecialistCard({
               Dr. {specialist.fullName}
             </h3>
             <div className="flex items-center gap-2 text-sm">
-              <div className="flex items-center text-amber-500">
-                <Star className="size-4 fill-current" />
+              <div className="flex items-center text-primary">
+                <Award className="size-4" />
                 <span className="ml-1 font-semibold">
-                  {parseFloat((Math.random() * 5).toFixed(2))}
+                  {specialist.specialty}
                 </span>
               </div>
               <span className="text-gray-300">•</span>
-              <span className="text-gray-600">
-                {Math.round(Math.random() * 30)} years exp.
-              </span>
+              <div className="flex items-center text-primary">
+                <User className="size-4" />
+                <span className="ml-1 font-semibold">
+                  {specialist.patientsCount} patient
+                </span>
+              </div>
             </div>
           </div>
 
