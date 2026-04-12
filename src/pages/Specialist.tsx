@@ -19,17 +19,17 @@ export default function Specialist() {
         "https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/Specialist",
       );
       console.log(req.data);
-      return req.data;
+      return req.data?.data;
     },
   });
   const filteredSpecialists: Specialist[] = useMemo(() => {
-    return specialists?.data?.filter((specialist: Specialist) => {
+    return specialists?.filter((specialist: Specialist) => {
       const fullName = specialist.fullName.toLowerCase();
       const specialty = specialist.specialty.toLowerCase();
       const search = searchTerm.toLowerCase();
       return fullName.includes(search) || specialty.includes(search);
     });
-  }, [searchTerm, specialists?.data]);
+  }, [searchTerm, specialists]);
 
   return (
     <div className="container mx-auto px-4 py-8">

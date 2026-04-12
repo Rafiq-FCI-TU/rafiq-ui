@@ -152,7 +152,10 @@ export default function Session() {
                 ))}
               </ol>
             </div>
-            <SessionAttempt sessionId={sessionId} patientId={user?.patientid?.toString()} /> 
+            <SessionAttempt
+              sessionId={sessionId}
+              patientId={user?.patientId?.toString()}
+            />
           </div>
         </section>
       )}

@@ -1,4 +1,4 @@
-import { User,Award} from "lucide-react";
+import { User, Award } from "lucide-react";
 import type { Specialist } from "../../types/Specialist";
 import { Link } from "react-router";
 
