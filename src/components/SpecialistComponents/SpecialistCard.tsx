@@ -1,38 +1,44 @@
 import { Star } from "lucide-react";
-import type { SpecialistCard } from "../../types/Specialist";
+import type { Specialist } from "../../types/Specialist";
 import { Link } from "react-router";
 
-interface SpecialistCardProps {
-  specialist: SpecialistCard;
-}
-
-export default function SpecialistCard({ specialist }: SpecialistCardProps) {
+export default function SpecialistCard({
+  specialist,
+}: {
+  specialist: Specialist;
+}) {
   return (
     <div className="p-5 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow flex flex-col gap-5">
       <img
-        src={specialist.imageUrl}
-        alt={`Dr. ${specialist.fullname}`}
+        src={
+          specialist.gender.toLocaleLowerCase() === "male"
+            ? "/mdoctor.png"
+            : "/fdoctor.png"
+        }
+        alt={`Dr. ${specialist.fullName}`}
         className="w-full object-cover aspect-video rounded-2xl"
       />
       <div className="flex flex-col justify-between h-full gap-5">
         <div className="flex flex-col grow">
           <div className="mb-4">
             <h3 className="text-xl font-bold text-gray-900 mb-1">
-              Dr. {specialist.fullname}
+              Dr. {specialist.fullName}
             </h3>
             <div className="flex items-center gap-2 text-sm">
               <div className="flex items-center text-amber-500">
                 <Star className="size-4 fill-current" />
-                <span className="ml-1 font-semibold">{specialist.rating}</span>
+                <span className="ml-1 font-semibold">
+                  {parseFloat((Math.random() * 5).toFixed(2))}
+                </span>
               </div>
               <span className="text-gray-300">•</span>
               <span className="text-gray-600">
-                {specialist.experienceYears} years exp.
+                {Math.round(Math.random() * 30)} years exp.
               </span>
             </div>
           </div>
 
-          <p className="text-gray-600">{specialist.bio}</p>
+          <p className="text-gray-600">{specialist.professionalBio}</p>
         </div>
 
         <Link

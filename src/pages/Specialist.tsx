@@ -1,94 +1,35 @@
 import { useState, useMemo } from "react";
 import { Search } from "lucide-react";
 import SpecialistCard from "../components/SpecialistComponents/SpecialistCard";
-import type { SpecialistCard as SpecialistCardType } from "../types/Specialist";
-
-const MOCK_SPECIALISTS: SpecialistCardType[] = [
-  {
-    id: "1",
-    fullname: "Sarah Mitchell",
-    specialty: "Cardiologist",
-    rating: parseFloat((Math.random() * 5).toFixed(2)),
-    experienceYears: Math.round(Math.random() * 30),
-    bio: "Board-certified cardiologist specializing in interventional cardiology and heart disease prevention. Passionate about patient education and comprehensive cardiac care.",
-    imageUrl: "Mitchell.png",
-  },
-  {
-    id: "2",
-    fullname: "Michael Chen",
-    specialty: "Neurologist",
-    rating: parseFloat((Math.random() * 5).toFixed(2)),
-    experienceYears: Math.round(Math.random() * 30),
-    bio: "Neurologist with expertise in movement disorders and epilepsy. Published researcher in neurodegenerative diseases and dedicated to advancing neurological treatments.",
-    imageUrl: "Mitchell.png",
-  },
-  {
-    id: "3",
-    fullname: "Emily Rodriguez",
-    specialty: "Pediatrician",
-    rating: parseFloat((Math.random() * 5).toFixed(2)),
-    experienceYears: Math.round(Math.random() * 30),
-    bio: "Pediatrician focused on developmental pediatrics and childhood wellness. Creates a warm, friendly environment for children and their families.",
-    imageUrl: "Mitchell.png",
-  },
-  {
-    id: "4",
-    fullname: "James Thompson",
-    specialty: "Dermatologist",
-    rating: parseFloat((Math.random() * 5).toFixed(2)),
-    experienceYears: Math.round(Math.random() * 30),
-    bio: "Dermatologist specializing in medical and cosmetic dermatology. Expert in skin cancer detection, acne treatment, and anti-aging procedures.",
-    imageUrl: "Mitchell.png",
-  },
-  {
-    id: "5",
-    fullname: "Lisa Anderson",
-    specialty: "Psychiatrist",
-    rating: parseFloat((Math.random() * 5).toFixed(2)),
-    experienceYears: Math.round(Math.random() * 30),
-    bio: "Psychiatrist with expertise in anxiety disorders, depression, and trauma therapy. Uses evidence-based approaches including cognitive behavioral therapy.",
-    imageUrl: "Mitchell.png",
-  },
-  {
-    id: "6",
-    fullname: "Robert Williams",
-    specialty: "General Practitioner",
-    rating: parseFloat((Math.random() * 5).toFixed(2)),
-    experienceYears: Math.round(Math.random() * 30),
-    bio: "Experienced family physician providing comprehensive primary care for all ages. Focuses on preventive medicine and chronic disease management.",
-    imageUrl: "Mitchell.png",
-  },
-  {
-    id: "7",
-    fullname: "Maria Garcia",
-    specialty: "Orthopedic Surgeon",
-    rating: parseFloat((Math.random() * 5).toFixed(2)),
-    experienceYears: Math.round(Math.random() * 30),
-    bio: "Orthopedic surgeon specializing in sports medicine and joint replacement surgery. Helps patients regain mobility and return to active lifestyles.",
-    imageUrl: "Mitchell.png",
-  },
-  {
-    id: "8",
-    fullname: "Kevin Park",
-    specialty: "Endocrinologist",
-    rating: parseFloat((Math.random() * 5).toFixed(2)),
-    experienceYears: Math.round(Math.random() * 30),
-    bio: "Endocrinologist focused ",
-    imageUrl: "Mitchell.png",
-  },
-];
+import { type Specialist } from "../types/Specialist";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { X, Loader2, SearchX } from "lucide-react";
 
 export default function Specialist() {
   const [searchTerm, setSearchTerm] = useState("");
-
-  const filteredSpecialists = useMemo(() => {
-    return MOCK_SPECIALISTS.filter((specialist) => {
-      const fullName = specialist.fullname.toLowerCase();
+  const {
+    data: specialists,
+    error,
+    isFetching,
+  } = useQuery({
+    queryKey: ["specialists"],
+    queryFn: async () => {
+      const req = await axios.get(
+        "https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/Specialist",
+      );
+      console.log(req.data);
+      return req.data;
+    },
+  });
+  const filteredSpecialists: Specialist[] = useMemo(() => {
+    return specialists?.data?.filter((specialist: Specialist) => {
+      const fullName = specialist.fullName.toLowerCase();
       const specialty = specialist.specialty.toLowerCase();
       const search = searchTerm.toLowerCase();
       return fullName.includes(search) || specialty.includes(search);
     });
-  }, [searchTerm]);
+  }, [searchTerm, specialists?.data]);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -111,19 +52,42 @@ export default function Specialist() {
           placeholder="Search doctors by name or specialty..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
+          disabled={isFetching}
         />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {filteredSpecialists.length > 0 ? (
-          filteredSpecialists.map((specialist) => (
+        {isFetching ? (
+          <div className="col-span-full py-20 text-center ">
+            <div className="mb-4 flex justify-center text-primary">
+              <Loader2 className="animate-spin size-20" />
+            </div>
+            <h3 className="text-xl font-semibold mb-2 text-green-800">
+              Loading specialists...
+            </h3>
+            <p className="text-green-600">Please wait a moment.</p>
+          </div>
+        ) : error ? (
+          <div className="col-span-full py-20 text-center">
+            <div className="mb-4 flex justify-center">
+              <X className="size-20 text-red-500" />
+            </div>
+            <h3 className="text-xl font-semibold text-red-800 mb-2">
+              Failed loading specialists
+            </h3>
+            <p className="text-red-600">Please try again later.</p>
+          </div>
+        ) : filteredSpecialists && filteredSpecialists.length > 0 ? (
+          filteredSpecialists.map((specialist: Specialist) => (
             <SpecialistCard key={specialist.id} specialist={specialist} />
           ))
         ) : (
           <div className="col-span-full py-20 text-center">
-            <div className="text-5xl mb-4">🔍</div>
+            <div className="flex justify-center mb-4">
+              <SearchX className="size-20" />
+            </div>
             <h3 className="text-xl font-semibold text-gray-800 mb-2">
-              No doctors found
+              No specialists found
             </h3>
             <p className="text-gray-500">
               Try adjusting your search terms to find what you're looking for.

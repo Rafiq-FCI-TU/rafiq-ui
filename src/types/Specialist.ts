@@ -1,14 +1,11 @@
-export interface SpecialistCard {
+export interface Specialist {
   id: string;
-  fullname: string;
+  fullName: string;
+  email: string;
+  credentials: string;
   specialty: string;
-  rating: number;
-  experienceYears: number;
-  bio: string;
-  imageUrl: string;
-}
-
-export interface SpecialistDetails extends SpecialistCard {
-  education: string[];
-  specializations: string[];
+  organization: string;
+  professionalBio: string;
+  gender: string;
+  patientsCount: number;
 }
