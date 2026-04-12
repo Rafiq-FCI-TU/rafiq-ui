@@ -1,20 +1,13 @@
-import { useState } from "react";
 import { Link, useParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import type { Session } from "../types/Session";
-import {
-  ArrowLeft,
-  LoaderCircle,
-  Sparkles,
-  UploadCloud,
-  XCircle,
-} from "lucide-react";
+import { ArrowLeft, LoaderCircle, Sparkles, XCircle } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
+import SessionAttempt from "../components/SessionComponents/PatientSessionComponents/SessionAttempt";
 
 export default function Session() {
   const { user } = useAuth();
   const { sessionId } = useParams();
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const isFamily: boolean = user?.roles?.includes("Family") ?? false;
 
   const { data, isPending, error } = useQuery({
@@ -159,69 +152,7 @@ export default function Session() {
                 ))}
               </ol>
             </div>
-
-            <div className="bg-white rounded-3xl shadow-md border border-gray-100 p-6 sm:p-8">
-              <h2 className="text-xl font-bold text-gray-900 mb-2">
-                Upload Child&apos;s Attempt
-              </h2>
-              <p className="text-gray-600 text-sm sm:text-base mb-6">
-                Securely upload the video of your child doing the exercises.
-              </p>
-
-              <label
-                htmlFor="session-upload"
-                className="group flex flex-col items-center justify-center gap-3 border-2 border-green-100 rounded-3xl px-4 py-10 text-center cursor-pointer hover:border-primary/70 hover:bg-primary/5 transition-colors bg-green-50/60"
-              >
-                <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1 shadow-md">
-                  <UploadCloud className="size-7 text-primary" />
-                </div>
-                <div className="space-y-1">
-                  <p className="text-sm sm:text-base font-semibold text-primary">
-                    Upload your video
-                  </p>
-                  <p className="text-xs sm:text-sm text-green-500">
-                    MP4, MOV up to 50MB
-                  </p>
-                </div>
-                <div className="inline-flex items-center gap-2 mt-2 px-5 py-2.5 rounded-full bg-green-900 text-white text-xs sm:text-sm font-semibold group-hover:bg-primary transition-colors shadow-md">
-                  <UploadCloud className="size-4" />
-                  <span>Browse files</span>
-                </div>
-                <input
-                  id="session-upload"
-                  type="file"
-                  accept="video/mp4,video/quicktime"
-                  className="hidden"
-                  onChange={(event) => {
-                    const file = event.target.files?.[0] ?? null;
-                    setSelectedFile(file);
-                  }}
-                />
-              </label>
-
-              {selectedFile && (
-                <div className="mt-4 rounded-2xl bg-green-50 border border-green-100 p-4 text-left space-y-1">
-                  <p className="text-xs font-semibold text-green-500 uppercase tracking-wide">
-                    Selected file
-                  </p>
-                  <p className="text-sm font-medium text-green-900 break-all">
-                    {selectedFile.name}
-                  </p>
-                  <p className="text-xs text-green-500">
-                    {(selectedFile.size / (1024 * 1024)).toFixed(1)} MB
-                  </p>
-                </div>
-              )}
-
-              <button
-                type="button"
-                disabled={!selectedFile}
-                className="mt-6 w-full inline-flex items-center justify-center gap-2 rounded-xl bg-primary text-white font-semibold py-3.5 text-sm sm:text-base disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-primary/90 transition-all shadow-md cursor-pointer disabled:shadow-none"
-              >
-                <UploadCloud className="size-4" />
-                <span>Submit video for review</span>
-              </button>
-            </div>
+            <SessionAttempt sessionId={sessionId} patientId={user?.patientid?.toString()} /> 
           </div>
         </section>
       )}
