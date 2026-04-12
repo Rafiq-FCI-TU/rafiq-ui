@@ -22,16 +22,15 @@ export default function UploadSession() {
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: async (formData: FormData) => {
-      const response = await axios.post(
+      const req = await axios.post(
         "https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/Session",
         formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        },
       );
-      return response.data;
+      const res = req.data;
+      if (res.success !== true) {
+        throw new Error("Failed to upload session");
+      }
+      return res;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["SpecialistSessions"] });
@@ -54,13 +53,13 @@ export default function UploadSession() {
     formikHelpers: FormikHelpers<typeof initialValues>,
   ) => {
     const formData = new FormData();
-    formData.append("title", values.title);
-    formData.append("description", values.description);
-    formData.append("notes", values.notes);
-    formData.append("media", values.media as File);
-    formData.append("thumbnail", values.thumbnail as File);
-    formData.append("score", values.score.toString());
-    formData.append("specialistId", values.specialistId);
+    formData.append("Title", values.title);
+    formData.append("Description", values.description);
+    formData.append("Notes", values.notes);
+    formData.append("Media", values.media as File);
+    formData.append("Thumbnail", values.thumbnail as File);
+    formData.append("Score", values.score.toString());
+    formData.append("SpecialistProfileId", values.specialistId);
     try {
       await mutation.mutateAsync(formData);
     } catch (error) {

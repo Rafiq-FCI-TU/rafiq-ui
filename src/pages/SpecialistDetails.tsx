@@ -4,7 +4,7 @@ import {
   Briefcase,
   GraduationCap,
   CheckCircle2,
-  Award
+  Award,
 } from "lucide-react";
 import { Link, useParams } from "react-router";
 import type { SpecialistDetails } from "../types/Specialist";
@@ -80,9 +80,7 @@ export default function SpecialistDetails() {
                 </span>
               </div>
 
-              <p className="text-gray-600 leading-relaxed">
-                {specialist.bio}
-              </p>
+              <p className="text-gray-600 leading-relaxed">{specialist.bio}</p>
             </div>
           </div>
         </div>
