@@ -17,6 +17,7 @@ import PublicRoute from "./routes/PublicRoute.tsx";
 import AppLayout from "./layouts/AppLayout.tsx";
 import Specialist from "./pages/Specialist.tsx";
 import SpecialistDetails from "./pages/SpecialistDetails.tsx";
+import AIAssistant from "./pages/AIAssistant.tsx";
 
 const router = createBrowserRouter([
   {
@@ -48,6 +49,7 @@ const router = createBrowserRouter([
           },
           { path: "specialist", element: <Specialist /> },
           { path: "specialist/:specialistId", element: <SpecialistDetails /> },
+          { path: "ai-assistant", element: <AIAssistant /> },
         ],
       },
     ],
