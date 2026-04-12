@@ -4,6 +4,11 @@ export interface SpecialistCard {
   specialty: string;
   rating: number;
   experienceYears: number;
-  bio:string;
+  bio: string;
   imageUrl: string;
+}
+
+export interface SpecialistDetails extends SpecialistCard {
+  education: string[];
+  specializations: string[];
 }
