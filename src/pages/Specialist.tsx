@@ -31,7 +31,7 @@ export default function Specialist() {
   }, [searchTerm, specialists]);
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto  p-8">
       <header className="mb-10">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
           Find Your Specialist
@@ -55,7 +55,7 @@ export default function Specialist() {
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {isFetching ? (
           <div className="col-span-full py-20 text-center ">
             <div className="mb-4 flex justify-center text-primary">

@@ -19,14 +19,14 @@ export default function PatientSessionCard({
           loading="lazy"
         />
 
-        <div className="text-black shadow-md backdrop-blur-lg bg-white/70 px-3 py-1 rounded-full absolute top-3 right-3 flex items-center gap-2">
+        <div className="text-black shadow-md backdrop-blur-lg font-semibold bg-white/70 px-3 py-1 rounded-full absolute top-3 right-3 flex items-center gap-2">
           <Clock className="size-4" />{" "}
           {session.duration.split(".")[0].substring(3)}
         </div>
         <span
           className={` ${
             type === "not-allowed" ? " text-red-800" : " text-primary"
-          } text-sm backdrop-blur-lg bg-white/70 px-3 py-1 rounded-full shadow-md absolute bottom-3 left-3 flex items-center gap-2`}
+          } text-sm backdrop-blur-lg bg-white/70 font-semibold px-3 py-1 rounded-full shadow-md absolute bottom-3 left-3 flex items-center gap-2`}
         >
           <Sparkles className="size-4" /> Score {session.score}
         </span>
@@ -37,21 +37,24 @@ export default function PatientSessionCard({
         )}
       </div>
       <div className="p-5 flex flex-col justify-between h-full gap-5">
-        <h3 className="font-semibold text-lg">{session.title}</h3>
-        <p className="text-md text-gray-600">{session.description}</p>
-        <p className="text-md text-gray-500 flex items-center gap-2 border-t border-gray-200 pt-2">
-          <CalendarDays className="size-4" />
-          Uploaded: {" "}
-          {format(session.publishedAt, "MMMM d, yyyy")}
-        </p>
-        {type === "allowed" && (
-          <Link
-            to={`/sessions/${session.id}`}
-            className="flex items-center justify-center shadow-md border-primary hover:border-primary hover:bg-white hover:text-primary transition-all border-2 gap-2 bg-primary text-white px-4 py-2 rounded-full"
-          >
-            <Video /> Watch & Record
-          </Link>
-        )}
+        <div className="flex flex-col gap-5">
+          <h3 className="font-semibold text-lg">{session.title}</h3>
+          <p className="text-md text-gray-600">{session.description}</p>
+        </div>
+        <div className="flex flex-col gap-5">
+          <p className="text-md text-gray-500 flex items-center gap-2 border-t border-gray-200 pt-2">
+            <CalendarDays className="size-4" />
+            Uploaded: {format(session.publishedAt, "MMMM d, yyyy")}
+          </p>
+          {type === "allowed" && (
+            <Link
+              to={`/sessions/${session.id}`}
+              className="flex items-center justify-center shadow-md border-primary hover:border-primary hover:bg-white hover:text-primary transition-all border-2 gap-2 bg-primary text-white px-4 py-2 rounded-full"
+            >
+              <Video /> Watch & Record
+            </Link>
+          )}
+        </div>
       </div>
     </div>
   );

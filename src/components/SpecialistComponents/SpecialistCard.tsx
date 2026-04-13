@@ -1,41 +1,53 @@
-import { User, Award } from "lucide-react";
+import {  Award, Check, UserPlus } from "lucide-react";
 import type { Specialist } from "../../types/Specialist";
 import { Link } from "react-router";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function SpecialistCard({
   specialist,
 }: {
   specialist: Specialist;
 }) {
+  const { user } = useAuth();
   return (
-    <div className="p-5 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow flex flex-col gap-5">
-      <img
-        src={
-          specialist.gender.toLocaleLowerCase() === "male"
-            ? "/mdoctor.png"
-            : "/fdoctor.png"
-        }
-        alt={`Dr. ${specialist.fullName}`}
-        className="w-full object-cover aspect-video rounded-2xl"
-      />
+    <div className="p-5 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all hover:scale-102 flex flex-col gap-5">
+      <div className="relative">
+        <img
+          src={
+            specialist.gender.toLocaleLowerCase() === "male"
+              ? "/mdoctor.png"
+              : "/fdoctor.png"
+          }
+          alt={`Dr. ${specialist.fullName}`}
+          className="w-full object-cover aspect-video rounded-2xl"
+        />
+        {user?.specialistId === specialist.id && (
+          <span className="text-primary shadow-md backdrop-blur-lg bg-white/50 px-3 py-1 rounded-full absolute font-semibold bottom-3 right-3 flex items-center gap-2">
+            <Check className="size-5" />Current
+          </span>
+        )}
+      </div>
       <div className="flex flex-col justify-between h-full gap-5">
         <div className="flex flex-col grow">
           <div className="mb-4">
             <h3 className="text-xl font-bold text-gray-900 mb-1">
               Dr. {specialist.fullName}
             </h3>
-            <div className="flex items-center gap-2 text-sm">
-              <div className="flex items-center text-primary">
+            <div className="flex items-center flex-wrap gap-2 text-sm">
+              <div className="flex items-center text-primary" title="specialty">
                 <Award className="size-4" />
                 <span className="ml-1 font-semibold">
                   {specialist.specialty}
                 </span>
               </div>
               <span className="text-gray-300">•</span>
-              <div className="flex items-center text-primary">
-                <User className="size-4" />
+              <div
+                className="flex items-center text-primary"
+                title="Number of patients"
+              >
+                <UserPlus className="size-4" />
                 <span className="ml-1 font-semibold">
-                  {specialist.patientsCount} patient
+                  {specialist.patientsCount}
                 </span>
               </div>
             </div>

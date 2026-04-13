@@ -96,14 +96,14 @@ export default function SpecialistDetails() {
               <BadgeInfo className="size-6 text-primary" />
               <h2 className="text-xl font-bold text-gray-900">Information</h2>
             </div>
-            <div className="space-y-2.5">
+            <div className="space-y-4">
               <div className="flex items-center gap-3">
                 <Mail className="size-5 text-primary" />
                 <span className="font-medium text-gray-900">
                   Email: {specialist.email}
                 </span>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 ">
                 <BriefcaseMedical className="size-5 text-primary" />
                 <span className="font-medium text-gray-900">
                   Organization: {specialist.organization}
@@ -131,50 +131,59 @@ export default function SpecialistDetails() {
               </div>
             </div>
           </div>
-
-          <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/80 backdrop-blur-md border-t border-gray-100 flex justify-center">
-            {user?.specialistId === specialistId ? (
-              <button
-                className="w-full max-w-6xl lg:ml-[256px] cursor-pointer border-red-500 text-center hover:border-red-500 hover:bg-white hover:text-red-500  border-2 gap-2 bg-red-500 text-white py-[7px] px-8 rounded-2xl shadow-lg transition-all text-lg"
-                onSubmit={() => {
-                  fetch(
-                    `https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/Specialist/${specialistId}/patients/${user?.patientId}`,
-                    {
-                      method: "DELETE",
-                    },
-                  ).then(() => {
-                    setUser({ ...user, specialistId: null });
-                    localStorage.setItem(
-                      "user",
-                      JSON.stringify({ ...user, specialistId: null }),
-                    );
-                  }).catch((e)=>console.log(e));
-                }}
-              >
-                Unassign This Specialist
-              </button>
-            ) : (
-              <button
-                className="w-full max-w-6xl lg:ml-[256px] cursor-pointer border-primary text-center hover:border-primary hover:bg-white hover:text-primary  border-2 gap-2 bg-primary text-white py-[7px] px-8 rounded-2xl shadow-lg transition-all text-lg"
-                onSubmit={() => {
-                  fetch(
-                    `https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/Specialist/${specialistId}/patients/${user?.patientId}`,
-                    {
-                      method: "POST",
-                    },
-                  ).then(() => {
-                    setUser({ ...user, specialistId: specialistId });
-                    localStorage.setItem(
-                      "user",
-                      JSON.stringify({ ...user, specialistId: specialistId }),
-                    );
-                  }).catch((e) => console.log(e));
-                }}
-              >
-                Assign This Specialist
-              </button>
-            )}
-          </div>
+          {(user?.specialistId === specialistId ||
+            user?.specialistId === null) && (
+            <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/80 backdrop-blur-md border-t border-gray-100 flex justify-center">
+              {user?.specialistId === specialistId ? (
+                <button
+                  className="w-full max-w-6xl lg:ml-[256px] cursor-pointer border-red-500 text-center hover:border-red-500 hover:bg-white hover:text-red-500  border-2 gap-2 bg-red-500 text-white py-[7px] px-8 rounded-2xl shadow-lg transition-all text-lg"
+                  onClick={() => {
+                    fetch(
+                      `https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/Specialist/${specialistId}/patients/${user?.patientId}`,
+                      {
+                        method: "DELETE",
+                      },
+                    )
+                      .then(() => {
+                        setUser({ ...user, specialistId: null });
+                        localStorage.setItem(
+                          "user",
+                          JSON.stringify({ ...user, specialistId: null }),
+                        );
+                      })
+                      .catch((e) => console.log(e));
+                  }}
+                >
+                  Unassign This Specialist
+                </button>
+              ) : (
+                <button
+                  className="w-full max-w-6xl lg:ml-[256px] cursor-pointer border-primary text-center hover:border-primary hover:bg-white hover:text-primary  border-2 gap-2 bg-primary text-white py-[7px] px-8 rounded-2xl shadow-lg transition-all text-lg"
+                  onClick={() => {
+                    fetch(
+                      `https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/Specialist/${specialistId}/patients/${user?.patientId}`,
+                      {
+                        method: "POST",
+                      },
+                    )
+                      .then(() => {
+                        setUser({ ...user, specialistId: specialistId });
+                        localStorage.setItem(
+                          "user",
+                          JSON.stringify({
+                            ...user,
+                            specialistId: specialistId,
+                          }),
+                        );
+                      })
+                      .catch((e) => console.log(e));
+                  }}
+                >
+                  Assign This Specialist
+                </button>
+              )}
+            </div>
+          )}
         </div>
       )}
     </div>

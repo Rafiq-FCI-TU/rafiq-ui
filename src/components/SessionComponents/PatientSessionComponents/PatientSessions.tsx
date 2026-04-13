@@ -1,8 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
 import {
   CalendarDays,
   Video,
-  LoaderCircle,
   Stethoscope,
   CheckCircle2,
   Star,
@@ -29,31 +27,11 @@ export default function PatientSessions() {
       type: "allowed",
     },
   ]);
-  const { data, isPending } = useQuery({
-    queryKey: ["PatientSessions", user?.patientId],
-    staleTime: 0,
-    queryFn: async () => {
-      const response = await fetch(
-        `https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/Session/patient/${
-          user?.patientId
-        }/sessions?status=not-allowed`,
-      );
-      return response.json();
-    },
-  });
-  if (isPending) {
+
+  if (!user?.specialistId) {
     return (
-      <main className="h-[calc(100vh-150px)] flex items-center justify-center">
-        <LoaderCircle className="animate-spin size-20 text-primary" />
-      </main>
-    );
-  } else if (
-    !data.success &&
-    data.message === "No sessions found. Please select a specialist first."
-  ) {
-    return (
-      <div className="flex justify-center items-center p-10">
-        <div className="max-w-xl w-full bg-white rounded-3xl border border-primary/20 shadow-sm p-12 flex flex-col items-center text-center">
+      <div className="flex justify-center items-center p-6">
+        <div className="max-w-xl w-full bg-white rounded-3xl border border-primary/20 shadow-sm p-10 flex flex-col items-center text-center">
           <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-8">
             <Stethoscope className="w-10 h-10 text-primary" />
           </div>
@@ -100,7 +78,7 @@ export default function PatientSessions() {
             className="bg-linear-to-r from-primary-dark to-primary text-white px-8 py-4 rounded-xl font-bold flex items-center gap-3 hover:scale-105 transition-all shadow-lg shadow-primary/20"
           >
             <Stethoscope className="w-5 h-5" />
-            Book Your Specialist Now
+            Assign Your Specialist Now
           </Link>
         </div>
       </div>
