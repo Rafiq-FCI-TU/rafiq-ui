@@ -15,16 +15,16 @@ export default function PatientSessions() {
   const { user } = useAuth();
   const [tabs, setTabs] = useState<Tab[]>([
     {
-      name: "Upcoming Sessions",
-      active: true,
-      icon: <CalendarDays className="size-5 not-sm:size-4" />,
-      type: "not-allowed",
-    },
-    {
       name: "Available Sessions",
-      active: false,
+      active: true,
       icon: <Video className="size-5 not-sm:size-4" />,
       type: "allowed",
+    },
+    {
+      name: "Upcoming Sessions",
+      active: false,
+      icon: <CalendarDays className="size-5 not-sm:size-4" />,
+      type: "not-allowed",
     },
   ]);
 
