@@ -31,7 +31,7 @@ export default function SpecialistDetails() {
   const specialist: Specialist = data;
 
   return (
-    <div className="bg-gray-50/30 mb-15">
+    <div className="bg-gray-50/30 pb-15">
       {isFetching ? (
         <div className="flex flex-col items-center justify-center h-[calc(100vh-200px)]">
           <div className="mb-4 flex justify-center text-primary">
