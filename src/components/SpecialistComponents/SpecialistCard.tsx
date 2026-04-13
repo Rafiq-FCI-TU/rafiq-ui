@@ -16,7 +16,7 @@ export default function SpecialistCard({
           src={
             specialist.gender.toLocaleLowerCase() === "male"
               ? "/mdoctor.png"
-              : "/fdoctor.png"
+              : "/fdoctor.jpg"
           }
           alt={`Dr. ${specialist.fullName}`}
           className="w-full object-cover aspect-video rounded-2xl"
