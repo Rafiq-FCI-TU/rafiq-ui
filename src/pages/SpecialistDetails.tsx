@@ -69,7 +69,7 @@ export default function SpecialistDetails() {
               src={
                 specialist.gender.toLowerCase() === "male"
                   ? "/mdoctor.png"
-                  : "/fdoctor.png"
+                  : "/fdoctor.jpg"
               }
               alt={`Dr. ${specialist.fullName}`}
               className="w-48 h-48 rounded-2xl object-cover"
