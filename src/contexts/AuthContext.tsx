@@ -61,8 +61,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       roles: userData.roles || [],
       hasAssessment: userData.hasAssessment || false,
       assessmentId: userData.assessmentId ? userData.assessmentId : null,
-      patientId: userData.patientId || null,
-      specialistId: userData.specialistId || null,
+      patientId: userData.patientid || null,
+      specialistId: userData.specialistid || null,
       isAuthenticated: true,
     };
 

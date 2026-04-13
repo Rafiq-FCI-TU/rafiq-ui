@@ -22,7 +22,6 @@ export default function AppLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const isFamily: boolean = user?.roles?.includes("Family") ?? false;
-  console.log("user", user, "isFamily", isFamily);
   const menuItems = [
     { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
     {
@@ -139,7 +138,7 @@ export default function AppLayout() {
                         {user?.username || "Username"}
                       </p>
                       <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider mt-1">
-                        {user?.roles[0] || "User"}
+                        {user?.roles?.[0] || "User"}
                       </p>
                     </div>
                     <ChevronDown

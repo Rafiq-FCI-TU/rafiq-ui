@@ -18,7 +18,6 @@ export default function Specialist() {
       const req = await axios.get(
         "https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/Specialist",
       );
-      console.log(req.data);
       return req.data?.data;
     },
   });

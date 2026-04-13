@@ -29,7 +29,6 @@ export default function SpecialistDetails() {
     },
   });
   const specialist: Specialist = data;
-  console.log("specialist", specialist);
 
   return (
     <div className="bg-gray-50/30 mb-15">
@@ -137,12 +136,19 @@ export default function SpecialistDetails() {
             {user?.specialistId === specialistId ? (
               <button
                 className="w-full max-w-6xl lg:ml-[256px] cursor-pointer border-red-500 text-center hover:border-red-500 hover:bg-white hover:text-red-500  border-2 gap-2 bg-red-500 text-white py-[7px] px-8 rounded-2xl shadow-lg transition-all text-lg"
-                onClick={() => {
-                  setUser({ ...user, specialistId: null });
-                  localStorage.setItem(
-                    "user",
-                    JSON.stringify({ ...user, specialistId: null }),
-                  );
+                onSubmit={() => {
+                  fetch(
+                    `https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/Specialist/${specialistId}/patients/${user?.patientId}`,
+                    {
+                      method: "DELETE",
+                    },
+                  ).then(() => {
+                    setUser({ ...user, specialistId: null });
+                    localStorage.setItem(
+                      "user",
+                      JSON.stringify({ ...user, specialistId: null }),
+                    );
+                  }).catch((e)=>console.log(e));
                 }}
               >
                 Unassign This Specialist
@@ -150,12 +156,19 @@ export default function SpecialistDetails() {
             ) : (
               <button
                 className="w-full max-w-6xl lg:ml-[256px] cursor-pointer border-primary text-center hover:border-primary hover:bg-white hover:text-primary  border-2 gap-2 bg-primary text-white py-[7px] px-8 rounded-2xl shadow-lg transition-all text-lg"
-                onClick={() => {
-                  setUser({ ...user, specialistId: specialistId });
-                  localStorage.setItem(
-                    "user",
-                    JSON.stringify({ ...user, specialistId: specialistId }),
-                  );
+                onSubmit={() => {
+                  fetch(
+                    `https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/Specialist/${specialistId}/patients/${user?.patientId}`,
+                    {
+                      method: "POST",
+                    },
+                  ).then(() => {
+                    setUser({ ...user, specialistId: specialistId });
+                    localStorage.setItem(
+                      "user",
+                      JSON.stringify({ ...user, specialistId: specialistId }),
+                    );
+                  }).catch((e) => console.log(e));
                 }}
               >
                 Assign This Specialist
