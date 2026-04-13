@@ -7,7 +7,6 @@ import Login from "./pages/Login.tsx";
 import Register from "./pages/Register.tsx";
 import ForgotPassword from "./pages/ForgotPassword.tsx";
 import Assessment from "./pages/Assessment.tsx";
-import { GoogleOAuthProvider } from "@react-oauth/google";
 import Sessions from "./pages/Sessions.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./contexts/AuthContext.tsx";
@@ -18,6 +17,7 @@ import AppLayout from "./layouts/AppLayout.tsx";
 import Specialist from "./pages/Specialist.tsx";
 import SpecialistDetails from "./pages/SpecialistDetails.tsx";
 import AIAssistant from "./pages/AIAssistant.tsx";
+import Dashboard from "./pages/Dashboard.tsx";
 
 const router = createBrowserRouter([
   {
@@ -38,7 +38,7 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
         children: [
-          { path: "dashboard", element: <h1>dashboard</h1> },
+          { path: "dashboard", element: <Dashboard /> },
           {
             path: "sessions",
             element: <Sessions />,
@@ -91,12 +91,10 @@ const router = createBrowserRouter([
 const queryClient = new QueryClient();
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <GoogleOAuthProvider clientId={"Client_Id"}>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <RouterProvider router={router} />
         </AuthProvider>
       </QueryClientProvider>
-    </GoogleOAuthProvider>
   </StrictMode>,
 );
