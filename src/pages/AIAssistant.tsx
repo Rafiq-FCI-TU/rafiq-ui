@@ -124,7 +124,7 @@ export default function AIAssistant() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-74px)] overflow-hidden bg-linear-to-br from-slate-50 via-blue-50/30 to-green-50/20">
+    <div className="flex flex-col h-[calc(100vh-78px)] overflow-hidden bg-linear-to-br from-slate-50 via-blue-50/30 to-green-50/20">
       {/* Enhanced Header */}
       <header className="relative bg-white/80 backdrop-blur-xl border-b border-gray-200/50 py-4 px-6 shrink-0 shadow-lg">
         <div className="absolute inset-0 bg-linear-to-r from-primary/5 via-transparent to-primary/5"></div>
