@@ -15,6 +15,7 @@ export interface User {
   assessmentId?: number | null;
   patientId?: number | null;
   specialistId?: string | null;
+  score?: number | null;
   isAuthenticated?: boolean;
 }
 
@@ -63,6 +64,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       assessmentId: userData.assessmentId ? userData.assessmentId : null,
       patientId: userData.patientid || null,
       specialistId: userData.specialistid || null,
+      score: userData.score || null,
       isAuthenticated: true,
     };
 

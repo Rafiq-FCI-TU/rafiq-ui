@@ -23,7 +23,7 @@ export default function ActiveTab({
 
   return (
     <div
-      className={`p-10 not-md:p-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 relative ${!data?.data && "justify-center items-center min-h-[400px]"}`}
+      className={`p-10 not-md:p-5 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 relative ${!data?.data && "justify-center items-center min-h-[400px]"}`}
     >
       {isPending ? (
         <div className="col-span-full flex items-center justify-center">

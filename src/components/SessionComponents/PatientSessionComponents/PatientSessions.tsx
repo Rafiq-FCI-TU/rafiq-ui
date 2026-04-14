@@ -104,7 +104,8 @@ export default function PatientSessions() {
                   CHILD SCORE
                 </div>
                 <div className="text-4xl font-bold text-gray-700">
-                  100<span className="text-sm text-gray-500"> pts</span>
+                  {user.score?.toFixed(2)}
+                  <span className="text-sm text-gray-500"> pts</span>
                 </div>
               </div>
             </div>
