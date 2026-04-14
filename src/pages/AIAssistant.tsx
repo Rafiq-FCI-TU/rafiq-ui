@@ -1,12 +1,12 @@
 import { useState, useRef, useEffect } from "react";
-import { 
-  Send, 
-  Bot, 
-  User, 
-  Sparkles, 
-  Brain, 
-  Heart, 
-  BookOpen, 
+import {
+  Send,
+  Bot,
+  User,
+  Sparkles,
+  Brain,
+  Heart,
+  BookOpen,
   Activity,
   Copy,
   Check,
@@ -124,7 +124,7 @@ export default function AIAssistant() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-78px)] overflow-hidden bg-linear-to-br from-slate-50 via-blue-50/30 to-green-50/20">
+    <div className="flex flex-col min-h-[calc(100vh-74px)] bg-linear-to-br from-slate-50 via-blue-50/30 to-green-50/20">
       {/* Enhanced Header */}
       <header className="relative bg-white/80 backdrop-blur-xl border-b border-gray-200/50 py-4 px-6 shrink-0 shadow-lg">
         <div className="absolute inset-0 bg-linear-to-r from-primary/5 via-transparent to-primary/5"></div>
@@ -148,7 +148,7 @@ export default function AIAssistant() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <button 
+            <button
               onClick={() => setMessages([messages[0]])}
               className="p-2.5 rounded-xl bg-gray-100 hover:bg-gray-200 transition-all hover:scale-105 active:scale-95 cursor-pointer group"
               title="New conversation"
@@ -160,7 +160,7 @@ export default function AIAssistant() {
       </header>
 
       {/* Chat Area */}
-      <div className="flex-1 overflow-y-auto px-4 py-6 scroll-smooth">
+      <div className="flex-1 px-4 py-6 scroll-smooth pb-32">
         <div className="max-w-4xl mx-auto space-y-6">
           {/* Welcome Section */}
           {messages.length === 1 && (
@@ -206,11 +206,10 @@ export default function AIAssistant() {
             >
               {/* Avatar */}
               <div
-                className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 shadow-lg transition-all hover:scale-110 ${
-                  msg.role === "user"
+                className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 shadow-lg transition-all hover:scale-110 ${msg.role === "user"
                     ? "bg-linear-to-br from-primary-dark to-primary text-white"
                     : "bg-white border-2 border-primary/30 text-primary"
-                }`}
+                  }`}
               >
                 {msg.role === "user" ? <User className="w-5 h-5" /> : <Bot className="w-6 h-6 text-primary" />}
               </div>
@@ -218,20 +217,17 @@ export default function AIAssistant() {
               {/* Message Bubble */}
               <div className={`max-w-[75%] group ${msg.role === "user" ? "items-end" : "items-start"}`}>
                 <div
-                  className={`rounded-2xl px-5 py-3.5 shadow-lg transition-all hover:shadow-xl ${
-                    msg.role === "user"
+                  className={`rounded-2xl px-5 py-3.5 shadow-lg transition-all hover:shadow-xl ${msg.role === "user"
                       ? "bg-linear-to-br from-primary to-primary-dark text-white rounded-tr-none"
                       : "bg-white/90 backdrop-blur-sm border border-gray-200/50 text-gray-800 rounded-tl-none"
-                  }`}
+                    }`}
                 >
                   <p className="leading-relaxed text-sm whitespace-pre-wrap">{msg.text}</p>
-                  <div className={`flex items-center gap-2 mt-2 pt-2 border-t ${
-                    msg.role === "user" ? "border-white/20" : "border-gray-200/50"
-                  }`}>
+                  <div className={`flex items-center gap-2 mt-2 pt-2 border-t ${msg.role === "user" ? "border-white/20" : "border-gray-200/50"
+                    }`}>
                     <p
-                      className={`text-[10px] font-medium ${
-                        msg.role === "user" ? "text-white/70" : "text-gray-500"
-                      }`}
+                      className={`text-[10px] font-medium ${msg.role === "user" ? "text-white/70" : "text-gray-500"
+                        }`}
                     >
                       {msg.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                     </p>
@@ -302,7 +298,7 @@ export default function AIAssistant() {
       </div>
 
       {/* Enhanced Input Area */}
-      <div className="bg-white/80 backdrop-blur-xl border-t border-gray-200/50 p-4 shrink-0 shadow-2xl">
+      <div className="fixed sm:sticky bottom-0 left-0 lg:left-64 right-0 bg-white/80 backdrop-blur-xl border-t border-gray-200/50 p-4 shrink-0 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.1)] z-40">
         <div className="max-w-4xl mx-auto">
           <form
             onSubmit={onSubmit}
@@ -316,7 +312,7 @@ export default function AIAssistant() {
             >
               <Paperclip className="w-5 h-5 text-gray-500 group-hover:text-primary transition-colors" />
             </button>
-            
+
             <textarea
               ref={textareaRef}
               value={inputValue}
@@ -331,7 +327,7 @@ export default function AIAssistant() {
               className="flex-1 max-h-32 min-h-11 bg-transparent border-none focus:ring-0 resize-none px-3 py-2.5 text-sm text-gray-800 outline-none placeholder:text-gray-400"
               rows={1}
             />
-            
+
             {/* Voice Input Button */}
             <button
               type="button"
@@ -340,7 +336,7 @@ export default function AIAssistant() {
             >
               <Mic className="w-5 h-5 text-gray-500 group-hover:text-primary transition-colors" />
             </button>
-            
+
             <button
               type="submit"
               disabled={!inputValue.trim() || isTyping}

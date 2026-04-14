@@ -51,13 +51,13 @@ export default function FamilyDashboard() {
   }, [user?.specialistId]);
 
   return (
-    <div className="container mx-auto px-6 py-8 h-[calc(100vh-74px)] overflow-y-auto bg-linear-to-br from-gray-50 to-green-50/30">
+    <div className="container mx-auto px-6 py-8 min-h-[calc(100vh-74px)] bg-linear-to-br from-gray-50 to-green-50/30">
       <WelcomeBanner username={user?.username} />
-      
-      <SpecialistDetailsCard 
-        isLoading={isLoadingSpecialist} 
-        error={error} 
-        specialistData={specialistData} 
+
+      <SpecialistDetailsCard
+        isLoading={isLoadingSpecialist}
+        error={error}
+        specialistData={specialistData}
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
