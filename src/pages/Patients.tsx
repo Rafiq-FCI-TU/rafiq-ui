@@ -79,16 +79,11 @@ export default function Patients() {
 
         <div
           title="Number of Patients"
-          className="w-fit flex items-center gap-1 px-4 py-3 bg-gray-50 rounded-2xl border text-md border-gray-100"
+          className="w-fit flex items-center gap-1 px-4 py-3 bg-gray-50 text-gray-500 rounded-2xl border text-md border-gray-100"
         >
           <UserPlus className="size-5 text-primary" />
-          <span className="text-primary font-semibold">
-            {filteredPatients.length}
-          </span>
-          <span className="text-gray-500 hidden sm:inline">
-            patient
-            {filteredPatients.length !== 1 ? "s" : ""}
-          </span>
+          <span className="text-lg font-bold">{filteredPatients.length}</span>
+
         </div>
       </div>
 

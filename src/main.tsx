@@ -19,6 +19,7 @@ import SpecialistDetails from "./pages/SpecialistDetails.tsx";
 import AIAssistant from "./pages/AIAssistant.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import Patients from "./pages/Patients.tsx";
+import Patient from "./pages/Patient.tsx";
 
 const router = createBrowserRouter([
   {
@@ -51,6 +52,7 @@ const router = createBrowserRouter([
           { path: "specialist", element: <Specialist /> },
           { path: "specialist/:specialistId", element: <SpecialistDetails /> },
           { path: "patients", element: <Patients /> },
+          { path: "patients/:patientId", element: <Patient /> },
           { path: "ai-assistant", element: <AIAssistant /> },
         ],
       },
