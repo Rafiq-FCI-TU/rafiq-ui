@@ -1,4 +1,4 @@
-import {  Award, Check, UserPlus } from "lucide-react";
+import {  Award, Check, Eye, UserPlus } from "lucide-react";
 import type { Specialist } from "../../types/Specialist";
 import { Link } from "react-router";
 import { useAuth } from "../../contexts/AuthContext";
@@ -59,8 +59,9 @@ export default function SpecialistCard({
 
         <Link
           to={`/specialist/${specialist.id}`}
-          className="shadow-md border-primary text-center hover:border-primary hover:bg-white hover:text-primary transition-all duration-300 border-2 gap-2 bg-primary text-white px-6 py-4 rounded-2xl"
+          className="shadow-md border-primary text-center hover:border-primary hover:bg-white hover:text-primary transition-all duration-300 border-2 gap-2 bg-primary text-white px-6 py-4 rounded-2xl flex items-center justify-center"
         >
+          <Eye className="size-5" />
           View Details
         </Link>
       </div>

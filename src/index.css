@@ -9,7 +9,7 @@
   --color-primary-light: #148445;
 }
 
-body{
+body {
   font-family: "Noto Sans Arabic";
 }
 /* AI Assistant Animations */
@@ -42,4 +42,3 @@ body{
 .animate-slide-up {
   animation: slide-up 0.4s ease-out;
 }
-
