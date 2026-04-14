@@ -57,7 +57,7 @@ export default function SpecialistDetails() {
           {/* Back Navigation */}
           <Link
             to="/specialist"
-            className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-8 transition-colors"
+            className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-8 transition-colors duration-300"
           >
             <ArrowLeft className="size-5 mr-2" />
             <span className="font-medium text-lg">Go Back</span>
@@ -136,7 +136,7 @@ export default function SpecialistDetails() {
             <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/80 backdrop-blur-md border-t border-gray-100 flex justify-center">
               {user?.specialistId === specialistId ? (
                 <button
-                  className="w-full max-w-6xl lg:ml-[256px] cursor-pointer border-red-500 text-center hover:border-red-500 hover:bg-white hover:text-red-500  border-2 gap-2 bg-red-500 text-white py-[7px] px-8 rounded-2xl shadow-lg transition-all text-lg"
+                  className="w-full max-w-6xl lg:ml-[256px] cursor-pointer border-red-500 text-center hover:border-red-500 hover:bg-white hover:text-red-500  border-2 gap-2 bg-red-500 text-white py-[7px] px-8 rounded-2xl shadow-lg transition-all duration-300 text-lg"
                   onClick={() => {
                     fetch(
                       `https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/Specialist/${specialistId}/patients/${user?.patientId}`,
@@ -158,7 +158,7 @@ export default function SpecialistDetails() {
                 </button>
               ) : (
                 <button
-                  className="w-full max-w-6xl lg:ml-[256px] cursor-pointer border-primary text-center hover:border-primary hover:bg-white hover:text-primary  border-2 gap-2 bg-primary text-white py-[7px] px-8 rounded-2xl shadow-lg transition-all text-lg"
+                  className="w-full max-w-6xl lg:ml-[256px] cursor-pointer border-primary text-center hover:border-primary hover:bg-white hover:text-primary  border-2 gap-2 bg-primary text-white py-[7px] px-8 rounded-2xl shadow-lg transition-all duration-300 text-lg"
                   onClick={() => {
                     fetch(
                       `https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/Specialist/${specialistId}/patients/${user?.patientId}`,

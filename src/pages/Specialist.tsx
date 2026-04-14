@@ -47,7 +47,7 @@ export default function Specialist() {
         </div>
         <input
           type="text"
-          className="block w-full pl-12 pr-4 py-4 bg-white border border-gray-200 rounded-2xl shadow-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all duration-200"
+          className="block w-full pl-12 pr-4 py-4 bg-white border border-gray-200 rounded-2xl shadow-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all duration-300"
           placeholder="Search doctors by name or specialty..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}

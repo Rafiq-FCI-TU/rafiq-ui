@@ -51,7 +51,7 @@ export default function Session() {
           </p>
           <Link
             to="/sessions"
-            className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-semibold bg-primary text-white hover:bg-primary/90 transition-colors"
+            className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-semibold bg-primary text-white hover:bg-primary/90 transition-colors duration-300"
           >
             <ArrowLeft className="size-4" />
             Back to sessions
@@ -69,7 +69,7 @@ export default function Session() {
         <div className="flex items-center justify-between gap-4 flex-wrap px-1">
           <Link
             to="/sessions"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-gray-600 hover:text-primary transition-colors"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-gray-600 hover:text-primary transition-colors duration-300"
           >
             <ArrowLeft className="size-4" />
             Back to sessions

@@ -10,7 +10,7 @@ export default function SpecialistCard({
 }) {
   const { user } = useAuth();
   return (
-    <div className="p-5 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all hover:scale-102 flex flex-col gap-5">
+    <div className="p-5 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-102 flex flex-col gap-5">
       <div className="relative">
         <img
           src={
@@ -23,7 +23,8 @@ export default function SpecialistCard({
         />
         {user?.specialistId === specialist.id && (
           <span className="text-primary shadow-md backdrop-blur-lg bg-white/50 px-3 py-1 rounded-full absolute font-semibold bottom-3 right-3 flex items-center gap-2">
-            <Check className="size-5" />Current
+            <Check className="size-5" />
+            Current
           </span>
         )}
       </div>
@@ -58,7 +59,7 @@ export default function SpecialistCard({
 
         <Link
           to={`/specialist/${specialist.id}`}
-          className="shadow-md border-primary text-center hover:border-primary hover:bg-white hover:text-primary transition-all border-2 gap-2 bg-primary text-white px-6 py-4 rounded-2xl"
+          className="shadow-md border-primary text-center hover:border-primary hover:bg-white hover:text-primary transition-all duration-300 border-2 gap-2 bg-primary text-white px-6 py-4 rounded-2xl"
         >
           View Details
         </Link>

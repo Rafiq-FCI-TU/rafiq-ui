@@ -12,7 +12,7 @@ export default function GetStarted() {
       </p>
       <Link
         to="/register"
-        className="bg-white text-primary-dark font-semibold rounded-xl transition-all hover:scale-105  px-10 py-2"
+        className="bg-white text-primary-dark font-semibold rounded-xl transition-all duration-300 hover:scale-105  px-10 py-2"
       >
         You Can Start Free →
       </Link>

@@ -75,7 +75,7 @@ export default function PatientSessions() {
           </div>
           <Link
             to={"/specialist"}
-            className="bg-linear-to-r from-primary-dark to-primary text-white px-8 py-4 rounded-xl font-bold flex items-center gap-3 hover:scale-105 transition-all shadow-lg shadow-primary/20"
+            className="bg-linear-to-r from-primary-dark to-primary text-white px-8 py-4 rounded-xl font-bold flex items-center gap-3 hover:scale-105 transition-all duration-300 shadow-lg shadow-primary/20"
           >
             <Stethoscope className="w-5 h-5" />
             Assign Your Specialist Now

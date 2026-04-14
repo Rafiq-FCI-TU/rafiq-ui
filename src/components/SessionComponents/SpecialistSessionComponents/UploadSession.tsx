@@ -91,7 +91,7 @@ export default function UploadSession() {
         </div>
         <button
           onClick={() => setUploadFormToggle(true)}
-          className="flex items-center justify-center gap-2  bg-white px-4 py-2 rounded-xl shadow-md text-primary font-bold hover:scale-105 cursor-pointer transition-transform whitespace-nowrap"
+          className="flex items-center justify-center gap-2  bg-white px-4 py-2 rounded-xl shadow-md text-primary font-bold hover:scale-105 cursor-pointer transition-transform duration-300 whitespace-nowrap"
         >
           <Upload className="size-6" /> Upload Session
         </button>
@@ -148,7 +148,7 @@ export default function UploadSession() {
                             error={
                               touched.title ? (errors.title as string) : ""
                             }
-                            className={`w-full px-4 py-3 bg-white border ${touched.title && errors.title ? "border-red-500" : "border-gray-200"} rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all shadow-sm`}
+                            className={`w-full px-4 py-3 bg-white border ${touched.title && errors.title ? "border-red-500" : "border-gray-200"} rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all duration-300 shadow-sm`}
                           />
                           <ErrorMessage
                             name="title"
@@ -165,7 +165,7 @@ export default function UploadSession() {
                             as="textarea"
                             name="description"
                             placeholder="Enter session description"
-                            className={`w-full px-4 py-3 bg-white border ${touched.description && errors.description ? "border-red-500" : "border-gray-200"} rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all shadow-sm min-h-[100px] resize-none`}
+                            className={`w-full px-4 py-3 bg-white border ${touched.description && errors.description ? "border-red-500" : "border-gray-200"} rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all duration-300 shadow-sm min-h-[100px] resize-none`}
                           />
                           <ErrorMessage
                             name="description"
@@ -182,7 +182,7 @@ export default function UploadSession() {
                             as="textarea"
                             name="notes"
                             placeholder="Additional notes..."
-                            className={`w-full px-4 py-3 bg-white border ${touched.notes && errors.notes ? "border-red-500" : "border-gray-200"} rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all shadow-sm min-h-[100px] resize-none`}
+                            className={`w-full px-4 py-3 bg-white border ${touched.notes && errors.notes ? "border-red-500" : "border-gray-200"} rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all duration-300 shadow-sm min-h-[100px] resize-none`}
                           />
                           <ErrorMessage
                             name="notes"
@@ -200,7 +200,7 @@ export default function UploadSession() {
                           </label>
                           <div
                             onClick={() => fileInputRef.current?.click()}
-                            className={`relative group flex flex-col items-center justify-center p-6 border-2  rounded-2xl cursor-pointer transition-all ${
+                            className={`relative group flex flex-col items-center justify-center p-6 border-2  rounded-2xl cursor-pointer transition-all duration-300 ${
                               values.media
                                 ? "border-primary bg-primary/5"
                                 : touched.media && errors.media
@@ -229,7 +229,7 @@ export default function UploadSession() {
                               </>
                             ) : (
                               <>
-                                <FileVideo className="size-10 mb-2 text-gray-400 group-hover:text-primary transition-colors" />
+                                <FileVideo className="size-10 mb-2 text-gray-400 group-hover:text-primary transition-colors duration-300" />
                                 <span className="text-xs font-medium text-gray-600">
                                   Click to upload video
                                 </span>
@@ -252,7 +252,7 @@ export default function UploadSession() {
                           </label>
                           <div
                             onClick={() => thumbInputRef.current?.click()}
-                            className={`relative group flex flex-col items-center justify-center aspect-video border-2  rounded-2xl cursor-pointer transition-all overflow-hidden ${
+                            className={`relative group flex flex-col items-center justify-center aspect-video border-2  rounded-2xl cursor-pointer transition-all duration-300 overflow-hidden ${
                               values.thumbnail
                                 ? "border-primary"
                                 : touched.thumbnail && errors.thumbnail
@@ -281,7 +281,7 @@ export default function UploadSession() {
                                   alt="Preview"
                                   className="w-full h-full object-cover"
                                 />
-                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300">
                                   <span className="text-white text-xs font-bold">
                                     Change Photo
                                   </span>
@@ -289,7 +289,7 @@ export default function UploadSession() {
                               </div>
                             ) : (
                               <>
-                                <ImageIcon className="size-10 mb-2 text-gray-400 group-hover:text-primary transition-colors" />
+                                <ImageIcon className="size-10 mb-2 text-gray-400 group-hover:text-primary transition-colors duration-300" />
                                 <span className="text-xs font-medium text-gray-600">
                                   Click to upload photo
                                 </span>
@@ -317,7 +317,7 @@ export default function UploadSession() {
                         name="score"
                         min="0"
                         max="100"
-                        className={`w-full px-4 py-3 bg-white border ${touched.score && errors.score ? "border-red-500" : "border-gray-200"} rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all shadow-sm`}
+                        className={`w-full px-4 py-3 bg-white border ${touched.score && errors.score ? "border-red-500" : "border-gray-200"} rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all duration-300 shadow-sm`}
                         placeholder="Enter score"
                       />
                       <ErrorMessage
@@ -336,14 +336,14 @@ export default function UploadSession() {
                           setThumbnailPreview(null);
                         }}
                         disabled={isSubmitting}
-                        className="flex-1 px-6 py-4 border-2 disabled:cursor-not-allowed border-gray-100 text-gray-500 font-bold rounded-2xl hover:bg-gray-50 hover:text-gray-700 transition-all cursor-pointer active:scale-[0.98]"
+                        className="flex-1 px-6 py-4 border-2 disabled:cursor-not-allowed border-gray-100 text-gray-500 font-bold rounded-2xl hover:bg-gray-50 hover:text-gray-700 transition-all duration-300 cursor-pointer active:scale-[0.98]"
                       >
                         Cancel
                       </button>
                       <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="flex-1 px-6 py-4 bg-primary disabled:bg-primary-dark disabled:cursor-not-allowed text-white font-bold rounded-2xl hover:bg-primary-dark transition-all shadow-lg shadow-primary/20 cursor-pointer active:scale-[0.98] flex items-center justify-center gap-2"
+                        className="flex-1 px-6 py-4 bg-primary disabled:bg-primary-dark disabled:cursor-not-allowed text-white font-bold rounded-2xl hover:bg-primary-dark transition-all duration-300 shadow-lg shadow-primary/20 cursor-pointer active:scale-[0.98] flex items-center justify-center gap-2"
                       >
                         {isSubmitting ? (
                           <>

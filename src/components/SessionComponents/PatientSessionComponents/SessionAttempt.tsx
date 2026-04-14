@@ -88,7 +88,7 @@ export default function SessionAttempt({
 
             <label
               htmlFor="video"
-              className="group flex flex-col items-center justify-center gap-3 border-2 border-green-100 rounded-3xl px-4 py-10 text-center cursor-pointer hover:border-primary/70 hover:bg-primary/5 transition-colors bg-green-50/60"
+              className="group flex flex-col items-center justify-center gap-3 border-2 border-green-100 rounded-3xl px-4 py-10 text-center cursor-pointer hover:border-primary/70 hover:bg-primary/5 transition-colors duration-300 bg-green-50/60"
             >
               <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1 shadow-md">
                 <UploadCloud className="size-7 text-primary" />
@@ -101,7 +101,7 @@ export default function SessionAttempt({
                   MP4, MOV up to 50MB
                 </p>
               </div>
-              <div className="inline-flex items-center gap-2 mt-2 px-5 py-2.5 rounded-full bg-green-900 text-white text-xs sm:text-sm font-semibold group-hover:bg-primary transition-colors shadow-md">
+              <div className="inline-flex items-center gap-2 mt-2 px-5 py-2.5 rounded-full bg-green-900 text-white text-xs sm:text-sm font-semibold group-hover:bg-primary transition-colors duration-300 shadow-md">
                 <UploadCloud className="size-4" />
                 <span>Browse files</span>
               </div>

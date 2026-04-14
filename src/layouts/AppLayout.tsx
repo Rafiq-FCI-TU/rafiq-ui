@@ -65,7 +65,7 @@ export default function AppLayout() {
             </div>
             <button
               onClick={() => setSidebarOpen(false)}
-              className="lg:hidden p-2 rounded-xl hover:bg-white/10 text-white transition-colors"
+              className="lg:hidden p-2 rounded-xl hover:bg-white/10 text-white transition-colors duration-300"
             >
               <X className="w-5 h-5" />
             </button>
@@ -81,7 +81,7 @@ export default function AppLayout() {
                       `flex items-center px-4 py-3 text-gray-600 rounded-xl hover:bg-green-100 hover:text-primary transition-all duration-300 group relative overflow-hidden ${isActive ? "bg-green-100 text-primary font-bold" : ""}`
                     }
                   >
-                    <item.icon className="w-5 h-5 mr-3 group-hover:scale-110 group-hover:rotate-3 transition-transform relative z-10" />
+                    <item.icon className="w-5 h-5 mr-3 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 relative z-10" />
                     <span className="font-semibold text-sm relative z-10">
                       {item.label}
                     </span>
@@ -96,7 +96,7 @@ export default function AppLayout() {
               onClick={logout}
               className="flex cursor-pointer items-center w-full px-4 py-3 text-red-600 rounded-xl hover:bg-red-50 transition-all duration-300 group border border-transparent hover:border-red-100 shadow-sm hover:shadow-md active:scale-[0.98]"
             >
-              <LogOut className="w-5 h-5 mr-3 group-hover:-translate-x-1 transition-transform" />
+              <LogOut className="w-5 h-5 mr-3 group-hover:-translate-x-1 transition-transform duration-300" />
               <span className="font-bold text-sm">Sign Out</span>
             </button>
           </div>
@@ -111,24 +111,24 @@ export default function AppLayout() {
             <div className="flex items-center lg:justify-end justify-between gap-4">
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="lg:hidden p-2.5 bg-linear-to-r from-primary-dark to-green-700 rounded-2xl hover:opacity-90 shadow-md cursor-pointer text-white transition-all active:scale-95"
+                className="lg:hidden p-2.5 bg-linear-to-r from-primary-dark to-green-700 rounded-2xl hover:opacity-90 shadow-md cursor-pointer text-white transition-all duration-300 active:scale-95"
               >
                 <Menu className="w-6 h-6" />
               </button>
 
               <div className="flex items-center gap-3 ">
-                <button className="relative p-2.5 cursor-pointer text-gray-500 hover:bg-gray-50 rounded-xl transition-all group">
-                  <Bell className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+                <button className="relative p-2.5 cursor-pointer text-gray-500 hover:bg-gray-50 rounded-xl transition-all duration-300 group">
+                  <Bell className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
                   <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white shadow-sm"></span>
                 </button>
 
                 <div className="relative ml-1">
                   <button
                     onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                    className="flex items-center hover:cursor-pointer gap-3 p-1.5 pr-3 rounded-xl hover:bg-gray-50 transition-all border border-transparent hover:border-gray-100"
+                    className="flex items-center hover:cursor-pointer gap-3 p-1.5 pr-3 rounded-xl hover:bg-gray-50 transition-all duration-300 border border-transparent hover:border-gray-100"
                   >
                     <div className="w-9 h-9 bg-linear-to-r from-primary-dark to-primary rounded-xl flex items-center justify-center text-white font-bold shadow-inner relative overflow-hidden">
-                      <div className="absolute inset-0 bg-white/10 opacity-0 hover:opacity-100 transition-opacity"></div>
+                      <div className="absolute inset-0 bg-white/10 opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
                       <span className="text-sm">
                         {user?.username?.charAt(0)?.toUpperCase() || "U"}
                       </span>
@@ -159,7 +159,7 @@ export default function AppLayout() {
                       <div className="px-2 space-y-0.5">
                         <Link
                           to="/settings"
-                          className="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-xl transition-color group"
+                          className="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-xl transition-color duration-300 group"
                         >
                           <div className="w-8 h-8 rounded-xl bg-gray-50 group-hover:bg-gray-100 flex items-center justify-center text-gray-600">
                             <Settings className="w-4 h-4" />
@@ -172,9 +172,9 @@ export default function AppLayout() {
                       <div className="px-2">
                         <button
                           onClick={logout}
-                          className="w-full cursor-pointer flex items-center gap-3 px-3 py-2 text-red-600 hover:bg-red-50 rounded-xl transition-colors group"
+                          className="w-full cursor-pointer flex items-center gap-3 px-3 py-2 text-red-600 hover:bg-red-50 rounded-xl transition-colors duration-300 group"
                         >
-                          <div className="w-8 h-8 rounded-xl bg-red-50 flex items-center justify-center text-red-600 group-hover:bg-red-100 transition-colors">
+                          <div className="w-8 h-8 rounded-xl bg-red-50 flex items-center justify-center text-red-600 group-hover:bg-red-100 transition-colors duration-300">
                             <LogOut className="w-4 h-4" />
                           </div>
                           <span className="text-sm font-bold">Sign Out</span>

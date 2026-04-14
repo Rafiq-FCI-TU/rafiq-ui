@@ -19,7 +19,7 @@ export default function TapButton({
           });
         })
       }
-      className={`flex items-center not-sm:py-2 not-sm:px-3 not-sm:text-xs not-sm:text-nowrap gap-2 py-4 px-8 rounded-full font-medium text-sm transition-all ${
+      className={`flex items-center not-sm:py-2 not-sm:px-3 not-sm:text-xs not-sm:text-nowrap gap-2 py-4 px-8 rounded-full font-medium text-sm transition-all duration-300 ${
         tab.active
           ? "bg-primary text-white"
           : "cursor-pointer  text-gray-500 bg-gray-100 hover:text-gray-700"

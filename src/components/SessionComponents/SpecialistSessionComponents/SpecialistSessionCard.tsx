@@ -11,7 +11,7 @@ export default function SpecialistSessionCard({
   return (
     <Link
       to={`/sessions/${session.id}`}
-      className="flex bg-white not-md:flex-col gap-5 shadow-md border hover:scale-102 transition-all border-gray-200 rounded-2xl p-4"
+      className="flex bg-white not-md:flex-col gap-5 shadow-md border hover:scale-102 transition-all duration-300 border-gray-200 rounded-2xl p-4"
     >
       <img
         src={session.thumbnailUrl || "cards.png"}

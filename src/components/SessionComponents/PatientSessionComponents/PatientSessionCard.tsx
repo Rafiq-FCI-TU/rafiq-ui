@@ -10,7 +10,7 @@ export default function PatientSessionCard({
   type: SessionType;
 }) {
   return (
-    <div className="flex flex-col  hover:scale-102 transition-all shadow-md border border-gray-200 rounded-3xl">
+    <div className="flex flex-col  hover:scale-102 transition-all duration-300 shadow-md border border-gray-200 rounded-3xl">
       <div className="relative">
         <img
           className="w-full object-cover aspect-video rounded-t-3xl"
@@ -49,7 +49,7 @@ export default function PatientSessionCard({
           {type === "allowed" && (
             <Link
               to={`/sessions/${session.id}`}
-              className="flex items-center justify-center shadow-md border-primary hover:border-primary hover:bg-white hover:text-primary transition-all border-2 gap-2 bg-primary text-white px-4 py-2 rounded-full"
+              className="flex items-center justify-center shadow-md border-primary hover:border-primary hover:bg-white hover:text-primary transition-all duration-300 border-2 gap-2 bg-primary text-white px-4 py-2 rounded-full"
             >
               <Video /> Watch & Record
             </Link>

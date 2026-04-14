@@ -50,14 +50,14 @@ export default function WelcomeSection() {
           <div className="flex gap-4 not-lg:gap-2 flex-wrap">
             <Link
               to="/register"
-              className="text-primary-dark text-center w-fit shadow-2xl  font-semibold text-lg not-lg:text-base bg-white py-4 px-8 rounded-xl transition-all hover:scale-105"
+              className="text-primary-dark text-center w-fit shadow-2xl  font-semibold text-lg not-lg:text-base bg-white py-4 px-8 rounded-xl transition-all duration-300 hover:scale-105"
             >
               Get Started
             </Link>
             <Link
               to="https://ndss.org/about"
               target="_blank"
-              className="text-white border-2 border-white/30 text-center w-fit font-semibold text-lg not-lg:text-base bg-white/10 py-4 px-8 rounded-xl hover:bg-primary-light transition-all hover:scale-105"
+              className="text-white border-2 border-white/30 text-center w-fit font-semibold text-lg not-lg:text-base bg-white/10 py-4 px-8 rounded-xl hover:bg-primary-light transition-all duration-300 hover:scale-105"
             >
               Learn More
             </Link>
