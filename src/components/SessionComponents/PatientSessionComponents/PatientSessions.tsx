@@ -97,13 +97,13 @@ export default function PatientSessions() {
                 review clinical feedback directly from your doctor.
               </p>
             </div>
-            <div className="border-3 border-white shadow-xl shadow-green-100 rounded-2xl px-4 py-3 not-md:p-2  flex items-center text-center gap-4 not-md:flex-col not-md:flex-0.5">
-              <Star className="size-12 text-yellow-400 fill-yellow-400" />
+            <div className="border-3 border-white shadow-md shadow-primary/20 rounded-2xl px-4 py-3 not-md:p-2  flex items-center text-center gap-2 not-md:flex-col not-md:flex-0.5">
+              <Star className="size-8 text-primary fill-primary" />
               <div>
                 <div className="text-sm font-extrabold text-primary uppercase tracking-wide">
                   CHILD SCORE
                 </div>
-                <div className="text-4xl font-bold text-gray-700">
+                <div className="text-xl font-bold text-gray-700">
                   {user.score?.toFixed(2)}
                   <span className="text-sm text-gray-500"> pts</span>
                 </div>

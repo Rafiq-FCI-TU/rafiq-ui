@@ -9,6 +9,9 @@
   --color-primary-light: #148445;
 }
 
+body{
+  font-family: "Noto Sans Arabic";
+}
 /* AI Assistant Animations */
 @keyframes fade-in {
   from {
