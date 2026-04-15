@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { askRafiqAi } from "../lib/rafiqAiApi";
 import {
   Send,
   Bot,
@@ -27,24 +28,14 @@ type Message = {
 
 const SUGGESTED_QUESTIONS = [
   {
-    question: "What are effective early intervention therapies for Down syndrome?",
-    icon: Brain,
-    category: "Therapy"
+    question: "What is Down syndrome ?",
+    icon: Heart,
+    category: "Health",
   },
   {
     question: "How can I support my child's speech and language development?",
     icon: Activity,
-    category: "Development"
-  },
-  {
-    question: "What are the best comprehensive inclusive education strategies?",
-    icon: BookOpen,
-    category: "Education"
-  },
-  {
-    question: "Activities to improve fine and gross motor skills?",
-    icon: Heart,
-    category: "Activities"
+    category: "Growth",
   },
 ];
 
@@ -105,17 +96,30 @@ export default function AIAssistant() {
     setInputValue("");
     setIsTyping(true);
 
-    // Simulate AI response
-    setTimeout(() => {
-      const newBotMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: "bot",
-        text: "I am currently a demo assistant. Once connected to a backend, I will provide insightful, personalized answers based on your specific questions!",
-        timestamp: new Date(),
-      };
-      setMessages((prev) => [...prev, newBotMessage]);
-      setIsTyping(false);
-    }, 1500);
+    void (async () => {
+      try {
+        const answer = await askRafiqAi(text);
+        const newBotMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          role: "bot",
+          text: answer || "No answer returned.",
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev, newBotMessage]);
+      } catch (err) {
+        const msg =
+          err instanceof Error ? err.message : "Something went wrong. Please try again.";
+        const newBotMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          role: "bot",
+          text: `Sorry, I couldn’t reach the assistant: ${msg}`,
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev, newBotMessage]);
+      } finally {
+        setIsTyping(false);
+      }
+    })();
   };
 
   const onSubmit = (e: React.FormEvent) => {
