@@ -13,21 +13,6 @@ export interface SpecialistDetails extends SpecialistCard {
   specializations: string[];
 }
 
-export interface SpecialistApiResponse {
-  success: boolean;
-  message: string;
-  data: {
-    id: string;
-    fullName: string;
-    email: string;
-    credentials: string;
-    specialty: string;
-    organization: string;
-    professionalBio: string;
-    gender: string;
-    patientsCount: number;
-  };
-}
 export interface Specialist {
   id: string;
   fullName: string;
@@ -38,4 +23,10 @@ export interface Specialist {
   professionalBio: string;
   gender: string;
   patientsCount: number;
+}
+
+export interface SpecialistApiResponse {
+  success: boolean;
+  message: string;
+  data: Specialist;
 }
