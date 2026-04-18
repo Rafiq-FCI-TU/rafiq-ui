@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router";
+import {  Link } from "react-router";
 import type { Patient as PatientType } from "../types/Patient";
 import type { Session } from "../types/Session";
 import { ArrowLeft, Calendar, User, Venus, Mars } from "lucide-react";
@@ -60,7 +60,7 @@ function getAvatarUrl(gender: string): string {
 }
 
 export default function Patient() {
-  const { patientId } = useParams();
+  // const { patientId } = useParams();
   const [patient] = useState(mockPatient);
   const [upcomingSessions] = useState(mockSessions);
 
@@ -117,7 +117,7 @@ export default function Patient() {
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 not-lg:order-2">
-          <UpcomingSessions sessions={upcomingSessions} patientId={patientId} />
+          <UpcomingSessions sessions={upcomingSessions}  />
         </div>
 
         {/* Sidebar */}

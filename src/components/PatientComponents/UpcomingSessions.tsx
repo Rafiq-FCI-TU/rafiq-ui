@@ -6,10 +6,8 @@ import { format } from "date-fns";
 
 export default function UpcomingSessions({
   sessions,
-  // patientId,
 }: {
   sessions: Session[];
-  // patientId: string | undefined;
 }) {
   // const { data, error, isPending } = useQuery({
   //   queryKey: ["UpcomingSessions"],
