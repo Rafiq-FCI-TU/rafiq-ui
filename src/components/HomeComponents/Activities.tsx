@@ -25,7 +25,7 @@ export default function Activities() {
     },
   ];
   return (
-    <section className=" px-10 py-30 bg-gray-50">
+    <section id="activities" className="px-10 not-md:px-6 pt-30 pb-24 bg-gray-50">
       <div className="container mx-auto">
         <div className="text-center mb-20 flex flex-col gap-5">
           <h1 className="text-2xl w-fit bg-green-100 px-8 py-2 rounded-full mx-auto not-lg:text-xl font-semibold text-primary-dark">

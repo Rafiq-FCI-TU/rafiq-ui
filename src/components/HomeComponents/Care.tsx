@@ -23,7 +23,10 @@ export default function Care() {
     },
   ];
   return (
-    <section className="flex items-center justify-around gap-10 flex-wrap not-lg:flex-col   p-20 not-md:px-5 relative">
+    <section
+      id="care"
+      className="flex items-center justify-around gap-10 flex-wrap not-lg:flex-col px-20 py-40 not-md:px-0 not-md:py-30 relative"
+    >
       <div className="relative w-10/12 h-fit lg:w-1/3 bg-white/10  border-2 border-white/30 rounded-2xl">
         <img src="doctor.png" alt="doctor" className="w-full object-contain" />
         <div className="absolute rounded-4xl w-11/12 h-11/12 inset-4 bg-green-300/10 rotate-1" />
@@ -36,7 +39,7 @@ export default function Care() {
           Connect with certified specialists who understand your child's unique
           needs
         </p>
-        
+
         <div className="container mx-auto space-y-4 ">
           {careFeature.map((feature) => (
             <CareFeature key={feature.number} {...feature} />

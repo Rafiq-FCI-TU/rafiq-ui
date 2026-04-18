@@ -2,7 +2,7 @@ import { Link } from "react-router";
 import { LockIcon } from "lucide-react";
 export default function GetStarted() {
   return (
-    <div className="flex flex-col items-center justify-center text-center bg-linear-to-b from-primary-dark to-green-700 text-white rounded-xl p-10 gap-10 shadow-2xl">
+    <div className="w-full flex flex-col items-center justify-center text-center bg-linear-to-b from-primary-dark to-green-700 text-white rounded-xl p-10 not-md:p-5 gap-10 shadow-2xl" >
       <h3 className="text-2xl font-semibold">
         Ready to Transform Your Child's Journey?
       </h3>

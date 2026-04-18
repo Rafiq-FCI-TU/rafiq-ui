@@ -1,7 +1,7 @@
 import WelcomeSection from "../components/HomeComponents/WelcomeSection";
 import Services from "../components/HomeComponents/Services";
 import Activities from "../components/HomeComponents/Activities";
-import GetStarted from "../components/HomeComponents/GetStarted";
+// import GetStarted from "../components/HomeComponents/GetStarted";
 import Doctor from "../components/HomeComponents/Care";
 
 export default function Home() {
@@ -11,9 +11,9 @@ export default function Home() {
       <Services />
       <Doctor />
       <Activities />
-      <section className="container mx-auto px-10 py-30">
+      {/* <section id="get-started" className="container mx-auto px-6 py-50 min-h-screen flex justify-center items-center">
         <GetStarted />
-      </section>
+      </section> */}
     </div>
   );
 }

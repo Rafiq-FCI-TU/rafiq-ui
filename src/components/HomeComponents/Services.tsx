@@ -45,7 +45,10 @@ export default function Services() {
     },
   ];
   return (
-    <section className="mx-auto bg-linear-to-b from-gray-50 to-white  py-30 lg:pt-100">
+    <section
+      id="services"
+      className="mx-auto bg-linear-to-b from-gray-50 to-white py-50 not-md:py-30 min-h-screen"
+    >
       <section className="not-md:w-10/12 mx-auto">
         <div className="space-y-5 text-center">
           <h2 className="text-6xl not-lg:text-4xl font-semibold">
