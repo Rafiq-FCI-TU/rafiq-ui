@@ -1,25 +1,25 @@
-import { Link } from "react-router";
+// import { Link } from "react-router";
 import type { Session } from "../../types/Session";
 import { Calendar, Clock, Play } from "lucide-react";
 import { format } from "date-fns";
-import { useQuery } from "@tanstack/react-query";
+// import { useQuery } from "@tanstack/react-query";
 
 export default function UpcomingSessions({
   sessions,
-  patientId,
+  // patientId,
 }: {
   sessions: Session[];
-  patientId: string | undefined;
+  // patientId: string | undefined;
 }) {
-  const { data, error, isPending } = useQuery({
-    queryKey: ["UpcomingSessions"],
-    queryFn: async () => {
-      const response = await fetch(
-        `https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/Session/patient/${patientId}/sessions?status=not-allowed`,
-      );
-      return response.json();
-    },
-  });
+  // const { data, error, isPending } = useQuery({
+  //   queryKey: ["UpcomingSessions"],
+  //   queryFn: async () => {
+  //     const response = await fetch(
+  //       `https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/Session/patient/${patientId}/sessions?status=not-allowed`,
+  //     );
+  //     return response.json();
+  //   },
+  // });
   return (
     <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
       <div className="flex items-center justify-between mb-4">
