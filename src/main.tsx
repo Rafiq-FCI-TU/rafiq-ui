@@ -20,18 +20,39 @@ import AIAssistant from "./pages/AIAssistant.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import Patients from "./pages/Patients.tsx";
 import Patient from "./pages/Patient.tsx";
+import WelcomeSection from "./components/HomeComponents/WelcomeSection.tsx";
+import Services from "./components/HomeComponents/Services.tsx";
+import Activities from "./components/HomeComponents/Activities.tsx";
+import Care from "./components/HomeComponents/Care.tsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     children: [
       {
-        index: true,
         element: (
           <PublicRoute>
             <Home />
           </PublicRoute>
         ),
+        children: [
+          {
+            index: true,
+            element: <WelcomeSection />,
+          },
+          {
+            path: "services",
+            element: <Services />,
+          },
+          {
+            path: "activities",
+            element: <Activities />,
+          },
+          {
+            path: "care",
+            element: <Care />,
+          },
+        ],
       },
       {
         element: (

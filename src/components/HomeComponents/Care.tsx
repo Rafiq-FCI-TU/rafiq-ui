@@ -25,7 +25,7 @@ export default function Care() {
   return (
     <section
       id="care"
-      className="flex items-center justify-around gap-10 flex-wrap not-lg:flex-col px-20 py-40 not-md:px-0 not-md:py-30 relative"
+      className="flex items-center justify-around gap-10 flex-wrap not-lg:flex-col px-20 not-md:px-0 pt-30 pb-15 relative min-h-screen"
     >
       <div className="relative w-10/12 h-fit lg:w-1/3 bg-white/10  border-2 border-white/30 rounded-2xl">
         <img src="doctor.png" alt="doctor" className="w-full object-contain" />
