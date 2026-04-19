@@ -71,6 +71,7 @@ export default function HomeNavBar(){
           <nav className="flex flex-col p-6 gap-4">
             {navItems.map((item) => (
               <NavLink
+                onClick={() => setIsMobileMenuOpen(false)}
                 key={item.id}
                 to={`/${item.id}`}
                 className={({ isActive }) =>

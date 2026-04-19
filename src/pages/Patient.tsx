@@ -1,55 +1,86 @@
-import {  Link } from "react-router";
+import { Link, useParams } from "react-router";
 import type { Patient as PatientType } from "../types/Patient";
-import type { Session } from "../types/Session";
-import { ArrowLeft, Calendar, User, Venus, Mars } from "lucide-react";
+import {
+  ArrowLeft,
+  Calendar,
+  User,
+  Venus,
+  Mars,
+  X,
+  RefreshCw,
+} from "lucide-react";
 import { format, differenceInYears } from "date-fns";
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import UpcomingSessions from "../components/PatientComponents/UpcomingSessions";
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
+import axios from "axios";
 
-// Mock data using only Patient and Session interfaces
-// Replace with actual API calls
-const mockPatient: PatientType = {
-  id: 1,
-  firstName: "Emma",
-  lastName: "Johnson",
-  fullName: "Emma Johnson",
-  dateOfBirth: "2017-05-15",
-  gender: "Female",
-  totalScore: 84,
-  familyProfileId: "fam-001",
-  assessmentId: 1,
-};
+const API_BASE_URL =
+  "https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net";
 
-const mockSessions: Session[] = [
-  {
-    id: 1,
-    title: "Initial Assessment",
-    description: "Comprehensive speech and language evaluation",
-    videoUrl: "",
-    duration: "00:00:00.000",
-    sequence: 1,
-    score: 85,
-    publishedAt: "2026-02-26T10:00:00",
-    thumbnailUrl: "",
-    specialistProfileId: "spec-001",
-    specialistName: "Dr. Sarah Smith",
-    notes: "First session scheduled",
-  },
-  {
-    id: 2,
-    title: "Follow-up Session",
-    description: "Progress review and next steps",
-    videoUrl: "",
-    duration: "00:00:00.000",
-    sequence: 2,
-    score: 0,
-    publishedAt: "2026-03-05T14:00:00",
-    thumbnailUrl: "",
-    specialistProfileId: "spec-001",
-    specialistName: "Dr. Sarah Smith",
-    notes: "Second session",
-  },
-];
+function HeaderSkeleton() {
+  return (
+    <div className="bg-linear-to-br from-gray-300 to-gray-400 rounded-2xl p-6 mb-6 shadow-lg">
+      <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
+        <div className="w-32 h-32 rounded-2xl bg-white/30 shimmer" />
+        <div className="flex-1 w-full min-w-0 space-y-3">
+          <div className="h-8 bg-white/30 rounded w-2/3 shimmer" />
+          <div className="max-w-4xl bg-white/20 rounded-xl p-3 space-y-2">
+            <div className="h-4 bg-white/30 rounded w-full shimmer" />
+            <div className="h-2 bg-white/30 rounded w-full shimmer" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DetailItemSkeleton() {
+  return (
+    <div className="flex items-start gap-3">
+      <div className="w-8 h-8 bg-gray-200 rounded-lg shrink-0 shimmer" />
+      <div className="space-y-1 flex-1">
+        <div className="h-3 bg-gray-200 rounded w-12 shimmer" />
+        <div className="h-4 bg-gray-200 rounded w-24 shimmer" />
+      </div>
+    </div>
+  );
+}
+
+function PatientSkeleton() {
+  return (
+    <div className="bg-gray-50 p-6 min-h-screen">
+      {/* Back Link Skeleton */}
+      <div className="inline-flex items-center gap-2 mb-6">
+        <div className="w-4 h-4 bg-gray-300 rounded shimmer" />
+        <div className="h-4 bg-gray-300 rounded w-28 shimmer" />
+      </div>
+
+      <HeaderSkeleton />
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
+          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 h-64">
+            <div className="h-6 bg-gray-200 rounded w-40 mb-4 shimmer" />
+            <div className="space-y-3">
+              <div className="h-16 bg-gray-100 rounded-xl shimmer" />
+              <div className="h-16 bg-gray-100 rounded-xl shimmer" />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 h-fit">
+          <div className="h-6 bg-gray-200 rounded w-32 mb-4 shimmer" />
+          <div className="space-y-4">
+            <DetailItemSkeleton />
+            <DetailItemSkeleton />
+            <DetailItemSkeleton />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function calculateAge(dateOfBirth: string): number {
   return differenceInYears(new Date(), new Date(dateOfBirth));
@@ -60,17 +91,76 @@ function getAvatarUrl(gender: string): string {
 }
 
 export default function Patient() {
-  // const { patientId } = useParams();
-  const [patient] = useState(mockPatient);
-  const [upcomingSessions] = useState(mockSessions);
+  const { patientId } = useParams();
+
+  const {
+    data: patient,
+    error,
+    isLoading,
+    isFetching,
+    refetch,
+  } = useQuery({
+    queryKey: ["patient", patientId],
+    queryFn: async () => {
+      const req = await axios.get(`${API_BASE_URL}/api/Patient/${patientId}`);
+      return req.data?.data as PatientType;
+    },
+    enabled: !!patientId,
+    placeholderData: keepPreviousData,
+    staleTime: 30 * 1000,
+    gcTime: 60 * 1000,
+    refetchOnWindowFocus: false,
+  });
 
   const age = useMemo(
-    () => calculateAge(patient.dateOfBirth),
-    [patient.dateOfBirth],
+    () => (patient ? calculateAge(patient.dateOfBirth) : 0),
+    [patient],
   );
 
+  if (isLoading) {
+    return <PatientSkeleton />;
+  }
+
+  if (error || !patient) {
+    return (
+      <div className="bg-gray-50 p-6 min-h-screen">
+        <Link
+          to="/patients"
+          className="inline-flex items-center gap-2 text-gray-600 hover:text-primary transition-colors duration-300 mb-6"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span className="text-sm font-medium">Back to Patients</span>
+        </Link>
+        <div className="flex flex-col items-center justify-center py-20">
+          <X className="w-16 h-16 text-red-500 mb-4" />
+          <h3 className="text-xl font-semibold text-red-800 mb-2">
+            Failed to load patient
+          </h3>
+          <p className="text-red-600 mb-4">Please try again later.</p>
+          <button
+            onClick={() => refetch()}
+            disabled={isFetching}
+            className="inline-flex cursor-pointer items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-dark transition-colors disabled:opacity-50"
+          >
+            <RefreshCw
+              className={`w-4 h-4 ${isFetching ? "animate-spin" : ""}`}
+            />
+            {isFetching ? "Retrying..." : "Try Again"}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className=" bg-gray-50 p-6">
+    <div className="bg-gray-50 p-6 relative">
+      {/* Progress bar for background refetch */}
+      {isFetching && (
+        <div className="fixed top-0 left-0 right-0 h-1 bg-gray-100 z-50 overflow-hidden">
+          <div className="h-full bg-primary animate-[loading-bar_1s_ease-in-out_infinite]" />
+        </div>
+      )}
+
       {/* Back Link */}
       <Link
         to="/patients"
@@ -100,7 +190,7 @@ export default function Patient() {
                   Total Score
                 </span>
                 <span className="text-white text-sm font-bold">
-                  {patient.totalScore}%
+                  {patient.totalScore.toFixed(2)}%
                 </span>
               </div>
               <div className="h-2 bg-white/30 rounded-full overflow-hidden">
@@ -117,7 +207,7 @@ export default function Patient() {
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 not-lg:order-2">
-          <UpcomingSessions sessions={upcomingSessions}  />
+          <UpcomingSessions patientId={patientId!} />
         </div>
 
         {/* Sidebar */}
