@@ -62,7 +62,10 @@ const validateForm = (values: FormValues) => {
 
   if (!values.emergencyContactName) {
     errors.emergencyContactName = "Emergency Contact Name is required";
-  } else if (values.emergencyContactName.length < 2 || values.emergencyContactName.length > 50) {
+  } else if (
+    values.emergencyContactName.length < 2 ||
+    values.emergencyContactName.length > 50
+  ) {
     errors.emergencyContactName = "Name must be at least 2 characters";
   }
 
@@ -95,42 +98,42 @@ export default function FamilyRegistrationForm({
   const handleSubmit = async (values: FormValues) => {
     setApiError(null);
     try {
-        const payload = {
-          firstName: values.firstName,
-          lastName: values.lastName,
-          email: values.email,
-          phoneNumber: values.phone,
-          relationship: values.relationship,
-          address: values.address,
-          emergencyContactName: values.emergencyContactName,
-          emergencyContactPhone: values.emergencyContactPhone,
-        };
+      const payload = {
+        firstName: values.firstName,
+        lastName: values.lastName,
+        email: values.email,
+        phoneNumber: values.phone,
+        relationship: values.relationship,
+        address: values.address,
+        emergencyContactName: values.emergencyContactName,
+        emergencyContactPhone: values.emergencyContactPhone,
+      };
 
-        const response = await axios.post(
-          "https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/FamilyRegistration/step1",
-          payload,
-        );
+      const response = await axios.post(
+        "https://rafiq-container-server.wittyhill-43579268.germanywestcentral.azurecontainerapps.io/api/FamilyRegistration/step1",
+        payload,
+      );
 
-        if (response.data?.success) {
-          const receivedToken = response.data?.data?.token || "";
-          onSubmit({ ...values, token: receivedToken });
-        } else {
-          setApiError(response.data?.message || "Registration failed");
-        }
-      } catch (error) {
-        if (axios.isAxiosError(error) && error.response) {
-          const msg =
-            error.response.data?.message ||
-            error.response.data?.detail ||
-            error.response.data?.title ||
-            (typeof error.response.data === "string"
-              ? error.response.data
-              : "Registration failed");
-          setApiError(msg);
-        } else {
-          setApiError("An unexpected error occurred. Please try again later.");
-        }
+      if (response.data?.success) {
+        const receivedToken = response.data?.data?.token || "";
+        onSubmit({ ...values, token: receivedToken });
+      } else {
+        setApiError(response.data?.message || "Registration failed");
       }
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        const msg =
+          error.response.data?.message ||
+          error.response.data?.detail ||
+          error.response.data?.title ||
+          (typeof error.response.data === "string"
+            ? error.response.data
+            : "Registration failed");
+        setApiError(msg);
+      } else {
+        setApiError("An unexpected error occurred. Please try again later.");
+      }
+    }
   };
 
   return (
@@ -152,7 +155,11 @@ export default function FamilyRegistrationForm({
         </p>
       </div>
 
-      <Formik initialValues={initialValues} validate={validateForm} onSubmit={handleSubmit}>
+      <Formik
+        initialValues={initialValues}
+        validate={validateForm}
+        onSubmit={handleSubmit}
+      >
         {({ isSubmitting, errors, touched }) => (
           <Form className="space-y-4">
             {apiError && (
@@ -164,14 +171,22 @@ export default function FamilyRegistrationForm({
               label="First Name *"
               placeholder="Enter your first name"
               name="firstName"
-              error={touched.firstName && errors.firstName ? errors.firstName : undefined}
+              error={
+                touched.firstName && errors.firstName
+                  ? errors.firstName
+                  : undefined
+              }
             />
 
             <TextInput
               label="Last Name *"
               placeholder="Enter your last name"
               name="lastName"
-              error={touched.lastName && errors.lastName ? errors.lastName : undefined}
+              error={
+                touched.lastName && errors.lastName
+                  ? errors.lastName
+                  : undefined
+              }
             />
 
             <EmailInput
@@ -219,21 +234,31 @@ export default function FamilyRegistrationForm({
               label="Address *"
               placeholder="Enter your address"
               name="address"
-              error={touched.address && errors.address ? errors.address : undefined}
+              error={
+                touched.address && errors.address ? errors.address : undefined
+              }
             />
 
             <TextInput
               label="Emergency Contact Name *"
               placeholder="Enter full name"
               name="emergencyContactName"
-              error={touched.emergencyContactName && errors.emergencyContactName ? errors.emergencyContactName : undefined}
+              error={
+                touched.emergencyContactName && errors.emergencyContactName
+                  ? errors.emergencyContactName
+                  : undefined
+              }
             />
 
             <TextInput
               label="Emergency Contact Phone *"
               placeholder="(555) 123-4567"
               name="emergencyContactPhone"
-              error={touched.emergencyContactPhone && errors.emergencyContactPhone ? errors.emergencyContactPhone : undefined}
+              error={
+                touched.emergencyContactPhone && errors.emergencyContactPhone
+                  ? errors.emergencyContactPhone
+                  : undefined
+              }
             />
 
             <button

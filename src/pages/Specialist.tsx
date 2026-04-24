@@ -16,7 +16,7 @@ export default function Specialist() {
     queryKey: ["specialists"],
     queryFn: async () => {
       const req = await axios.get(
-        "https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/Specialist",
+        "https://rafiq-container-server.wittyhill-43579268.germanywestcentral.azurecontainerapps.io/api/Specialist",
       );
       return req.data?.data;
     },

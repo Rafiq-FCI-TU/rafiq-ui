@@ -68,7 +68,7 @@ export default function SpecialistPasswordForm({
         };
 
         await axios.post(
-          "https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/SpecialistRegistration/step2",
+          "https://rafiq-container-server.wittyhill-43579268.germanywestcentral.azurecontainerapps.io/api/SpecialistRegistration/step2",
           payload,
         );
 

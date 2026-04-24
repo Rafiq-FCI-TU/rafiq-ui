@@ -15,7 +15,7 @@ export default function Session() {
     enabled: Boolean(sessionId),
     queryFn: async () => {
       const response = await fetch(
-        `https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/Session/SessionDetails/${sessionId}`,
+        `https://rafiq-container-server.wittyhill-43579268.germanywestcentral.azurecontainerapps.io/api/Session/SessionDetails/${sessionId}`,
       );
 
       if (!response.ok) {

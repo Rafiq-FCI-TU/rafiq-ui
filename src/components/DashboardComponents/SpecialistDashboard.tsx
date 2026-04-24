@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
-import WelcomeBanner from './SpecialistDashboard/WelcomeBanner';
-import Overview from './SpecialistDashboard/Overview';
-import RecentSessions from './SpecialistDashboard/RecentSessions';
-import MyPatients from './SpecialistDashboard/MyPatients';
-import { useAuth } from '../../contexts/AuthContext';
-import type { SpecialistApiResponse } from '../../types/Specialist';
+import { useEffect, useState } from "react";
+import WelcomeBanner from "./SpecialistDashboard/WelcomeBanner";
+import Overview from "./SpecialistDashboard/Overview";
+import RecentSessions from "./SpecialistDashboard/RecentSessions";
+import MyPatients from "./SpecialistDashboard/MyPatients";
+import { useAuth } from "../../contexts/AuthContext";
+import type { SpecialistApiResponse } from "../../types/Specialist";
 
 const SPECIALIST_API_BASE =
-  'https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api';
+  "https://rafiq-container-server.wittyhill-43579268.germanywestcentral.azurecontainerapps.io/api";
 
 export default function SpecialistDashboard() {
   const { user } = useAuth();
@@ -25,9 +25,9 @@ export default function SpecialistDashboard() {
     const fetchSpecialistProfile = async () => {
       setPatientsCount(null);
       try {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem("token");
         const headers: HeadersInit = {
-          Accept: 'application/json',
+          Accept: "application/json",
         };
         if (token) {
           headers.Authorization = `Bearer ${token}`;
@@ -35,11 +35,11 @@ export default function SpecialistDashboard() {
 
         const response = await fetch(
           `${SPECIALIST_API_BASE}/Specialist/${specialistProfileId}`,
-          { headers }
+          { headers },
         );
 
         if (!response.ok) {
-          throw new Error('Failed to fetch specialist profile');
+          throw new Error("Failed to fetch specialist profile");
         }
 
         const result: SpecialistApiResponse = await response.json();
@@ -52,7 +52,7 @@ export default function SpecialistDashboard() {
           setPatientsCount(0);
         }
       } catch (err) {
-        console.error('Error fetching specialist profile:', err);
+        console.error("Error fetching specialist profile:", err);
         if (!cancelled) setPatientsCount(0);
       }
     };
@@ -67,7 +67,10 @@ export default function SpecialistDashboard() {
   return (
     <div className="container mx-auto px-6 py-8 min-h-[calc(100vh-74px)] bg-linear-to-br from-gray-50 via-green-50/20 to-emerald-50/30 font-sans text-gray-800">
       <div className="space-y-8">
-        <WelcomeBanner doctorName={user?.username} patientsCount={patientsCount} />
+        <WelcomeBanner
+          doctorName={user?.username}
+          patientsCount={patientsCount}
+        />
         <Overview />
         <div className="space-y-8">
           <RecentSessions />

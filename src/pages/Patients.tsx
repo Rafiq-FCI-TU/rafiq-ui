@@ -24,7 +24,7 @@ export default function Patients() {
     queryKey: ["patients"],
     queryFn: async () => {
       const req = await axios.get(
-        `https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/Specialist/${user?.id}/patients`,
+        `https://rafiq-container-server.wittyhill-43579268.germanywestcentral.azurecontainerapps.io/api/Specialist/${user?.id}/patients`,
       );
       return req.data?.data;
     },
@@ -83,7 +83,6 @@ export default function Patients() {
         >
           <UserPlus className="size-5 text-primary" />
           <span className="text-lg font-bold">{filteredPatients.length}</span>
-
         </div>
       </div>
 

@@ -23,7 +23,7 @@ export default function UploadSession() {
   const mutation = useMutation({
     mutationFn: async (formData: FormData) => {
       const req = await axios.post(
-        "https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/Session",
+        "https://rafiq-container-server.wittyhill-43579268.germanywestcentral.azurecontainerapps.io/api/Session",
         formData,
       );
       const res = req.data;

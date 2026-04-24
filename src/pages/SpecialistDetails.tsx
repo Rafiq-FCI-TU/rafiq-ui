@@ -22,7 +22,7 @@ export default function SpecialistDetails() {
     queryKey: ["specialistDetails"],
     queryFn: async () => {
       const req = await axios.get(
-        `https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/specialist/${specialistId}`,
+        `https://rafiq-container-server.wittyhill-43579268.germanywestcentral.azurecontainerapps.io/api/specialist/${specialistId}`,
       );
 
       return req.data?.data;
@@ -139,7 +139,7 @@ export default function SpecialistDetails() {
                   className="w-full max-w-6xl lg:ml-[256px] cursor-pointer border-red-500 text-center hover:border-red-500 hover:bg-white hover:text-red-500  border-2 gap-2 bg-red-500 text-white py-[7px] px-8 rounded-2xl shadow-lg transition-all duration-300 text-lg"
                   onClick={() => {
                     fetch(
-                      `https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/Specialist/${specialistId}/patients/${user?.patientId}`,
+                      `https://rafiq-container-server.wittyhill-43579268.germanywestcentral.azurecontainerapps.io/api/Specialist/${specialistId}/patients/${user?.patientId}`,
                       {
                         method: "DELETE",
                       },
@@ -161,7 +161,7 @@ export default function SpecialistDetails() {
                   className="w-full max-w-6xl lg:ml-[256px] cursor-pointer border-primary text-center hover:border-primary hover:bg-white hover:text-primary  border-2 gap-2 bg-primary text-white py-[7px] px-8 rounded-2xl shadow-lg transition-all duration-300 text-lg"
                   onClick={() => {
                     fetch(
-                      `https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/Specialist/${specialistId}/patients/${user?.patientId}`,
+                      `https://rafiq-container-server.wittyhill-43579268.germanywestcentral.azurecontainerapps.io/api/Specialist/${specialistId}/patients/${user?.patientId}`,
                       {
                         method: "POST",
                       },

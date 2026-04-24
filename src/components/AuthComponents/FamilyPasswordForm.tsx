@@ -68,7 +68,7 @@ export default function FamilyPasswordForm({
         };
 
         const response = await axios.post(
-          "https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/FamilyRegistration/step3",
+          "https://rafiq-container-server.wittyhill-43579268.germanywestcentral.azurecontainerapps.io/api/FamilyRegistration/step3",
           payload,
         );
 

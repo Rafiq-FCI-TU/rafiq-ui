@@ -25,13 +25,19 @@ const validateChildForm = (values: ChildFormValues) => {
 
   if (!values.childFirstName) {
     errors.childFirstName = "First Name is required";
-  } else if (values.childFirstName.length < 2 || values.childFirstName.length > 50) {
+  } else if (
+    values.childFirstName.length < 2 ||
+    values.childFirstName.length > 50
+  ) {
     errors.childFirstName = "First Name must be at least 2 characters";
   }
 
   if (!values.childLastName) {
     errors.childLastName = "Last Name is required";
-  } else if (values.childLastName.length < 2 || values.childLastName.length > 50) {
+  } else if (
+    values.childLastName.length < 2 ||
+    values.childLastName.length > 50
+  ) {
     errors.childLastName = "Last Name must be at least 2 characters";
   }
 
@@ -63,49 +69,49 @@ export default function ChildDetailsForm({
   const handleSubmit = async (values: ChildFormValues) => {
     setApiError(null);
     try {
-        let dateOfBirthIso = "";
-        try {
-          dateOfBirthIso = new Date(values.birthDate).toISOString();
-        } catch (e) {
-          dateOfBirthIso = new Date().toISOString(); // Fallback date if parsing fails
-        }
-
-        const payload = {
-          token: token || "",
-          firstName: values.childFirstName,
-          lastName: values.childLastName,
-          dateOfBirth: dateOfBirthIso,
-          gender: values.gender,
-        };
-
-        const response = await axios.post(
-          "https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/FamilyRegistration/step2",
-          payload,
-        );
-
-        if (response.data?.success) {
-          // Extract the newly generated token from Step 2
-          const receivedToken = response.data?.data?.token || "";
-
-          // Pass this new token along to Step 3
-          onSubmit({ ...values, token: receivedToken || token || "" });
-        } else {
-          setApiError(response.data?.message || "Registration failed");
-        }
-      } catch (error) {
-        if (axios.isAxiosError(error) && error.response) {
-          const msg =
-            error.response.data?.message ||
-            error.response.data?.detail ||
-            error.response.data?.title ||
-            (typeof error.response.data === "string"
-              ? error.response.data
-              : "Registration failed");
-          setApiError(msg);
-        } else {
-          setApiError("An unexpected error occurred. Please try again later.");
-        }
+      let dateOfBirthIso = "";
+      try {
+        dateOfBirthIso = new Date(values.birthDate).toISOString();
+      } catch (e) {
+        dateOfBirthIso = new Date().toISOString(); // Fallback date if parsing fails
       }
+
+      const payload = {
+        token: token || "",
+        firstName: values.childFirstName,
+        lastName: values.childLastName,
+        dateOfBirth: dateOfBirthIso,
+        gender: values.gender,
+      };
+
+      const response = await axios.post(
+        "https://rafiq-container-server.wittyhill-43579268.germanywestcentral.azurecontainerapps.io/api/FamilyRegistration/step2",
+        payload,
+      );
+
+      if (response.data?.success) {
+        // Extract the newly generated token from Step 2
+        const receivedToken = response.data?.data?.token || "";
+
+        // Pass this new token along to Step 3
+        onSubmit({ ...values, token: receivedToken || token || "" });
+      } else {
+        setApiError(response.data?.message || "Registration failed");
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        const msg =
+          error.response.data?.message ||
+          error.response.data?.detail ||
+          error.response.data?.title ||
+          (typeof error.response.data === "string"
+            ? error.response.data
+            : "Registration failed");
+        setApiError(msg);
+      } else {
+        setApiError("An unexpected error occurred. Please try again later.");
+      }
+    }
   };
 
   return (
@@ -127,7 +133,11 @@ export default function ChildDetailsForm({
         </p>
       </div>
 
-      <Formik initialValues={childInitialValues} validate={validateChildForm} onSubmit={handleSubmit}>
+      <Formik
+        initialValues={childInitialValues}
+        validate={validateChildForm}
+        onSubmit={handleSubmit}
+      >
         {({ isSubmitting, errors, touched }) => (
           <Form className="space-y-4">
             {apiError && (
@@ -139,20 +149,32 @@ export default function ChildDetailsForm({
               label="Child's First Name *"
               placeholder="Amira"
               name="childFirstName"
-              error={touched.childFirstName && errors.childFirstName ? errors.childFirstName : undefined}
+              error={
+                touched.childFirstName && errors.childFirstName
+                  ? errors.childFirstName
+                  : undefined
+              }
             />
 
             <TextInput
               label="Child's Last Name *"
               placeholder="Hassan"
               name="childLastName"
-              error={touched.childLastName && errors.childLastName ? errors.childLastName : undefined}
+              error={
+                touched.childLastName && errors.childLastName
+                  ? errors.childLastName
+                  : undefined
+              }
             />
 
             <DateInput
               label="Date of Birth *"
               name="birthDate"
-              error={touched.birthDate && errors.birthDate ? errors.birthDate : undefined}
+              error={
+                touched.birthDate && errors.birthDate
+                  ? errors.birthDate
+                  : undefined
+              }
             />
 
             <div className="mb-4">

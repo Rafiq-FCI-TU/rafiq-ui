@@ -57,7 +57,7 @@ export default function LoginForm() {
       setErrors({});
       try {
         const response = await axios.post(
-          "https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/Auth/login",
+          "https://rafiq-container-server.wittyhill-43579268.germanywestcentral.azurecontainerapps.io/api/Auth/login",
           {
             email: values.email,
             password: values.password,

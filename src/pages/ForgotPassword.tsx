@@ -41,7 +41,7 @@ export default function ForgotPassword() {
 
     try {
       const response = await axios.post(
-        "https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/Auth/forgot-password",
+        "https://rafiq-container-server.wittyhill-43579268.germanywestcentral.azurecontainerapps.io/api/Auth/forgot-password",
         {
           email: values.email,
         },
@@ -84,7 +84,7 @@ export default function ForgotPassword() {
 
     try {
       const response = await axios.post(
-        "https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/Auth/verify-otp",
+        "https://rafiq-container-server.wittyhill-43579268.germanywestcentral.azurecontainerapps.io/api/Auth/verify-otp",
         {
           email: email,
           otp: otpValue,
@@ -155,7 +155,7 @@ export default function ForgotPassword() {
 
     try {
       const response = await axios.post(
-        "https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/Auth/reset-password",
+        "https://rafiq-container-server.wittyhill-43579268.germanywestcentral.azurecontainerapps.io/api/Auth/reset-password",
         {
           email: email,
           otp: otp,

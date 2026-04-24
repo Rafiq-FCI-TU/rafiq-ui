@@ -16,7 +16,7 @@ import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import axios from "axios";
 
 const API_BASE_URL =
-  "https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net";
+  "https://rafiq-container-server.wittyhill-43579268.germanywestcentral.azurecontainerapps.io";
 
 function HeaderSkeleton() {
   return (

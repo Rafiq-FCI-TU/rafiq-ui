@@ -15,7 +15,7 @@ export default function ActiveTab({
     gcTime: 0,
     queryFn: async () => {
       const response = await fetch(
-        `https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/Session/patient/${user?.patientId}/sessions?status=${activeTab === "not-allowed" ? "not-allowed" : "allowed"}`,
+        `https://rafiq-container-server.wittyhill-43579268.germanywestcentral.azurecontainerapps.io/api/Session/patient/${user?.patientId}/sessions?status=${activeTab === "not-allowed" ? "not-allowed" : "allowed"}`,
       );
       return response.json();
     },

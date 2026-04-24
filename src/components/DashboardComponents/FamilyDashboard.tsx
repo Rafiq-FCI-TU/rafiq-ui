@@ -10,8 +10,11 @@ import Milestones from "./FamilyDashboard/Milestones";
 
 export default function FamilyDashboard() {
   const { user } = useAuth();
-  const [specialistData, setSpecialistData] = useState<SpecialistApiResponse['data'] | null>(null);
-  const [isLoadingSpecialist, setIsLoadingSpecialist] = useState<boolean>(false);
+  const [specialistData, setSpecialistData] = useState<
+    SpecialistApiResponse["data"] | null
+  >(null);
+  const [isLoadingSpecialist, setIsLoadingSpecialist] =
+    useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -25,11 +28,11 @@ export default function FamilyDashboard() {
 
       try {
         const response = await fetch(
-          `https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/Specialist/${user.specialistId}`
+          `https://rafiq-container-server.wittyhill-43579268.germanywestcentral.azurecontainerapps.io/api/Specialist/${user.specialistId}`,
         );
 
         if (!response.ok) {
-          throw new Error('Failed to fetch specialist details');
+          throw new Error("Failed to fetch specialist details");
         }
 
         const result: SpecialistApiResponse = await response.json();
@@ -37,11 +40,13 @@ export default function FamilyDashboard() {
         if (result.success && result.data) {
           setSpecialistData(result.data);
         } else {
-          throw new Error(result.message || 'Failed to fetch specialist details');
+          throw new Error(
+            result.message || "Failed to fetch specialist details",
+          );
         }
       } catch (err) {
-        console.error('Error fetching specialist details:', err);
-        setError('Unable to load specialist information');
+        console.error("Error fetching specialist details:", err);
+        setError("Unable to load specialist information");
       } finally {
         setIsLoadingSpecialist(false);
       }

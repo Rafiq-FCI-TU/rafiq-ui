@@ -3,7 +3,7 @@ import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
 import axios from "axios";
 
 const API_BASE =
-  "https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api";
+  "https://rafiq-container-server.wittyhill-43579268.germanywestcentral.azurecontainerapps.io/api";
 
 const apiClient = axios.create({
   baseURL: API_BASE,

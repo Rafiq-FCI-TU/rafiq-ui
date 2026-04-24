@@ -59,13 +59,19 @@ const validateForm = (values: SpecialistFormValues) => {
 
   if (!values.organization) {
     errors.organization = "Organization is required";
-  } else if (values.organization.length < 2 || values.organization.length > 100) {
+  } else if (
+    values.organization.length < 2 ||
+    values.organization.length > 100
+  ) {
     errors.organization = "Organization must be at least 2 characters";
   }
 
   if (!values.professionalBio) {
     errors.professionalBio = "Professional Bio is required";
-  } else if (values.professionalBio.length < 20 || values.professionalBio.length > 1000) {
+  } else if (
+    values.professionalBio.length < 20 ||
+    values.professionalBio.length > 1000
+  ) {
     errors.professionalBio = "Professional Bio must be at least 20 characters";
   }
 
@@ -97,43 +103,43 @@ export default function SpecialistRegistrationForm({
   const handleSubmit = async (values: SpecialistFormValues) => {
     setApiError(null);
     try {
-        const payload = {
-          firstName: values.firstName,
-          lastName: values.lastName,
-          email: values.email,
-          phone: values.phone,
-          credentials: values.credentials,
-          specialty: values.specialty,
-          organization: values.organization,
-          professionalBio: values.professionalBio,
-          gender: values.gender,
-        };
+      const payload = {
+        firstName: values.firstName,
+        lastName: values.lastName,
+        email: values.email,
+        phone: values.phone,
+        credentials: values.credentials,
+        specialty: values.specialty,
+        organization: values.organization,
+        professionalBio: values.professionalBio,
+        gender: values.gender,
+      };
 
-        const response = await axios.post(
-          "https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/SpecialistRegistration/step1",
-          payload,
-        );
+      const response = await axios.post(
+        "https://rafiq-container-server.wittyhill-43579268.germanywestcentral.azurecontainerapps.io/api/SpecialistRegistration/step1",
+        payload,
+      );
 
-        // Extract token from response.data.data.token as per the actual API response
-        const receivedToken =
-          response.data?.data?.token || response.data?.token || "";
+      // Extract token from response.data.data.token as per the actual API response
+      const receivedToken =
+        response.data?.data?.token || response.data?.token || "";
 
-        // Advance to next step
-        onSubmit({ ...values, token: receivedToken });
-      } catch (error) {
-        if (axios.isAxiosError(error) && error.response) {
-          const msg =
-            error.response.data?.message ||
-            error.response.data?.detail ||
-            error.response.data?.title ||
-            (typeof error.response.data === "string"
-              ? error.response.data
-              : "Registration failed");
-          setApiError(msg);
-        } else {
-          setApiError("An unexpected error occurred. Please try again later.");
-        }
+      // Advance to next step
+      onSubmit({ ...values, token: receivedToken });
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        const msg =
+          error.response.data?.message ||
+          error.response.data?.detail ||
+          error.response.data?.title ||
+          (typeof error.response.data === "string"
+            ? error.response.data
+            : "Registration failed");
+        setApiError(msg);
+      } else {
+        setApiError("An unexpected error occurred. Please try again later.");
       }
+    }
   };
 
   return (
@@ -155,7 +161,11 @@ export default function SpecialistRegistrationForm({
         </p>
       </div>
 
-      <Formik initialValues={initialValues} validate={validateForm} onSubmit={handleSubmit}>
+      <Formik
+        initialValues={initialValues}
+        validate={validateForm}
+        onSubmit={handleSubmit}
+      >
         {({ isSubmitting, errors, touched }) => (
           <Form className="space-y-4">
             {apiError && (
@@ -168,14 +178,22 @@ export default function SpecialistRegistrationForm({
               label="First Name *"
               placeholder="Enter your first name"
               name="firstName"
-              error={touched.firstName && errors.firstName ? errors.firstName : undefined}
+              error={
+                touched.firstName && errors.firstName
+                  ? errors.firstName
+                  : undefined
+              }
             />
 
             <TextInput
               label="Last Name *"
               placeholder="Enter your last name"
               name="lastName"
-              error={touched.lastName && errors.lastName ? errors.lastName : undefined}
+              error={
+                touched.lastName && errors.lastName
+                  ? errors.lastName
+                  : undefined
+              }
             />
 
             <TextInput
@@ -196,28 +214,44 @@ export default function SpecialistRegistrationForm({
               label="Credentials"
               placeholder="MS, CCC-SLP"
               name="credentials"
-              error={touched.credentials && errors.credentials ? errors.credentials : undefined}
+              error={
+                touched.credentials && errors.credentials
+                  ? errors.credentials
+                  : undefined
+              }
             />
 
             <TextInput
               label="Specialty *"
               placeholder=""
               name="specialty"
-              error={touched.specialty && errors.specialty ? errors.specialty : undefined}
+              error={
+                touched.specialty && errors.specialty
+                  ? errors.specialty
+                  : undefined
+              }
             />
 
             <TextInput
               label="Organization *"
               placeholder="Children's Development Center"
               name="organization"
-              error={touched.organization && errors.organization ? errors.organization : undefined}
+              error={
+                touched.organization && errors.organization
+                  ? errors.organization
+                  : undefined
+              }
             />
 
             <TextInput
               label="Professional Bio *"
               placeholder=""
               name="professionalBio"
-              error={touched.professionalBio && errors.professionalBio ? errors.professionalBio : undefined}
+              error={
+                touched.professionalBio && errors.professionalBio
+                  ? errors.professionalBio
+                  : undefined
+              }
             />
 
             <div className="mb-4">

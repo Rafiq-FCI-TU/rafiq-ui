@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "../contexts/AuthContext";
 import {
   Heart,
@@ -416,4 +417,38 @@ export default function Community() {
       </div>
     </div>
   );
+}
+
+export function Users() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetch("/api/users")
+      .then((res) => res.json())
+      .then((data) => {
+        setData(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error!</p>;
+  return <div>{data}</div>;
+}
+
+export function Usersx() {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["users"],
+    queryFn: () => fetch("/api/users").then((res) => res.json()),
+  });
+
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error!</p>;
+  return <div>{data}</div>;
 }

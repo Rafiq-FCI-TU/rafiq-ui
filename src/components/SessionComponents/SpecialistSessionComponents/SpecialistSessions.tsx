@@ -11,7 +11,7 @@ export default function SpecialistSessions() {
     staleTime: 0,
     queryFn: () =>
       fetch(
-        `https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/Session/specialist/${user?.id}`,
+        `https://rafiq-container-server.wittyhill-43579268.germanywestcentral.azurecontainerapps.io/api/Session/specialist/${user?.id}`,
       ).then((res) => res.json()),
   });
   return (

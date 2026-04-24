@@ -1,4 +1,4 @@
-import { Loader2, UploadCloud,Check,X } from "lucide-react";
+import { Loader2, UploadCloud, Check, X } from "lucide-react";
 import { useState } from "react";
 import { Formik, Form, type FormikHelpers } from "formik";
 import * as Yup from "yup";
@@ -31,7 +31,7 @@ export default function SessionAttempt({
     formData.append("PatientId", values.patientId);
     try {
       const req = await axios.post(
-        "https://rafiq-server-gzdsa6a2afe4chbd.germanywestcentral-01.azurewebsites.net/api/PatientAttempts/submit",
+        "https://rafiq-container-server.wittyhill-43579268.germanywestcentral.azurecontainerapps.io/api/PatientAttempts/submit",
         formData,
       );
       const res = req.data;
