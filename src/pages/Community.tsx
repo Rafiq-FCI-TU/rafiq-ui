@@ -1,119 +1,272 @@
-import { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useState, useRef, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
+import type { Post, Comment, UserReaction } from "../types/Community";
 import {
-  Heart,
   MessageCircle,
   Share2,
   Search,
   Filter,
   Image,
   Send,
+  ThumbsUp,
 } from "lucide-react";
 
-interface Comment {
-  id: string;
-  author: {
-    name: string;
-    initials: string;
-    avatarColor: string;
-  };
-  content: string;
-  timestamp: string;
+const REACTIONS: {
+  type: UserReaction;
+  emoji: string;
+  label: string;
+  color: string;
+}[] = [
+  { type: "like", emoji: "👍", label: "Like", color: "text-blue-500" },
+  { type: "love", emoji: "❤️", label: "Love", color: "text-red-500" },
+  { type: "haha", emoji: "😂", label: "Haha", color: "text-yellow-500" },
+  { type: "wow", emoji: "😮", label: "Wow", color: "text-orange-500" },
+  { type: "sad", emoji: "😢", label: "Sad", color: "text-yellow-600" },
+  { type: "angry", emoji: "😡", label: "Angry", color: "text-red-600" },
+];
+
+const AVATAR_COLORS = [
+  "bg-rose-400",
+  "bg-amber-400",
+  "bg-teal-400",
+  "bg-blue-400",
+  "bg-violet-400",
+  "bg-pink-400",
+];
+
+function getInitials(firstName: string, lastName: string): string {
+  return (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
 }
 
-interface Post {
-  id: string;
-  author: {
-    name: string;
-    initials: string;
-    role: "Parent" | "Specialist";
-    avatarColor: string;
-  };
-  content: string;
-  timestamp: string;
-  likes: number;
-  comments: number;
-  hashtags: string[];
-  likedByMe?: boolean;
-  commentsList?: Comment[];
+function getAvatarColor(fullName: string): string {
+  let hash = 0;
+  for (let i = 0; i < fullName.length; i++) {
+    hash = fullName.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
 }
+
+function emptyReactionSummary() {
+  return {
+    total: 0,
+    types: { like: 0, love: 0, haha: 0, wow: 0, sad: 0, angry: 0 },
+    userReaction: null as null,
+  };
+}
+
+const HASHTAGS = ["#milestone", "#question", "#advice"];
 
 const INITIAL_POSTS: Post[] = [
   {
-    id: "1",
-    author: {
-      name: "Sarah M.",
-      initials: "SM",
-      role: "Parent",
-      avatarColor: "bg-rose-400",
-    },
+    id: 1,
     content:
       'Just wanted to share that my daughter spoke her first full sentence today! "I want cookie" - I cried happy tears. The speech therapy exercises really work! 🎉',
-    timestamp: "2 hours ago",
-    likes: 24,
-    comments: 1,
-    likedByMe: false,
-    hashtags: ["#milestone", "#speech"],
-    commentsList: [
+    createdAt: "2026-04-20T10:00:00Z",
+    postedAgo: "2 hours ago",
+    tags: ["#milestone", "#speech"],
+    totalReactionsCount: 24,
+    commentsCount: 1,
+    author: {
+      id: "a1",
+      firstName: "Sarah",
+      lastName: "M.",
+      fullName: "Sarah M.",
+    },
+    reactionSummary: {
+      total: 24,
+      types: { like: 24, love: 0, haha: 0, wow: 0, sad: 0, angry: 0 },
+      userReaction: null,
+    },
+    comments: [
       {
-        id: "c1",
-        author: {
-          name: "Dr. Johnson",
-          initials: "DJ",
-          avatarColor: "bg-amber-400",
-        },
+        id: 101,
         content: "That's wonderful news! Keep up the great work! 🎊",
-        timestamp: "1 hour ago",
+        createdAt: "2026-04-20T11:00:00Z",
+        postedAgo: "1 hour ago",
+        totalReactionsCount: 3,
+        author: {
+          id: "a2",
+          firstName: "Dr. Johnson",
+          lastName: "",
+          fullName: "Dr. Johnson",
+        },
+        reactionSummary: {
+          total: 3,
+          types: { like: 3, love: 0, haha: 0, wow: 0, sad: 0, angry: 0 },
+          userReaction: null,
+        },
       },
     ],
   },
   {
-    id: "2",
-    author: {
-      name: "Dr. Johnson",
-      initials: "DJ",
-      role: "Specialist",
-      avatarColor: "bg-amber-400",
-    },
+    id: 2,
     content:
       "Reminder: Early intervention is key! If you notice any developmental delays, reach out to our team. We're here to help every step of the way.",
-    timestamp: "5 hours ago",
-    likes: 18,
-    comments: 0,
-    likedByMe: false,
-    hashtags: ["#advice", "#professional"],
-    commentsList: [],
+    createdAt: "2026-04-20T07:00:00Z",
+    postedAgo: "5 hours ago",
+    tags: ["#advice", "#professional"],
+    totalReactionsCount: 18,
+    commentsCount: 0,
+    author: {
+      id: "a2",
+      firstName: "Dr. Johnson",
+      lastName: "",
+      fullName: "Dr. Johnson",
+    },
+    reactionSummary: {
+      total: 18,
+      types: { like: 18, love: 0, haha: 0, wow: 0, sad: 0, angry: 0 },
+      userReaction: null,
+    },
+    comments: [],
   },
   {
-    id: "3",
-    author: {
-      name: "Michael R.",
-      initials: "MR",
-      role: "Parent",
-      avatarColor: "bg-teal-400",
-    },
+    id: 3,
     content:
       "Has anyone tried the new sensory integration activities? Looking for recommendations for my 4-year-old who is sensitive to loud sounds.",
-    timestamp: "8 hours ago",
-    likes: 12,
-    comments: 0,
-    likedByMe: false,
-    hashtags: ["#question", "#sensory"],
-    commentsList: [],
+    createdAt: "2026-04-20T04:00:00Z",
+    postedAgo: "8 hours ago",
+    tags: ["#question", "#sensory"],
+    totalReactionsCount: 12,
+    commentsCount: 0,
+    author: {
+      id: "a3",
+      firstName: "Michael",
+      lastName: "R.",
+      fullName: "Michael R.",
+    },
+    reactionSummary: {
+      total: 12,
+      types: { like: 12, love: 0, haha: 0, wow: 0, sad: 0, angry: 0 },
+      userReaction: null,
+    },
+    comments: [],
   },
 ];
 
-const HASHTAGS = ["#milestone", "#question", "#advice"];
-
 interface PostCardProps {
   post: Post;
-  onLike: (postId: string) => void;
-  onAddComment: (postId: string, content: string) => void;
+  onReact: (postId: number, reaction: UserReaction) => void;
+  onCommentReact: (
+    postId: number,
+    commentId: number,
+    reaction: UserReaction,
+  ) => void;
+  onAddComment: (postId: number, content: string) => void;
   currentUser: { username?: string } | null;
 }
 
-function PostCard({ post, onLike, onAddComment, currentUser }: PostCardProps) {
+interface Reactionable {
+  reactionSummary: {
+    userReaction: UserReaction;
+    total: number;
+    types: {
+      like: number;
+      love: number;
+      haha: number;
+      wow: number;
+      sad: number;
+      angry: number;
+    };
+  };
+}
+
+function ReactionButton<T extends { id: number } & Reactionable>({
+  item,
+  onReact,
+  size = "md",
+}: {
+  item: T;
+  onReact: (itemId: number, reaction: UserReaction) => void;
+  size?: "sm" | "md";
+}) {
+  const [showPicker, setShowPicker] = useState(false);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const currentReaction = item.reactionSummary.userReaction;
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => setShowPicker(true), 200);
+  };
+
+  const handleMouseLeave = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => setShowPicker(false), 300);
+  };
+
+  const handleReact = (reaction: UserReaction) => {
+    onReact(item.id, reaction);
+    setShowPicker(false);
+  };
+
+  const currentReactionData = REACTIONS.find((r) => r.type === currentReaction);
+
+  return (
+    <div
+      ref={containerRef}
+      className="relative"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      {/* Picker Popup */}
+      {showPicker && (
+        <div className="absolute bottom-full left-0 mb-2 bg-white rounded-full shadow-lg border border-gray-100 px-2 py-1.5 flex items-center gap-1 animate-in fade-in slide-in-from-bottom-2 duration-200 z-10">
+          {REACTIONS.map((reaction) => (
+            <button
+              key={reaction.type}
+              onClick={() => handleReact(reaction.type)}
+              className="hover:scale-125 transition-transform p-1 text-lg"
+              title={reaction.label}
+            >
+              {reaction.emoji}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Main Button */}
+      <button
+        onClick={() => handleReact(currentReaction === "like" ? null : "like")}
+        className={`flex items-center gap-2 transition-colors group ${
+          currentReactionData
+            ? currentReactionData.color
+            : "text-gray-500 hover:text-blue-500"
+        }`}
+      >
+        {currentReactionData ? (
+          <span className={size === "sm" ? "text-sm" : "text-base"}>
+            {currentReactionData.emoji}
+          </span>
+        ) : (
+          <ThumbsUp
+            className={`${size === "sm" ? "w-3 h-3" : "w-4 h-4"} group-hover:scale-110 transition-transform`}
+          />
+        )}
+        <span className="text-sm font-medium">
+          {currentReactionData ? currentReactionData.label : "Like"}
+          {item.reactionSummary.total > 0 && (
+            <span className="ml-1">{item.reactionSummary.total}</span>
+          )}
+        </span>
+      </button>
+    </div>
+  );
+}
+
+function PostCard({
+  post,
+  onReact,
+  onCommentReact,
+  onAddComment,
+  currentUser,
+}: PostCardProps) {
   const [showComments, setShowComments] = useState(false);
   const [newComment, setNewComment] = useState("");
 
@@ -123,32 +276,28 @@ function PostCard({ post, onLike, onAddComment, currentUser }: PostCardProps) {
       setNewComment("");
     }
   };
+  const authorInitials = getInitials(
+    post.author.firstName,
+    post.author.lastName,
+  );
+  const authorColor = getAvatarColor(post.author.fullName);
 
   return (
     <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-300">
       {/* Header */}
       <div className="flex items-center gap-3 mb-4">
         <div
-          className={`w-11 h-11 ${post.author.avatarColor} rounded-full flex items-center justify-center text-white font-semibold text-sm`}
+          className={`w-11 h-11 ${authorColor} rounded-full flex items-center justify-center text-white font-semibold text-sm`}
         >
-          {post.author.initials}
+          {authorInitials}
         </div>
         <div className="flex-1">
           <div className="flex items-center gap-2">
             <span className="font-semibold text-gray-900">
-              {post.author.name}
-            </span>
-            <span
-              className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                post.author.role === "Parent"
-                  ? "bg-green-100 text-primary"
-                  : "bg-blue-100 text-blue-600"
-              }`}
-            >
-              {post.author.role}
+              {post.author.fullName}
             </span>
           </div>
-          <p className="text-xs text-gray-400 mt-0.5">{post.timestamp}</p>
+          <p className="text-xs text-gray-400 mt-0.5">{post.postedAgo}</p>
         </div>
       </div>
 
@@ -157,38 +306,26 @@ function PostCard({ post, onLike, onAddComment, currentUser }: PostCardProps) {
         {post.content}
       </p>
 
-      {/* Hashtags */}
-      <div className="flex flex-wrap gap-2 mb-4">
-        {post.hashtags.map((tag) => (
-          <span
-            key={tag}
-            className="px-3 py-1 bg-gray-50 text-gray-600 rounded-full text-xs font-medium hover:bg-gray-100 cursor-pointer transition-colors"
-          >
-            {tag}
-          </span>
-        ))}
-      </div>
+      {/* Tags */}
+      {post.tags.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-4">
+          {post.tags.map((tag) => (
+            <span
+              key={tag}
+              className="px-3 py-1 bg-gray-50 text-gray-600 rounded-full text-xs font-medium hover:bg-gray-100 cursor-pointer transition-colors"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
 
       {/* Divider */}
       <div className="border-t border-gray-100 mb-3" />
 
       {/* Actions */}
       <div className="flex items-center gap-6">
-        <button
-          onClick={() => onLike(post.id)}
-          className={`flex items-center gap-2 transition-colors group ${
-            post.likedByMe ? "text-red-500" : "text-gray-500 hover:text-red-500"
-          }`}
-        >
-          <Heart
-            className={`w-4 h-4 transition-transform ${
-              post.likedByMe
-                ? "fill-red-500 scale-110"
-                : "group-hover:scale-110"
-            }`}
-          />
-          <span className="text-sm font-medium">{post.likes}</span>
-        </button>
+        <ReactionButton item={post} onReact={onReact} />
         <button
           onClick={() => setShowComments(!showComments)}
           className={`flex items-center gap-2 transition-colors group ${
@@ -196,7 +333,7 @@ function PostCard({ post, onLike, onAddComment, currentUser }: PostCardProps) {
           }`}
         >
           <MessageCircle className="w-4 h-4 group-hover:scale-110 transition-transform" />
-          <span className="text-sm font-medium">{post.comments}</span>
+          <span className="text-sm font-medium">{post.commentsCount}</span>
         </button>
         <button className="flex items-center gap-2 text-gray-500 hover:text-primary transition-colors group ml-auto">
           <Share2 className="w-4 h-4 group-hover:scale-110 transition-transform" />
@@ -208,28 +345,44 @@ function PostCard({ post, onLike, onAddComment, currentUser }: PostCardProps) {
       {showComments && (
         <div className="mt-4 pt-4 border-t border-gray-100">
           {/* Comment List */}
-          {post.commentsList && post.commentsList.length > 0 && (
+          {post.comments && post.comments.length > 0 && (
             <div className="space-y-3 mb-4">
-              {post.commentsList.map((comment) => (
-                <div key={comment.id} className="flex gap-3">
-                  <div
-                    className={`w-8 h-8 ${comment.author.avatarColor} rounded-full flex items-center justify-center text-white font-semibold text-xs shrink-0`}
-                  >
-                    {comment.author.initials}
-                  </div>
-                  <div className="flex-1 bg-gray-50 rounded-xl rounded-tl-none px-3 py-2">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="font-semibold text-xs text-gray-900">
-                        {comment.author.name}
-                      </span>
-                      <span className="text-xs text-gray-400">
-                        {comment.timestamp}
-                      </span>
+              {post.comments.map((comment) => {
+                const cInitials = getInitials(
+                  comment.author.firstName,
+                  comment.author.lastName,
+                );
+                const cColor = getAvatarColor(comment.author.fullName);
+                return (
+                  <div key={comment.id} className="flex gap-3">
+                    <div
+                      className={`w-8 h-8 ${cColor} rounded-full flex items-center justify-center text-white font-semibold text-xs shrink-0`}
+                    >
+                      {cInitials}
                     </div>
-                    <p className="text-sm text-gray-700">{comment.content}</p>
+                    <div className="flex-1 bg-gray-50 rounded-xl rounded-tl-none px-3 py-2">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-semibold text-xs text-gray-900">
+                          {comment.author.fullName}
+                        </span>
+                        <span className="text-xs text-gray-400">
+                          {comment.postedAgo}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-700">{comment.content}</p>
+                      <div className="mt-1">
+                        <ReactionButton
+                          item={comment}
+                          onReact={(commentId, reaction) =>
+                            onCommentReact(post.id, commentId, reaction)
+                          }
+                          size="sm"
+                        />
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
 
@@ -266,31 +419,96 @@ export default function Community() {
   const { user } = useAuth();
   const [posts, setPosts] = useState<Post[]>(INITIAL_POSTS);
   const [newPost, setNewPost] = useState("");
+  const [selectedHashtags, setSelectedHashtags] = useState<string[]>([]);
 
-  const handleLike = (postId: string) => {
+  const handleReact = (postId: number, reaction: UserReaction) => {
     setPosts((prev) =>
-      prev.map((post) =>
-        post.id === postId
-          ? {
-              ...post,
-              likes: post.likedByMe ? post.likes - 1 : post.likes + 1,
-              likedByMe: !post.likedByMe,
-            }
-          : post,
-      ),
+      prev.map((post) => {
+        if (post.id !== postId) return post;
+        const prevReaction = post.reactionSummary.userReaction;
+        const isRemoving = prevReaction === reaction;
+        const newReaction = isRemoving ? null : reaction;
+
+        const newTypes = { ...post.reactionSummary.types };
+        if (prevReaction) newTypes[prevReaction]--;
+        if (newReaction) newTypes[newReaction]++;
+
+        const newTotal = isRemoving
+          ? post.totalReactionsCount - 1
+          : prevReaction
+            ? post.totalReactionsCount
+            : post.totalReactionsCount + 1;
+
+        return {
+          ...post,
+          totalReactionsCount: newTotal,
+          reactionSummary: {
+            ...post.reactionSummary,
+            total: newTotal,
+            types: newTypes,
+            userReaction: newReaction,
+          },
+        };
+      }),
     );
   };
 
-  const handleAddComment = (postId: string, content: string) => {
+  const handleCommentReact = (
+    postId: number,
+    commentId: number,
+    reaction: UserReaction,
+  ) => {
+    setPosts((prev) =>
+      prev.map((post) => {
+        if (post.id !== postId) return post;
+        return {
+          ...post,
+          comments: post.comments.map((comment) => {
+            if (comment.id !== commentId) return comment;
+            const prevReaction = comment.reactionSummary.userReaction;
+            const isRemoving = prevReaction === reaction;
+            const newReaction = isRemoving ? null : reaction;
+
+            const newTypes = { ...comment.reactionSummary.types };
+            if (prevReaction) newTypes[prevReaction]--;
+            if (newReaction) newTypes[newReaction]++;
+
+            const newTotal = isRemoving
+              ? comment.totalReactionsCount - 1
+              : prevReaction
+                ? comment.totalReactionsCount
+                : comment.totalReactionsCount + 1;
+
+            return {
+              ...comment,
+              totalReactionsCount: newTotal,
+              reactionSummary: {
+                ...comment.reactionSummary,
+                total: newTotal,
+                types: newTypes,
+                userReaction: newReaction,
+              },
+            };
+          }),
+        };
+      }),
+    );
+  };
+
+  const handleAddComment = (postId: number, content: string) => {
     const newComment: Comment = {
-      id: `c${Date.now()}`,
-      author: {
-        name: user?.username || "You",
-        initials: (user?.username?.charAt(0) || "Y").toUpperCase(),
-        avatarColor: "bg-primary",
-      },
+      id: Date.now(),
       content,
-      timestamp: "Just now",
+      createdAt: new Date().toISOString(),
+      postedAgo: "Just now",
+      totalReactionsCount: 0,
+      author: {
+        id: user?.id || "me",
+        firstName: user?.username || "You",
+        lastName: "",
+        fullName: user?.username || "You",
+      },
+      reactionSummary: emptyReactionSummary(),
     };
 
     setPosts((prev) =>
@@ -298,15 +516,13 @@ export default function Community() {
         post.id === postId
           ? {
               ...post,
-              comments: post.comments + 1,
-              commentsList: [...(post.commentsList || []), newComment],
+              commentsCount: post.commentsCount + 1,
+              comments: [...post.comments, newComment],
             }
           : post,
       ),
     );
   };
-
-  const [selectedHashtags, setSelectedHashtags] = useState<string[]>([]);
 
   const toggleHashtag = (tag: string) => {
     setSelectedHashtags((prev) =>
@@ -317,21 +533,23 @@ export default function Community() {
   const handleCreatePost = () => {
     if (!newPost.trim()) return;
 
+    const displayName = user?.username || "You";
     const post: Post = {
-      id: `p${Date.now()}`,
-      author: {
-        name: user?.username || "You",
-        initials: (user?.username?.charAt(0) || "Y").toUpperCase(),
-        role: (user?.roles?.[0] as "Parent" | "Specialist") || "Parent",
-        avatarColor: "bg-primary",
-      },
+      id: Date.now(),
       content: newPost.trim(),
-      timestamp: "Just now",
-      likes: 0,
-      comments: 0,
-      likedByMe: false,
-      hashtags: selectedHashtags.length > 0 ? selectedHashtags : [],
-      commentsList: [],
+      createdAt: new Date().toISOString(),
+      postedAgo: "Just now",
+      tags: selectedHashtags.length > 0 ? selectedHashtags : [],
+      totalReactionsCount: 0,
+      commentsCount: 0,
+      author: {
+        id: user?.id || "me",
+        firstName: displayName,
+        lastName: "",
+        fullName: displayName,
+      },
+      reactionSummary: emptyReactionSummary(),
+      comments: [],
     };
 
     setPosts((prev) => [post, ...prev]);
@@ -352,6 +570,12 @@ export default function Community() {
               placeholder="Share your thoughts, ask questions, or celebrate milestones..."
               value={newPost}
               onChange={(e) => setNewPost(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleCreatePost();
+                }
+              }}
               className="w-full resize-none border-0 focus:ring-0 text-sm text-gray-700 placeholder-gray-400 min-h-[60px] p-0"
             />
           </div>
@@ -409,7 +633,8 @@ export default function Community() {
           <PostCard
             key={post.id}
             post={post}
-            onLike={handleLike}
+            onReact={handleReact}
+            onCommentReact={handleCommentReact}
             onAddComment={handleAddComment}
             currentUser={user}
           />
@@ -417,38 +642,4 @@ export default function Community() {
       </div>
     </div>
   );
-}
-
-export function Users() {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    fetch("/api/users")
-      .then((res) => res.json())
-      .then((data) => {
-        setData(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err);
-        setLoading(false);
-      });
-  }, []);
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error!</p>;
-  return <div>{data}</div>;
-}
-
-export function Usersx() {
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["users"],
-    queryFn: () => fetch("/api/users").then((res) => res.json()),
-  });
-
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Error!</p>;
-  return <div>{data}</div>;
 }
