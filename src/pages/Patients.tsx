@@ -43,7 +43,7 @@ export default function Patients() {
   }, [searchQuery, patients]);
 
   return (
-    <div className="bg-linear-to-b min-h-[calc(100vh-80px)] from-gray-50 to-gray-100 p-8">
+    <div className="bg-linear-to-b min-h-[calc(100vh-81px)] from-gray-50 to-gray-100 p-4 sm:p-5">
       {/* Header */}
       <div className="mb-8 text-center sm:text-left">
         <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">

@@ -295,7 +295,7 @@ export default function Community() {
   };
 
   return (
-    <div className="p-6 max-w-3xl mx-auto">
+    <div className="p-5 max-w-4xl mx-auto">
       <CreatePostForm />
       <PostsFeed
         posts={posts}

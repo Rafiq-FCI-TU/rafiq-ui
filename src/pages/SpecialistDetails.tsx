@@ -31,7 +31,7 @@ export default function SpecialistDetails() {
   const specialist: Specialist = data;
 
   return (
-    <div className="bg-gray-50/30 pb-15">
+    <div className="bg-gray-50/30 pb-15 min-h-[calc(100vh-81px)]">
       {isFetching ? (
         <div className="flex flex-col items-center justify-center h-[calc(100vh-200px)]">
           <div className="mb-4 flex justify-center text-primary">
@@ -53,7 +53,7 @@ export default function SpecialistDetails() {
           <p className="text-red-600">Please try again later.</p>
         </div>
       ) : (
-        <div className="max-w-6xl mx-auto px-4 py-8">
+        <div className="max-w-6xl mx-auto px-5 py-8">
           {/* Back Navigation */}
           <Link
             to="/specialist"

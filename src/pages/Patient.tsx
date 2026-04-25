@@ -123,7 +123,7 @@ export default function Patient() {
 
   if (error || !patient) {
     return (
-      <div className="bg-gray-50 p-6 min-h-screen">
+      <div className="bg-gray-50 p-5 min-h-screen">
         <Link
           to="/patients"
           className="inline-flex items-center gap-2 text-gray-600 hover:text-primary transition-colors duration-300 mb-6"
@@ -153,7 +153,7 @@ export default function Patient() {
   }
 
   return (
-    <div className="bg-gray-50 p-6 relative">
+    <div className="bg-gray-50 min-h-[calc(100vh-81px)] p-4 relative">
       {/* Progress bar for background refetch */}
       {isFetching && (
         <div className="fixed top-0 left-0 right-0 h-1 bg-gray-100 z-50 overflow-hidden">

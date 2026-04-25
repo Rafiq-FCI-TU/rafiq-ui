@@ -31,7 +31,7 @@ export default function Specialist() {
   }, [searchTerm, specialists]);
 
   return (
-    <div className="mx-auto  p-10">
+    <div className="mx-auto  p-5">
       <header className="mb-10">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
           Find Your Specialist

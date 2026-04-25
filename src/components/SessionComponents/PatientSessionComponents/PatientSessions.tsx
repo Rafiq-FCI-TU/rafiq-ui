@@ -30,7 +30,7 @@ export default function PatientSessions() {
 
   if (!user?.specialistId) {
     return (
-      <div className="flex justify-center items-center p-6">
+      <div className="flex justify-center items-center p-5">
         <div className="max-w-xl w-full bg-white rounded-3xl border border-primary/20 shadow-sm p-10 flex flex-col items-center text-center">
           <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-8">
             <Stethoscope className="w-10 h-10 text-primary" />
