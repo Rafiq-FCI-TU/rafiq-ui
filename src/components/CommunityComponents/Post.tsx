@@ -5,6 +5,9 @@ import {
   MoreHorizontal,
   X,
   Check,
+  Pencil,
+  Trash2,
+  AlertTriangle,
 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import type { Post as PostType, UserReaction } from "../../types/Community";
@@ -44,27 +47,27 @@ function CommentInput({
   };
 
   return (
-    <div className="flex gap-3">
-      <div className="w-8 h-8 bg-linear-to-r from-primary-dark to-primary rounded-full flex items-center justify-center text-white font-semibold text-xs shrink-0">
-        {currentUser?.username?.charAt(0)?.toUpperCase() || "YO"}
+    <div className="flex justify-between items-center gap-3">
+      <div className="size-8 bg-linear-to-r from-primary-dark to-primary rounded-full flex items-center justify-center text-white font-semibold text-xs shrink-0">
+        {currentUser?.username?.charAt(0)?.toUpperCase() || "U"}
       </div>
-      <div className="flex-1 flex gap-2">
-        <input
-          type="text"
-          placeholder="Write a comment..."
-          value={newComment}
-          onChange={(e) => setNewComment(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
-          className="flex-1 px-3 py-2 bg-gray-50 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all"
-        />
-        <button
-          onClick={handleSubmit}
-          disabled={!newComment.trim()}
-          className="p-2 bg-primary text-white rounded-xl hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <Send className="w-4 h-4" />
-        </button>
-      </div>
+
+      <input
+        type="text"
+        placeholder="Write a comment..."
+        value={newComment}
+        onChange={(e) => setNewComment(e.target.value)}
+        onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+        className="w-full px-3 py-2 bg-gray-50 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all"
+      />
+
+      <button
+        onClick={handleSubmit}
+        disabled={!newComment.trim()}
+        className="size-8 bg-primary cursor-pointer text-white rounded-full hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center shrink-0"
+      >
+        <Send className="w-4 h-4" />
+      </button>
     </div>
   );
 }
@@ -129,22 +132,27 @@ function PostMenu({
     <div ref={menuRef} className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors text-gray-400 hover:text-gray-600"
+        className="p-2 cursor-pointer rounded-xl hover:bg-gray-100 active:bg-gray-200 transition-all text-gray-400 hover:text-gray-600"
+        aria-label="Post options"
       >
-        <MoreHorizontal className="w-4 h-4" />
+        <MoreHorizontal className="w-5 h-5" />
       </button>
       {open && (
-        <div className="absolute right-0 top-full mt-1 bg-white rounded-lg shadow-lg border border-gray-100 py-1 min-w-[120px] z-20 animate-in fade-in duration-150">
+        <div className="absolute right-0 top-full mt-2 bg-white rounded-xl shadow-xl border border-gray-100 py-1.5 min-w-[140px] z-20 animate-in fade-in zoom-in-95 duration-150 origin-top-right">
           {onEdit && (
             <button
               onClick={() => {
                 onEdit();
                 setOpen(false);
               }}
-              className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+              className="cursor-pointer w-full px-3 py-2.5 text-left text-sm text-gray-700 hover:bg-gray-50 transition-colors flex items-center gap-2.5"
             >
-              Edit
+              <Pencil className="w-4 h-4 text-gray-400" />
+              <span>Edit post</span>
             </button>
+          )}
+          {onEdit && onDelete && (
+            <div className="mx-3 my-1 border-t border-gray-100" />
           )}
           {onDelete && (
             <button
@@ -152,9 +160,10 @@ function PostMenu({
                 onDelete();
                 setOpen(false);
               }}
-              className="w-full px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50 transition-colors"
+              className="cursor-pointer w-full px-3 py-2.5 text-left text-sm text-red-600 hover:bg-red-50 transition-colors flex items-center gap-2.5"
             >
-              Delete
+              <Trash2 className="w-4 h-4 text-red-400" />
+              <span>Delete</span>
             </button>
           )}
         </div>
@@ -291,31 +300,32 @@ export function PostCard({
 
       {/* Delete Confirmation */}
       {showDeleteConfirm && (
-        <div className="mb-4 p-4 bg-red-50 rounded-xl border border-red-100 animate-in fade-in slide-in-from-top-1 duration-200">
-          <div className="flex items-start gap-3">
-            <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center shrink-0">
-              <span className="text-red-600 text-lg">⚠️</span>
+        <div className="mb-5 p-5 bg-red-50/80 rounded-2xl border border-red-200 animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="flex items-start gap-4">
+            <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center shrink-0 ring-4 ring-red-50">
+              <AlertTriangle className="w-5 h-5 text-red-600" />
             </div>
-            <div className="flex-1">
-              <p className="text-sm font-medium text-red-800 mb-1">
+            <div className="flex-1 min-w-0">
+              <h4 className="text-base font-semibold text-red-900 mb-1">
                 Delete this post?
-              </p>
-              <p className="text-xs text-red-600/80 mb-3">
+              </h4>
+              <p className="text-sm text-red-700/80 mb-4 leading-relaxed">
                 This action cannot be undone. The post and all its comments will
-                be permanently removed.
+                be permanently removed from your account.
               </p>
-              <div className="flex gap-2">
+              <div className="flex gap-3">
                 <button
                   onClick={() => setShowDeleteConfirm(false)}
-                  className="px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-white rounded-lg transition-all border border-gray-200"
+                  className="cursor-pointer px-4 py-2 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 rounded-xl transition-all border border-gray-200 shadow-sm"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleDelete}
-                  className="px-3 py-1.5 text-xs font-medium bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all shadow-sm"
+                  className="cursor-pointer px-4 py-2 text-sm font-medium bg-red-600 text-white rounded-xl hover:bg-red-400 transition-all shadow-sm flex items-center gap-2"
                 >
-                  Yes, Delete
+                  <Trash2 className="w-4 h-4" />
+                  Delete Post
                 </button>
               </div>
             </div>
@@ -388,15 +398,15 @@ export function PostCard({
               ? "text-primary bg-primary/10"
               : "text-gray-500 hover:text-primary hover:bg-gray-50"
           }`}
+          title="Comment"
         >
           <MessageCircle className="w-[18px] h-[18px]" />
-          <span className="text-sm font-semibold">
-            {post.commentsCount || "Comment"}
-          </span>
         </button>
-        <button className="flex items-center gap-2 px-3 py-2 text-gray-500 hover:text-primary hover:bg-gray-50 rounded-xl transition-all ml-auto">
+        <button
+          className="flex cursor-pointer items-center gap-2 px-3 py-2 text-gray-500 hover:text-primary hover:bg-gray-50 rounded-xl transition-all ml-auto"
+          title="Share"
+        >
           <Share2 className="w-[18px] h-[18px]" />
-          <span className="text-sm font-semibold">Share</span>
         </button>
       </div>
 

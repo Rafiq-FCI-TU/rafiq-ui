@@ -101,13 +101,6 @@ export function ReactionButton<T extends { id: number } & Reactionable>({
             className={`${sizeClasses.icon} transition-transform group-hover:scale-110`}
           />
         )}
-        <span className={`${sizeClasses.text} font-semibold`}>
-          {item.reactionSummary.total > 0 && (
-            <span className="ml-1.5 text-gray-500 font-medium">
-              {item.reactionSummary.total}
-            </span>
-          )}
-        </span>
       </button>
     </div>
   );

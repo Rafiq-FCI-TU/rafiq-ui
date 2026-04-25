@@ -48,6 +48,54 @@ export default function Community() {
 
   const posts: Post[] = fetchedPosts?.data ?? [];
 
+  // Edit post mutation with optimistic updates
+  const editPostMutation = useMutation({
+    mutationFn: async ({
+      postId,
+      content,
+      tags,
+    }: {
+      postId: number;
+      content: string;
+      tags: string[];
+    }) => {
+      const res = await fetch(`${API_BASE}/community/posts/${postId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ content, tags }),
+      });
+      if (!res.ok) throw new Error("Failed to edit post");
+      return res.json();
+    },
+    onMutate: async ({ postId, content, tags }) => {
+      await queryClient.cancelQueries({ queryKey: ["Posts"] });
+      const previousPosts = queryClient.getQueryData(["Posts"]);
+
+      queryClient.setQueryData(
+        ["Posts"],
+        (old: { data?: Post[] } | undefined) => {
+          if (!old?.data) return old;
+          return {
+            ...old,
+            data: old.data.map((post: Post) =>
+              post.id === postId ? { ...post, content, tags } : post,
+            ),
+          };
+        },
+      );
+
+      return { previousPosts };
+    },
+    onError: (_err, _vars, context) => {
+      if (context?.previousPosts) {
+        queryClient.setQueryData(["Posts"], context.previousPosts);
+      }
+    },
+  });
+
   // Post reaction mutation with optimistic updates
   const postReactionMutation = useMutation({
     mutationFn: async ({
@@ -265,20 +313,7 @@ export default function Community() {
     newContent: string,
     newTags: string[],
   ) => {
-    queryClient.setQueryData(
-      ["Posts"],
-      (old: { data?: Post[] } | undefined) => {
-        if (!old?.data) return old;
-        return {
-          ...old,
-          data: old.data.map((post: Post) =>
-            post.id === postId
-              ? { ...post, content: newContent, tags: newTags }
-              : post,
-          ),
-        };
-      },
-    );
+    editPostMutation.mutate({ postId, content: newContent, tags: newTags });
   };
 
   const handleDeletePost = (postId: number) => {
