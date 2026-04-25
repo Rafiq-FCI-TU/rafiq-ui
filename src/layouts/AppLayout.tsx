@@ -38,7 +38,8 @@ export default function AppLayout() {
     { icon: Settings, label: "Settings", href: "/settings" },
   ];
   const currentPageTitle =
-    menuItems.find((item) => pathname.startsWith(item.href))?.label || "Activities";
+    menuItems.find((item) => pathname.startsWith(item.href))?.label ||
+    "Activities";
 
   return (
     <div className="min-h-screen bg-[#f3f5f4]">
@@ -136,9 +137,6 @@ export default function AppLayout() {
         <header className="sticky top-0 z-30 border-b border-[#dde3df] bg-white">
           <div className="px-8 py-5">
             <div className="flex items-center justify-between gap-4">
-              <h2 className="text-4xl font-medium text-[#1f2c28] tracking-tight">
-                {currentPageTitle}
-              </h2>
               <button
                 onClick={() => setSidebarOpen(true)}
                 className="lg:hidden p-2.5 bg-[#0f5a3a] rounded-xl hover:opacity-90 cursor-pointer text-white transition-all duration-300"
@@ -146,6 +144,9 @@ export default function AppLayout() {
                 <Menu className="w-6 h-6" />
               </button>
 
+              <h2 className="text-2xl font-medium text-[#1f2c28] tracking-tight">
+                {currentPageTitle}
+              </h2>
               <div className="ml-auto flex items-center gap-3">
                 <button className="relative p-2.5 cursor-pointer text-[#44534d] hover:bg-[#f4f6f5] rounded-xl transition-colors duration-200">
                   <Bell className="w-5 h-5" />
@@ -157,7 +158,7 @@ export default function AppLayout() {
         </header>
 
         {/* Page Content */}
-        <main className="p-6 md:p-8">
+        <main>
           <Outlet />
         </main>
       </div>
