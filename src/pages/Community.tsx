@@ -386,6 +386,61 @@ export default function Community() {
     addCommentMutation.mutate({ postId, content });
   };
 
+  // Delete comment mutation with optimistic updates
+  const deleteCommentMutation = useMutation({
+    mutationFn: async ({
+      postId: _unusedPostId,
+      commentId,
+    }: {
+      postId: number;
+      commentId: number;
+    }) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const res = await fetch(`${API_BASE}/community/comments/${commentId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!res.ok) throw new Error("Failed to delete comment");
+      return res.json();
+    },
+    onMutate: async ({ postId, commentId }) => {
+      await queryClient.cancelQueries({ queryKey: ["Posts"] });
+      const previousPosts = queryClient.getQueryData(["Posts"]);
+
+      queryClient.setQueryData(
+        ["Posts"],
+        (old: { data?: Post[] } | undefined) => {
+          if (!old?.data) return old;
+          return {
+            ...old,
+            data: old.data.map((post: Post) =>
+              post.id === postId
+                ? {
+                    ...post,
+                    commentsCount: post.commentsCount - 1,
+                    comments: post.comments.filter((c) => c.id !== commentId),
+                  }
+                : post,
+            ),
+          };
+        },
+      );
+
+      return { previousPosts };
+    },
+    onError: (_err, _vars, context) => {
+      if (context?.previousPosts) {
+        queryClient.setQueryData(["Posts"], context.previousPosts);
+      }
+    },
+  });
+
+  const handleDeleteComment = (postId: number, commentId: number) => {
+    deleteCommentMutation.mutate({ postId, commentId });
+  };
+
   // Delete post mutation with optimistic updates
   const deletePostMutation = useMutation({
     mutationFn: async (postId: number) => {
@@ -444,6 +499,7 @@ export default function Community() {
         onReact={handleReact}
         onCommentReact={handleCommentReact}
         onAddComment={handleAddComment}
+        onDeleteComment={handleDeleteComment}
         onEditPost={handleEditPost}
         onDeletePost={handleDeletePost}
         currentUser={user}

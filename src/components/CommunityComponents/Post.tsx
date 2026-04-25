@@ -25,6 +25,7 @@ interface PostCardProps {
     reaction: UserReaction,
   ) => void;
   onAddComment: (postId: number, content: string) => void;
+  onDeleteComment: (postId: number, commentId: number) => void;
   onEditPost: (postId: number, newContent: string, newTags: string[]) => void;
   onDeletePost: (postId: number) => void;
   currentUser: User | null;
@@ -236,6 +237,7 @@ export function PostCard({
   onReact,
   onCommentReact,
   onAddComment,
+  onDeleteComment,
   onEditPost,
   onDeletePost,
   currentUser,
@@ -423,6 +425,9 @@ export function PostCard({
                   onReact={(commentId, reaction) =>
                     onCommentReact(post.id, commentId, reaction)
                   }
+                  onDelete={onDeleteComment}
+                  postId={post.id}
+                  currentUser={currentUser}
                 />
               ))}
             </div>

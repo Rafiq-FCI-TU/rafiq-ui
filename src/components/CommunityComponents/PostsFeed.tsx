@@ -14,6 +14,7 @@ interface PostsFeedProps {
     reaction: UserReaction,
   ) => void;
   onAddComment: (postId: number, content: string) => void;
+  onDeleteComment: (postId: number, commentId: number) => void;
   onEditPost: (postId: number, newContent: string, newTags: string[]) => void;
   onDeletePost: (postId: number) => void;
   currentUser: User | null;
@@ -26,6 +27,7 @@ export function PostsFeed({
   onReact,
   onCommentReact,
   onAddComment,
+  onDeleteComment,
   onEditPost,
   onDeletePost,
   currentUser,
@@ -68,6 +70,7 @@ export function PostsFeed({
           onReact={onReact}
           onCommentReact={onCommentReact}
           onAddComment={onAddComment}
+          onDeleteComment={onDeleteComment}
           onEditPost={onEditPost}
           onDeletePost={onDeletePost}
           currentUser={currentUser}
