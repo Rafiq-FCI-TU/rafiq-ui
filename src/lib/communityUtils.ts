@@ -1,4 +1,4 @@
-import type { UserReaction, ReactionSummary } from "../../types/Community";
+import type { UserReaction, ReactionSummary } from "../types/Community";
 
 export const REACTIONS: {
   type: UserReaction;

@@ -3,41 +3,10 @@ import type {
   Comment as CommentType,
   UserReaction,
 } from "../../types/Community";
-import { getInitials, getAvatarColor, REACTIONS } from "./communityUtils";
+import { getInitials, getAvatarColor } from "../../lib/communityUtils";
 import { ReactionButton } from "./ReactionButton";
+import { CommentReactionsBreakdown } from "./CommentReactionsBreakdown";
 import { MoreHorizontal, Trash2, AlertTriangle } from "lucide-react";
-
-function CommentReactionsBreakdown({
-  summary,
-}: {
-  summary: CommentType["reactionSummary"];
-}) {
-  const activeReactions = REACTIONS.filter(
-    (r) => r.type && summary.types[r.type] > 0,
-  );
-
-  if (activeReactions.length === 0) return null;
-
-  return (
-    <div className="flex items-center">
-      {activeReactions.map((r, index) => (
-        <div
-          key={r.type}
-          className={`flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-white shadow-sm border border-gray-100 text-xs ${
-            index > 0 ? "-ml-1.5" : ""
-          }`}
-          style={{ zIndex: activeReactions.length - index }}
-          title={`${r.label}: ${r.type ? summary.types[r.type] : 0}`}
-        >
-          <span>{r.emoji}</span>
-          <span className="font-semibold text-gray-600">
-            {r.type ? summary.types[r.type] : 0}
-          </span>
-        </div>
-      ))}
-    </div>
-  );
-}
 
 interface CommentProps {
   comment: CommentType;

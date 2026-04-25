@@ -1,7 +1,7 @@
 import { ThumbsUp } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import type { UserReaction } from "../../types/Community";
-import { REACTIONS, type Reactionable } from "./communityUtils";
+import { REACTIONS, type Reactionable } from "../../lib/communityUtils";
 
 export function ReactionButton<T extends { id: number } & Reactionable>({
   item,
