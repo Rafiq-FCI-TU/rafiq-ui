@@ -60,7 +60,7 @@ export default function AppLayout() {
         <div className="flex h-full flex-col bg-[#0f5a3a]">
           <div className="relative flex h-20 items-center justify-between px-5 shrink-0">
             <div className="flex items-center space-x-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-white/15">
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-white">
                 <img src="logo.png" alt="Rafiq Logo" className="size-9" />
               </div>
               <h1 className="text-3xl font-semibold text-white leading-none">
