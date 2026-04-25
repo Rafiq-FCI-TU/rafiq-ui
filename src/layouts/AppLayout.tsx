@@ -112,12 +112,19 @@ export default function AppLayout() {
           <div className="mt-auto border-t border-white/10 px-3 py-2.5 shrink-0 bg-[#0d5436]">
             <div className="flex w-full items-center justify-between rounded-xl px-2 py-1 text-white/95">
               <div className="flex min-w-0 items-center gap-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#1f7a53]">
-                  <User className="h-4.5 w-4.5 text-white/90" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1f7a53]">
+                  <User className="h-5 w-5 text-white/90" />
                 </div>
-                <p className="truncate text-sm font-medium leading-none">
-                  {user?.email || "user@example.com"}
-                </p>
+                <div className="flex flex-col min-w-0">
+                  <p className="truncate text-sm font-medium leading-tight">
+                    {user?.username || user?.email || "User"}
+                  </p>
+                  {user?.roles && user.roles.length > 0 && (
+                    <p className="truncate text-xs text-white/60 leading-tight mt-0.5">
+                      {user.roles.join(", ")}
+                    </p>
+                  )}
+                </div>
               </div>
               <button
                 onClick={logout}
