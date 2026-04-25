@@ -308,6 +308,42 @@ export default function Community() {
     );
   };
 
+  // Delete post mutation with optimistic updates
+  const deletePostMutation = useMutation({
+    mutationFn: async (postId: number) => {
+      const res = await fetch(`${API_BASE}/community/posts/${postId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!res.ok) throw new Error("Failed to delete post");
+      return res.json();
+    },
+    onMutate: async (postId) => {
+      await queryClient.cancelQueries({ queryKey: ["Posts"] });
+      const previousPosts = queryClient.getQueryData(["Posts"]);
+
+      queryClient.setQueryData(
+        ["Posts"],
+        (old: { data?: Post[] } | undefined) => {
+          if (!old?.data) return old;
+          return {
+            ...old,
+            data: old.data.filter((post: Post) => post.id !== postId),
+          };
+        },
+      );
+
+      return { previousPosts };
+    },
+    onError: (_err, _vars, context) => {
+      if (context?.previousPosts) {
+        queryClient.setQueryData(["Posts"], context.previousPosts);
+      }
+    },
+  });
+
   const handleEditPost = (
     postId: number,
     newContent: string,
@@ -317,16 +353,7 @@ export default function Community() {
   };
 
   const handleDeletePost = (postId: number) => {
-    queryClient.setQueryData(
-      ["Posts"],
-      (old: { data?: Post[] } | undefined) => {
-        if (!old?.data) return old;
-        return {
-          ...old,
-          data: old.data.filter((post: Post) => post.id !== postId),
-        };
-      },
-    );
+    deletePostMutation.mutate(postId);
   };
 
   return (
