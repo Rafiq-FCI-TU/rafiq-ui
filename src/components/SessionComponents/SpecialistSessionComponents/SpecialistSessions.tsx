@@ -27,13 +27,13 @@ export default function SpecialistSessions() {
       </div>
 
       {isPending ? (
-        <div className="h-[calc(100vh-500px)] flex items-center justify-center">
+        <div className="h-[calc(100vh-500px)] flex-col gap-3 flex items-center justify-center">
           <LoaderCircle className="animate-spin size-10 text-primary" />
         </div>
       ) : error ? (
-        <div className="h-[calc(100vh-500px)] flex items-center justify-center">
+        <div className="h-[calc(100vh-500px)] flex-col gap-3 flex items-center justify-center">
           <XCircle className="text-red-500 size-10" />
-          <span className="text-red-500 ml-2 text-lg font-bold">
+          <span className="text-red-500 text-lg font-bold">
             {error.message}
           </span>
         </div>
