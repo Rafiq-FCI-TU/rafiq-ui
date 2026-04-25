@@ -61,8 +61,8 @@ export default function AppLayout() {
         <div className="flex h-full flex-col bg-[#0f5a3a]">
           <div className="relative flex h-20 items-center justify-between px-5 shrink-0">
             <div className="flex items-center space-x-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-white">
-                <img src="logo.png" alt="Rafiq Logo" className="size-9" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-white p-2">
+                <img src="logo.png" alt="Rafiq Logo" className="size-8" />
               </div>
               <h1 className="text-3xl font-semibold text-white leading-none">
                 Rafiq
@@ -70,7 +70,7 @@ export default function AppLayout() {
             </div>
             <button
               onClick={() => setSidebarOpen(false)}
-              className="lg:hidden p-2 rounded-lg hover:bg-white/10 text-white transition-colors duration-300"
+              className="lg:hidden cursor-pointer p-2 rounded-lg hover:bg-white/10 text-white transition-colors duration-300"
             >
               <X className="w-5 h-5" />
             </button>
@@ -96,9 +96,9 @@ export default function AppLayout() {
                               : "bg-transparent text-white/90"
                           }`}
                         >
-                          <item.icon className="w-7 h-7" />
+                          <item.icon className="size-6" />
                         </div>
-                        <span className="font-medium text-[20px] leading-none">
+                        <span className="font-medium text-lg leading-none">
                           {item.label}
                         </span>
                       </div>
@@ -129,7 +129,7 @@ export default function AppLayout() {
               <button
                 onClick={logout}
                 aria-label="Sign out"
-                className="ml-2 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-white/80 transition-colors duration-200 hover:bg-white/10 hover:text-white"
+                className="ml-2 cursor-pointer inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-white/80 transition-colors duration-200 hover:bg-white/10 hover:text-white"
               >
                 <LogOut className="h-4 w-4" />
               </button>
