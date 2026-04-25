@@ -272,40 +272,118 @@ export default function Community() {
     commentReactionMutation.mutate({ postId, commentId, reaction });
   };
 
-  const handleAddComment = (postId: number, content: string) => {
-    const newComment: Comment = {
-      id: Date.now(),
+  // Add comment mutation with optimistic updates
+  const addCommentMutation = useMutation({
+    mutationFn: async ({
+      postId,
       content,
-      createdAt: new Date().toISOString(),
-      postedAgo: "Just now",
-      totalReactionsCount: 0,
-      author: {
-        id: user?.id || "me",
-        firstName: user?.username || "You",
-        lastName: "",
-        fullName: user?.username || "You",
-      },
-      reactionSummary: emptyReactionSummary(),
-    };
+    }: {
+      postId: number;
+      content: string;
+    }) => {
+      const res = await fetch(
+        `${API_BASE}/community/posts/${postId}/comments`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ content }),
+        },
+      );
+      if (!res.ok) throw new Error("Failed to add comment");
+      return res.json();
+    },
+    onMutate: async ({ postId, content }) => {
+      await queryClient.cancelQueries({ queryKey: ["Posts"] });
+      const previousPosts = queryClient.getQueryData(["Posts"]);
 
-    queryClient.setQueryData(
-      ["Posts"],
-      (old: { data?: Post[] } | undefined) => {
-        if (!old?.data) return old;
-        return {
-          ...old,
-          data: old.data.map((post: Post) =>
-            post.id === postId
-              ? {
-                  ...post,
-                  commentsCount: post.commentsCount + 1,
-                  comments: [...post.comments, newComment],
-                }
-              : post,
-          ),
-        };
-      },
-    );
+      const newComment: Comment = {
+        id: Date.now(),
+        content,
+        createdAt: new Date().toISOString(),
+        postedAgo: "Just now",
+        totalReactionsCount: 0,
+        author: {
+          id: user?.id || "me",
+          firstName: user?.username || "You",
+          lastName: "",
+          fullName: user?.username || "You",
+        },
+        reactionSummary: emptyReactionSummary(),
+      };
+
+      queryClient.setQueryData(
+        ["Posts"],
+        (old: { data?: Post[] } | undefined) => {
+          if (!old?.data) return old;
+          return {
+            ...old,
+            data: old.data.map((post: Post) =>
+              post.id === postId
+                ? {
+                    ...post,
+                    commentsCount: post.commentsCount + 1,
+                    comments: [...post.comments, newComment],
+                  }
+                : post,
+            ),
+          };
+        },
+      );
+
+      return { previousPosts, tempId: newComment.id };
+    },
+    onSuccess: (data, variables, context) => {
+      // Replace temp comment with server response
+      queryClient.setQueryData(
+        ["Posts"],
+        (old: { data?: Post[] } | undefined) => {
+          if (!old?.data) return old;
+          return {
+            ...old,
+            data: old.data.map((post: Post) =>
+              post.id === variables.postId
+                ? {
+                    ...post,
+                    comments: post.comments.map((c) =>
+                      c.id === context?.tempId ? data.data || c : c,
+                    ),
+                  }
+                : post,
+            ),
+          };
+        },
+      );
+    },
+    onError: (_err, variables, context) => {
+      // Remove temp comment on error
+      queryClient.setQueryData(
+        ["Posts"],
+        (old: { data?: Post[] } | undefined) => {
+          if (!old?.data) return old;
+          return {
+            ...old,
+            data: old.data.map((post: Post) =>
+              post.id === variables.postId
+                ? {
+                    ...post,
+                    commentsCount: post.commentsCount - 1,
+                    comments: post.comments.filter(
+                      (c) => c.id !== context?.tempId,
+                    ),
+                  }
+                : post,
+            ),
+          };
+        },
+      );
+    },
+  });
+
+  const handleAddComment = (postId: number, content: string) => {
+    addCommentMutation.mutate({ postId, content });
   };
 
   // Delete post mutation with optimistic updates
