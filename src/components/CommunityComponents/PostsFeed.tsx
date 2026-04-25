@@ -1,5 +1,6 @@
 import { LoaderCircle, XCircle } from "lucide-react";
 import type { Post as PostType, UserReaction } from "../../types/Community";
+import type { User } from "../../contexts/AuthContext";
 import { PostCard } from "./Post";
 
 interface PostsFeedProps {
@@ -13,7 +14,9 @@ interface PostsFeedProps {
     reaction: UserReaction,
   ) => void;
   onAddComment: (postId: number, content: string) => void;
-  currentUser: { username?: string } | null;
+  onEditPost: (postId: number, newContent: string, newTags: string[]) => void;
+  onDeletePost: (postId: number) => void;
+  currentUser: User | null;
 }
 
 export function PostsFeed({
@@ -23,6 +26,8 @@ export function PostsFeed({
   onReact,
   onCommentReact,
   onAddComment,
+  onEditPost,
+  onDeletePost,
   currentUser,
 }: PostsFeedProps) {
   if (isPending) {
@@ -63,6 +68,8 @@ export function PostsFeed({
           onReact={onReact}
           onCommentReact={onCommentReact}
           onAddComment={onAddComment}
+          onEditPost={onEditPost}
+          onDeletePost={onDeletePost}
           currentUser={currentUser}
         />
       ))}

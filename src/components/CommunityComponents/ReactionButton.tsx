@@ -25,12 +25,12 @@ export function ReactionButton<T extends { id: number } & Reactionable>({
 
   const handleMouseEnter = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => setShowPicker(true), 200);
+    timeoutRef.current = setTimeout(() => setShowPicker(true), 150);
   };
 
   const handleMouseLeave = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => setShowPicker(false), 300);
+    timeoutRef.current = setTimeout(() => setShowPicker(false), 250);
   };
 
   const handleReact = (reaction: UserReaction) => {
@@ -39,6 +39,22 @@ export function ReactionButton<T extends { id: number } & Reactionable>({
   };
 
   const currentReactionData = REACTIONS.find((r) => r.type === currentReaction);
+  const hasReacted = currentReaction !== null;
+
+  const sizeClasses =
+    size === "sm"
+      ? {
+          button: "px-2 py-1",
+          icon: "w-3.5 h-3.5",
+          text: "text-xs",
+          emoji: "text-sm",
+        }
+      : {
+          button: "px-3 py-2",
+          icon: "w-[18px] h-[18px]",
+          text: "text-sm",
+          emoji: "text-base",
+        };
 
   return (
     <div
@@ -49,15 +65,17 @@ export function ReactionButton<T extends { id: number } & Reactionable>({
     >
       {/* Picker Popup */}
       {showPicker && (
-        <div className="absolute bottom-full left-0 mb-2 bg-white rounded-full shadow-lg border border-gray-100 px-2 py-1.5 flex items-center gap-1 animate-in fade-in slide-in-from-bottom-2 duration-200 z-10">
+        <div className="absolute bottom-full left-0 mb-2 bg-white rounded-full shadow-xl border border-gray-100 px-2 py-2 flex items-center gap-0.5 animate-in fade-in slide-in-from-bottom-3 duration-200 z-20">
           {REACTIONS.map((reaction) => (
             <button
               key={reaction.type}
               onClick={() => handleReact(reaction.type)}
-              className="hover:scale-125 transition-transform p-1 text-lg"
+              className="hover:scale-135 cursor-pointer hover:-translate-y-1 active:scale-95 transition-all p-1.5 rounded-full hover:bg-gray-50"
               title={reaction.label}
             >
-              {reaction.emoji}
+              <span className="text-xl filter drop-shadow-sm">
+                {reaction.emoji}
+              </span>
             </button>
           ))}
         </div>
@@ -65,26 +83,29 @@ export function ReactionButton<T extends { id: number } & Reactionable>({
 
       {/* Main Button */}
       <button
-        onClick={() => handleReact(currentReaction === "like" ? null : "like")}
-        className={`flex items-center gap-2 transition-colors group ${
-          currentReactionData
-            ? currentReactionData.color
-            : "text-gray-500 hover:text-blue-500"
+        onClick={() => handleReact(currentReaction || "like")}
+        className={`group flex items-center gap-1.5 rounded-xl cursor-pointer transition-all active:scale-95 ${sizeClasses.button} ${
+          hasReacted
+            ? `${currentReactionData?.color || "text-blue-500"} bg-current/10 hover:bg-current/15`
+            : "text-gray-500 hover:text-blue-500 hover:bg-blue-50"
         }`}
       >
         {currentReactionData ? (
-          <span className={size === "sm" ? "text-sm" : "text-base"}>
+          <span
+            className={`${sizeClasses.emoji} transition-transform group-hover:scale-110`}
+          >
             {currentReactionData.emoji}
           </span>
         ) : (
           <ThumbsUp
-            className={`${size === "sm" ? "w-3 h-3" : "w-4 h-4"} group-hover:scale-110 transition-transform`}
+            className={`${sizeClasses.icon} transition-transform group-hover:scale-110`}
           />
         )}
-        <span className="text-sm font-medium">
-          {currentReactionData ? currentReactionData.label : "Like"}
+        <span className={`${sizeClasses.text} font-semibold`}>
           {item.reactionSummary.total > 0 && (
-            <span className="ml-1">{item.reactionSummary.total}</span>
+            <span className="ml-1.5 text-gray-500 font-medium">
+              {item.reactionSummary.total}
+            </span>
           )}
         </span>
       </button>
