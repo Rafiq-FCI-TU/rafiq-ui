@@ -97,7 +97,7 @@ export default function AppLayout() {
                         >
                           <item.icon className="w-7 h-7" />
                         </div>
-                        <span className="font-medium text-[23px] leading-none">
+                        <span className="font-medium text-[20px] leading-none">
                           {item.label}
                         </span>
                       </div>
