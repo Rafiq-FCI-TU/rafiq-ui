@@ -53,7 +53,7 @@ export default function AppLayout() {
 
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-50 w-75 bg-[#0f5a3a] text-white shadow-2xl transform transition-transform duration-300 ease-in-out
+        className={`fixed inset-y-0 left-0 z-50 w-70 bg-[#0f5a3a] text-white shadow-2xl transform transition-transform duration-300 ease-in-out
         lg:translate-x-0 lg:inset-0
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
       `}
@@ -139,7 +139,7 @@ export default function AppLayout() {
       </div>
 
       {/* Main Content */}
-      <div className="lg:ml-75">
+      <div className="lg:ml-70">
         {/* Navbar */}
         <header className="sticky top-0 z-30 border-b border-[#dde3df] bg-white">
           <div className="px-8 py-5">
