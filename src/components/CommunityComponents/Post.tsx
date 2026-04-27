@@ -1,4 +1,4 @@
-import { MessageCircle, Share2, AlertTriangle, Trash2 } from "lucide-react";
+import { MessageCircle, AlertTriangle, Trash2 } from "lucide-react";
 import { useState } from "react";
 import type { Post as PostType, UserReaction } from "../../types/Community";
 import type { User } from "../../contexts/AuthContext";
@@ -188,20 +188,14 @@ export function PostCard({
         <ReactionButton item={post} onReact={onReact} />
         <button
           onClick={() => setShowComments(!showComments)}
-          className={`flex cursor-pointer items-center gap-2 px-3 py-2 rounded-xl transition-all ${
+          className={`flex cursor-pointer items-center gap-2 p-3 rounded-xl transition-all ${
             showComments
               ? "text-primary bg-primary/10"
               : "text-gray-500 hover:text-primary hover:bg-gray-50"
           }`}
           title="Comment"
         >
-          <MessageCircle className="w-[18px] h-[18px]" />
-        </button>
-        <button
-          className="flex cursor-pointer items-center gap-2 px-3 py-2 text-gray-500 hover:text-primary hover:bg-gray-50 rounded-xl transition-all ml-auto"
-          title="Share"
-        >
-          <Share2 className="w-[18px] h-[18px]" />
+          <MessageCircle className="size-6" />
         </button>
       </div>
 

@@ -44,14 +44,14 @@ export function ReactionButton<T extends { id: number } & Reactionable>({
   const sizeClasses =
     size === "sm"
       ? {
-          button: "px-2 py-1",
-          icon: "w-3.5 h-3.5",
+          button: "p-3",
+          icon: "size-4",
           text: "text-xs",
           emoji: "text-sm",
         }
       : {
-          button: "px-3 py-2",
-          icon: "w-[18px] h-[18px]",
+          button: "p-3",
+          icon: "size-6",
           text: "text-sm",
           emoji: "text-base",
         };
