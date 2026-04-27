@@ -78,7 +78,7 @@ const router = createBrowserRouter([
           { path: "patients/:patientId", element: <Patient /> },
           { path: "ai-assistant", element: <AIAssistant /> },
           { path: "community", element: <Community /> },
-          { path: "Resources", element: <Resources /> },
+          { path: "resources", element: <Resources /> },
         ],
       },
     ],

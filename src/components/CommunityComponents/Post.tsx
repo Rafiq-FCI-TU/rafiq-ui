@@ -145,7 +145,7 @@ export function PostCard({
             {shouldTruncate && (
               <button
                 onClick={() => setIsExpanded(!isExpanded)}
-                className="mt-2 text-sm font-semibold text-primary hover:text-primary-dark hover:underline transition-all"
+                className="mt-2 cursor-pointer text-sm font-semibold text-primary hover:text-primary-dark hover:underline transition-all"
               >
                 {isExpanded ? "Show less" : "Show more"}
               </button>
