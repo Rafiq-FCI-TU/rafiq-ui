@@ -25,6 +25,7 @@ import Services from "./components/HomeComponents/Services.tsx";
 import Activities from "./components/HomeComponents/Activities.tsx";
 import Care from "./components/HomeComponents/Care.tsx";
 import Community from "./pages/Community.tsx";
+import Resources from "./pages/Resources.tsx";
 
 const router = createBrowserRouter([
   {
@@ -77,6 +78,7 @@ const router = createBrowserRouter([
           { path: "patients/:patientId", element: <Patient /> },
           { path: "ai-assistant", element: <AIAssistant /> },
           { path: "community", element: <Community /> },
+          { path: "Resources", element: <Resources /> },
         ],
       },
     ],
