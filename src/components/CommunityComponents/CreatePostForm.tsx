@@ -13,6 +13,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
+import { useToast } from "../../hooks/useToast";
 
 // Quick tag options for post categorization
 const HASHTAGS = ["milestone", "question", "advice"];
@@ -35,6 +36,7 @@ const validationSchema = Yup.object().shape({
 
 export function CreatePostForm() {
   const { user, token } = useAuth();
+  const { showToast } = useToast();
   const queryClient = useQueryClient();
   const [tagInput, setTagInput] = useState("");
 
@@ -53,6 +55,7 @@ export function CreatePostForm() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["Posts"] });
+      showToast("Post created successfully", "success");
     },
   });
 
@@ -76,6 +79,7 @@ export function CreatePostForm() {
     } catch (error) {
       if (error) {
         const errorMessage = "Failed to create post";
+        showToast(errorMessage, "error");
         helpers.setStatus(errorMessage);
       }
     } finally {

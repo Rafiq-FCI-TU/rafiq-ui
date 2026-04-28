@@ -2,6 +2,7 @@ import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import type { Post, Comment, UserReaction } from "../types/Community";
 import { useAuth } from "../contexts/AuthContext";
 import { emptyReactionSummary } from "../lib/communityUtils";
+import { useToast } from "./useToast";
 
 const API_BASE =
   "https://rafiq-container-server.wittyhill-43579268.germanywestcentral.azurecontainerapps.io/api";
@@ -21,6 +22,7 @@ function getReactionType(reaction: UserReaction): number | undefined {
 }
 
 export function useCommunity() {
+  const { showToast } = useToast();
   const { user, token } = useAuth();
   const queryClient = useQueryClient();
 
@@ -88,7 +90,11 @@ export function useCommunity() {
 
       return { previousPosts };
     },
+    onSuccess: () => {
+      showToast("Post edited successfully", "success");
+    },
     onError: (_err, _vars, context) => {
+      showToast("Failed to edit post", "error");
       if (context?.previousPosts) {
         queryClient.setQueryData(["Posts"], context.previousPosts);
       }
@@ -164,6 +170,7 @@ export function useCommunity() {
       return { previousPosts };
     },
     onError: (_err, _vars, context) => {
+      showToast("Failed to update post reaction", "error");
       if (context?.previousPosts) {
         queryClient.setQueryData(["Posts"], context.previousPosts);
       }
@@ -245,8 +252,8 @@ export function useCommunity() {
 
       return { previousPosts };
     },
-    onError: (err, _vars, context) => {
-      console.error("Comment reaction error:", err);
+    onError: (_err, _vars, context) => {
+      showToast("Failed to update comment reaction", "error");
       if (context?.previousPosts) {
         queryClient.setQueryData(["Posts"], context.previousPosts);
       }
@@ -317,6 +324,7 @@ export function useCommunity() {
       return { previousPosts, tempId: newComment.id };
     },
     onSuccess: (data, variables, context) => {
+      showToast("Comment added successfully", "success");
       queryClient.setQueryData(
         ["Posts"],
         (old: { data?: Post[] } | undefined) => {
@@ -338,6 +346,7 @@ export function useCommunity() {
       );
     },
     onError: (_err, variables, context) => {
+      showToast("Failed to add comment", "error");
       queryClient.setQueryData(
         ["Posts"],
         (old: { data?: Post[] } | undefined) => {
@@ -403,7 +412,11 @@ export function useCommunity() {
 
       return { previousPosts };
     },
+    onSuccess: () => {
+      showToast("Comment deleted successfully", "success");
+    },
     onError: (_err, _vars, context) => {
+      showToast("Failed to delete comment", "error");
       if (context?.previousPosts) {
         queryClient.setQueryData(["Posts"], context.previousPosts);
       }
@@ -439,7 +452,11 @@ export function useCommunity() {
 
       return { previousPosts };
     },
+    onSuccess: () => {
+      showToast("Post deleted successfully", "success");
+    },
     onError: (_err, _vars, context) => {
+      showToast("Failed to delete post", "error");
       if (context?.previousPosts) {
         queryClient.setQueryData(["Posts"], context.previousPosts);
       }
