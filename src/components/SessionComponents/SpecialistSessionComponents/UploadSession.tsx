@@ -5,6 +5,8 @@ import { useQueryClient, useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import * as Yup from "yup";
 import { useAuth } from "../../../contexts/AuthContext";
+import { useToast } from "../../../hooks/useToast";
+
 const validationSchema = Yup.object().shape({
   title: Yup.string().required("Title is required"),
   description: Yup.string().required("Description is required"),
@@ -20,6 +22,7 @@ export default function UploadSession() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const thumbInputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
+  const { showToast } = useToast();
   const mutation = useMutation({
     mutationFn: async (formData: FormData) => {
       const req = await axios.post(
@@ -33,9 +36,13 @@ export default function UploadSession() {
       return res;
     },
     onSuccess: () => {
+      showToast("Session uploaded successfully", "success");
       queryClient.invalidateQueries({ queryKey: ["SpecialistSessions"] });
       setUploadFormToggle(false);
       setThumbnailPreview(null);
+    },
+    onError: () => {
+      showToast("Failed to upload session", "error");
     },
   });
 
