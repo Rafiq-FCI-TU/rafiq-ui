@@ -15,9 +15,11 @@ import type { Specialist } from "../types/Specialist";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useAuth } from "../contexts/AuthContext";
+import { useToast } from "../hooks/useToast";
 export default function SpecialistDetails() {
   const { specialistId } = useParams();
   const { user, setUser } = useAuth();
+  const { showToast } = useToast();
   const { data, error, isFetching } = useQuery({
     queryKey: ["specialistDetails"],
     queryFn: async () => {
@@ -124,7 +126,7 @@ export default function SpecialistDetails() {
               </div>
 
               <div className="flex items-center gap-2">
-                <User className="size4 text-primary " />
+                <User className="text-primary" />
                 <span className="font-medium text-gray-900">
                   Gender: {specialist.gender}
                 </span>
@@ -133,7 +135,7 @@ export default function SpecialistDetails() {
           </div>
           {(user?.specialistId === specialistId ||
             user?.specialistId === null) && (
-            <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/80 backdrop-blur-md border-t border-gray-100 flex justify-center">
+            <div className="fixed bottom-0 left-0 right-0 p-4.5 bg-white/80 backdrop-blur-md border-t border-gray-100 flex justify-center">
               {user?.specialistId === specialistId ? (
                 <button
                   className="w-full max-w-6xl lg:ml-[256px] cursor-pointer border-red-500 text-center hover:border-red-500 hover:bg-white hover:text-red-500  border-2 gap-2 bg-red-500 text-white py-[7px] px-8 rounded-2xl shadow-lg transition-all duration-300 text-lg"
@@ -145,13 +147,21 @@ export default function SpecialistDetails() {
                       },
                     )
                       .then(() => {
+                        showToast(
+                          "Specialist unassigned successfully",
+                          "success",
+                        );
                         setUser({ ...user, specialistId: null });
                         localStorage.setItem(
                           "user",
                           JSON.stringify({ ...user, specialistId: null }),
                         );
                       })
-                      .catch((e) => console.log(e));
+                      .catch((e) => {
+                        if (e) {
+                          showToast("Failed to unassign specialist", "error");
+                        }
+                      });
                   }}
                 >
                   Unassign This Specialist
@@ -167,6 +177,10 @@ export default function SpecialistDetails() {
                       },
                     )
                       .then(() => {
+                        showToast(
+                          "Specialist assigned successfully",
+                          "success",
+                        );
                         setUser({ ...user, specialistId: specialistId });
                         localStorage.setItem(
                           "user",
@@ -176,7 +190,11 @@ export default function SpecialistDetails() {
                           }),
                         );
                       })
-                      .catch((e) => console.log(e));
+                      .catch((e) => {
+                        if (e) {
+                          showToast("Failed to assign specialist", "error");
+                        }
+                      });
                   }}
                 >
                   Assign This Specialist
