@@ -37,7 +37,7 @@ const validationSchema = Yup.object().shape({
 });
 
 interface CreateResourceFormProps {
-  onCreate: (values: FormValues) => void;
+  onCreate: (values: FormValues) => Promise<void>;
 }
 
 export function CreateResourceForm({ onCreate }: CreateResourceFormProps) {
@@ -60,7 +60,7 @@ export function CreateResourceForm({ onCreate }: CreateResourceFormProps) {
     helpers: FormikHelpers<FormValues>,
   ) => {
     try {
-      onCreate(values);
+      await onCreate(values);
       helpers.resetForm();
       setTagInput("");
       setIsExpanded(false);

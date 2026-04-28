@@ -147,13 +147,13 @@ export function useResources() {
     deleteResourceMutation.mutate(resourceId);
   };
 
-  const handleCreateResource = (values: {
+  const handleCreateResource = async (values: {
     title: string;
     link: string;
     description: string;
     tags: string[];
   }) => {
-    createResourceMutation.mutate(values);
+    await createResourceMutation.mutateAsync(values);
   };
 
   const handleEditResource = (

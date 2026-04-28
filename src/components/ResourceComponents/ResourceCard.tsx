@@ -5,7 +5,7 @@ import type { User } from "../../contexts/AuthContext";
 import { getInitials, getAvatarColor } from "../../lib/communityUtils";
 import { PostMenu } from "../CommunityComponents/PostMenu";
 import { EditResourceForm } from "./EditResourceForm";
-
+import { format } from "date-fns";
 interface ResourceCardProps {
   resource: ResourcesCard;
   onDelete: (resourceId: number) => void;
@@ -71,8 +71,8 @@ export function ResourceCard({
             </span>
           </div>
           <p className="text-xs text-gray-400 mt-0.5 flex items-center gap-1">
-            <Calendar className="w-3 h-3" />
-            {new Date(resource.createdAt).toLocaleDateString()}
+            <Calendar className="size-4" />
+            {format(resource.createdAt, "MMM d, yyyy")}
           </p>
         </div>
         {isAuthor && (
