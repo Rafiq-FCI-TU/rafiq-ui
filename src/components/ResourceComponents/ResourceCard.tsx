@@ -86,10 +86,10 @@ export function ResourceCard({
       {showDeleteConfirm && (
         <div className="mb-5 p-5 bg-red-50/80 rounded-2xl border border-red-200 animate-in fade-in slide-in-from-top-2 duration-200">
           <div className="flex items-start gap-4">
-            <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center shrink-0 ring-4 ring-red-50">
-              <AlertTriangle className="w-5 h-5 text-red-600" />
-            </div>
-            <div className="flex-1 min-w-0">
+            <div className="flex-1 min-w-0 space-y-3">
+              <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center shrink-0 ring-4 ring-red-50">
+                <AlertTriangle className="w-5 h-5 text-red-600" />
+              </div>
               <h4 className="text-base font-semibold text-red-900 mb-1">
                 Delete this resource?
               </h4>
@@ -97,7 +97,7 @@ export function ResourceCard({
                 This action cannot be undone. The resource will be permanently
                 removed.
               </p>
-              <div className="flex gap-3">
+              <div className="flex gap-3 flex-wrap">
                 <button
                   onClick={() => setShowDeleteConfirm(false)}
                   className="cursor-pointer px-4 py-2 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 rounded-xl transition-all border border-gray-200 shadow-sm"
@@ -124,7 +124,7 @@ export function ResourceCard({
           onCancel={() => setIsEditing(false)}
         />
       ) : (
-        <>
+        <div className="flex flex-col justify-between">
           <div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
               {resource.title}
@@ -151,13 +151,13 @@ export function ResourceCard({
               href={resource.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-green-700 bg-green-50 hover:bg-green-100 rounded-xl transition-all border border-green-200"
+              className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-green-700 bg-green-50 hover:bg-green-100 rounded-xl transition-all border border-green-200"
             >
               <ExternalLink className="w-4 h-4" />
               Open Link
             </a>
           )}
-        </>
+        </div>
       )}
     </article>
   );

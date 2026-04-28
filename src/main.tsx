@@ -10,6 +10,8 @@ import Assessment from "./pages/Assessment.tsx";
 import Sessions from "./pages/Sessions.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./contexts/AuthContext.tsx";
+import { ToastProvider } from "./contexts/ToastContext.tsx";
+import { ToastContainer } from "./components/Toast.tsx";
 import Session from "./pages/Session.tsx";
 import ProtectedRoute from "./routes/ProtectedRoute.tsx";
 import PublicRoute from "./routes/PublicRoute.tsx";
@@ -122,7 +124,10 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <RouterProvider router={router} />
+        <ToastProvider>
+          <RouterProvider router={router} />
+          <ToastContainer />
+        </ToastProvider>
       </AuthProvider>
     </QueryClientProvider>
   </StrictMode>,

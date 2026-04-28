@@ -1,12 +1,14 @@
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import type { ResourcesCard } from "../types/Resources";
 import { useAuth } from "../contexts/AuthContext";
+import { useToast } from "./useToast";
 
 const API_BASE =
   "https://rafiq-container-server.wittyhill-43579268.germanywestcentral.azurecontainerapps.io/api";
 
 export function useResources() {
   const { user, token } = useAuth();
+  const { showToast } = useToast();
   const queryClient = useQueryClient();
 
   const {
@@ -62,10 +64,14 @@ export function useResources() {
 
       return { previousResources };
     },
+    onSuccess: () => {
+      showToast("Resource deleted successfully", "success");
+    },
     onError: (_err, _vars, context) => {
       if (context?.previousResources) {
         queryClient.setQueryData(["Resources"], context.previousResources);
       }
+      showToast("Failed to delete resource", "error");
     },
   });
 
@@ -90,6 +96,10 @@ export function useResources() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["Resources"] });
+      showToast("Resource created successfully", "success");
+    },
+    onError: () => {
+      showToast("Failed to create resource", "error");
     },
   });
 
@@ -136,10 +146,14 @@ export function useResources() {
 
       return { previousResources };
     },
+    onSuccess: () => {
+      showToast("Resource updated successfully", "success");
+    },
     onError: (_err, _vars, context) => {
       if (context?.previousResources) {
         queryClient.setQueryData(["Resources"], context.previousResources);
       }
+      showToast("Failed to update resource", "error");
     },
   });
 
