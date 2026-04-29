@@ -25,7 +25,7 @@ export function ToastContainer() {
           <span className="text-sm font-medium">{toast.message}</span>
           <button
             onClick={() => removeToast(toast.id)}
-            className="ml-2 p-1 hover:bg-black/5 rounded-full transition-colors"
+            className="cursor-pointer ml-2 p-1 hover:bg-black/5 rounded-full transition-colors"
           >
             <X className="w-4 h-4 opacity-60" />
           </button>
