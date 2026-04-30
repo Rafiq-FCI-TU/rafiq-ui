@@ -16,8 +16,8 @@ import Session from "./pages/Session.tsx";
 import ProtectedRoute from "./routes/ProtectedRoute.tsx";
 import PublicRoute from "./routes/PublicRoute.tsx";
 import AppLayout from "./layouts/AppLayout.tsx";
+import Specialists from "./pages/Specialists.tsx";
 import Specialist from "./pages/Specialist.tsx";
-import SpecialistDetails from "./pages/SpecialistDetails.tsx";
 import AIAssistant from "./pages/AIAssistant.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import Patients from "./pages/Patients.tsx";
@@ -28,6 +28,7 @@ import Activities from "./components/HomeComponents/Activities.tsx";
 import Care from "./components/HomeComponents/Care.tsx";
 import Community from "./pages/Community.tsx";
 import Resources from "./pages/Resources.tsx";
+import Chats from "./pages/Chats.tsx";
 
 const router = createBrowserRouter([
   {
@@ -74,13 +75,14 @@ const router = createBrowserRouter([
             path: "sessions/:sessionId",
             element: <Session />,
           },
-          { path: "specialist", element: <Specialist /> },
-          { path: "specialist/:specialistId", element: <SpecialistDetails /> },
+          { path: "specialists", element: <Specialists /> },
+          { path: "specialists/:specialistId", element: <Specialist /> },
           { path: "patients", element: <Patients /> },
           { path: "patients/:patientId", element: <Patient /> },
           { path: "ai-assistant", element: <AIAssistant /> },
           { path: "community", element: <Community /> },
           { path: "resources", element: <Resources /> },
+          { path: "chats", element: <Chats /> },
         ],
       },
     ],

@@ -18,6 +18,7 @@ import {
   ChevronRight,
   ChevronLeft,
   Sparkles,
+  MessagesSquare
 } from "lucide-react";
 import { NavLink, useLocation, Link } from "react-router";
 import { useAuth } from "../contexts/AuthContext";
@@ -48,12 +49,13 @@ export default function AppLayout() {
     { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
     {
       icon: isFamily ? Stethoscope : Users,
-      label: isFamily ? "Specialist" : "Patients",
-      href: isFamily ? "/specialist" : "/patients",
+      label: isFamily ? "Specialists" : "Patients",
+      href: isFamily ? "/specialists" : "/patients",
     },
     { icon: Video, label: "Sessions", href: "/sessions" },
     { icon: BotMessageSquare, label: "AI Assistant", href: "/ai-assistant" },
     { icon: MessageCircle, label: "Community", href: "/community" },
+    { icon: MessagesSquare, label: "Chats", href: "/chats" },
     { icon: Joystick, label: "Games", href: "/games" },
     { icon: Library, label: "Resources", href: "/resources" },
     { icon: Settings, label: "Settings", href: "/settings" },

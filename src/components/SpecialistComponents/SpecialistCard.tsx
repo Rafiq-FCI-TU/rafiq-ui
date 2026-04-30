@@ -58,7 +58,7 @@ export default function SpecialistCard({
         </div>
 
         <Link
-          to={`/specialist/${specialist.id}`}
+          to={`/specialists/${specialist.id}`}
           className="shadow-md border-primary text-center hover:border-primary hover:bg-white hover:text-primary transition-all duration-300 border-2 gap-2 bg-primary text-white px-6 py-4 rounded-2xl flex items-center justify-center"
         >
           <Eye className="size-5" />

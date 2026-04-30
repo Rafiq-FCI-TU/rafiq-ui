@@ -1,99 +1,209 @@
-import { useState, useMemo } from "react";
-import { Search } from "lucide-react";
-import SpecialistCard from "../components/SpecialistComponents/SpecialistCard";
-import { type Specialist } from "../types/Specialist";
+import {
+  ArrowLeft,
+  BriefcaseMedical,
+  BadgeInfo,
+  Award,
+  Loader2,
+  User,
+  X,
+  GraduationCap,
+  Mail,
+  UserPlus,
+} from "lucide-react";
+import { Link, useParams } from "react-router";
+import type { Specialist } from "../types/Specialist";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { X, Loader2, SearchX } from "lucide-react";
-
+import { useAuth } from "../contexts/AuthContext";
+import { useToast } from "../hooks/useToast";
 export default function Specialist() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const {
-    data: specialists,
-    error,
-    isFetching,
-  } = useQuery({
-    queryKey: ["specialists"],
+  const { specialistId } = useParams();
+  const { user, setUser } = useAuth();
+  const { showToast } = useToast();
+  const { data, error, isFetching } = useQuery({
+    queryKey: ["specialist"],
     queryFn: async () => {
       const req = await axios.get(
-        "https://rafiq-container-server.wittyhill-43579268.germanywestcentral.azurecontainerapps.io/api/Specialist",
+        `https://rafiq-container-server.wittyhill-43579268.germanywestcentral.azurecontainerapps.io/api/specialist/${specialistId}`,
       );
+
       return req.data?.data;
     },
   });
-  const filteredSpecialists: Specialist[] = useMemo(() => {
-    return specialists?.filter((specialist: Specialist) => {
-      const fullName = specialist.fullName.toLowerCase();
-      const specialty = specialist.specialty.toLowerCase();
-      const search = searchTerm.toLowerCase();
-      return fullName.includes(search) || specialty.includes(search);
-    });
-  }, [searchTerm, specialists]);
+  const specialist: Specialist = data;
 
   return (
-    <div className="mx-auto  p-5">
-      <header className="mb-10">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          Find Your Specialist
-        </h1>
-        <p className="text-gray-600">
-          Browse our team of specialized healthcare professionals
-        </p>
-      </header>
-
-      <div className="relative mb-12">
-        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-          <Search className="h-5 w-5 text-gray-400" />
+    <div className="bg-gray-50/30 pb-15 min-h-[calc(100vh-81px)]">
+      {isFetching ? (
+        <div className="flex flex-col items-center justify-center h-[calc(100vh-200px)]">
+          <div className="mb-4 flex justify-center text-primary">
+            <Loader2 className="animate-spin size-20" />
+          </div>
+          <h3 className="text-xl font-semibold mb-2 text-green-800">
+            Loading specialist...
+          </h3>
+          <p className="text-green-600">Please wait a moment.</p>
         </div>
-        <input
-          type="text"
-          className="block w-full pl-12 pr-4 py-4 bg-white border border-gray-200 rounded-2xl shadow-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all duration-300"
-          placeholder="Search doctors by name or specialty..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          disabled={isFetching}
-        />
-      </div>
+      ) : error ? (
+        <div className="flex flex-col items-center justify-center h-[calc(100vh-200px)]">
+          <div className="mb-4 flex justify-center">
+            <X className="size-20 text-red-500" />
+          </div>
+          <h3 className="text-xl font-semibold text-red-800 mb-2">
+            Failed loading specialists
+          </h3>
+          <p className="text-red-600">Please try again later.</p>
+        </div>
+      ) : (
+        <div className="max-w-6xl mx-auto px-5 py-8">
+          {/* Back Navigation */}
+          <Link
+            to="/specialists"
+            className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-8 transition-colors duration-300"
+          >
+            <ArrowLeft className="size-5 mr-2" />
+            <span className="font-medium text-lg">Go Back</span>
+          </Link>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-        {isFetching ? (
-          <div className="col-span-full py-20 text-center ">
-            <div className="mb-4 flex justify-center text-primary">
-              <Loader2 className="animate-spin size-20" />
+          {/* Main Info Card */}
+          <div className="bg-white rounded-2xl flex flex-col md:flex-row gap-8 border border-gray-100 p-8 shadow-sm mb-6">
+            <img
+              src={
+                specialist.gender.toLowerCase() === "male"
+                  ? "/mdoctor.png"
+                  : "/fdoctor.jpg"
+              }
+              alt={`Dr. ${specialist.fullName}`}
+              className="w-48 h-48 rounded-2xl object-cover"
+            />
+            <div className="flex-1">
+              <h1 className="text-3xl font-bold text-gray-900 mb-1">
+                Dr. {specialist.fullName}
+              </h1>
+              <p className="flex items-center gap-2 text-xl text-primary font-semibold mb-4">
+                <Award className="size-5 text-primary" />
+                {specialist.specialty}
+              </p>
+
+              <p className="text-gray-600 leading-relaxed">
+                {specialist.professionalBio}
+              </p>
             </div>
-            <h3 className="text-xl font-semibold mb-2 text-green-800">
-              Loading specialists...
-            </h3>
-            <p className="text-green-600">Please wait a moment.</p>
           </div>
-        ) : error ? (
-          <div className="col-span-full py-20 text-center">
-            <div className="mb-4 flex justify-center">
-              <X className="size-20 text-red-500" />
+
+          {/* Info Card */}
+
+          <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+            <div className="flex items-center gap-3 mb-6">
+              <BadgeInfo className="size-6 text-primary" />
+              <h2 className="text-xl font-bold text-gray-900">Information</h2>
             </div>
-            <h3 className="text-xl font-semibold text-red-800 mb-2">
-              Failed loading specialists
-            </h3>
-            <p className="text-red-600">Please try again later.</p>
-          </div>
-        ) : filteredSpecialists && filteredSpecialists.length > 0 ? (
-          filteredSpecialists.map((specialist: Specialist) => (
-            <SpecialistCard key={specialist.id} specialist={specialist} />
-          ))
-        ) : (
-          <div className="col-span-full py-20 text-center">
-            <div className="flex justify-center mb-4">
-              <SearchX className="size-20" />
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <Mail className="size-5 text-primary" />
+                <span className="font-medium text-gray-900">
+                  Email: {specialist.email}
+                </span>
+              </div>
+              <div className="flex items-center gap-3 ">
+                <BriefcaseMedical className="size-5 text-primary" />
+                <span className="font-medium text-gray-900">
+                  Organization: {specialist.organization}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <GraduationCap className="size4 text-primary " />
+                <span className="font-medium text-gray-900">
+                  Credentials: {specialist.credentials}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <UserPlus className="size4 text-primary " />
+                <span className="font-medium text-gray-900">
+                  Patients: {specialist.patientsCount}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <User className="text-primary" />
+                <span className="font-medium text-gray-900">
+                  Gender: {specialist.gender}
+                </span>
+              </div>
             </div>
-            <h3 className="text-xl font-semibold text-gray-800 mb-2">
-              No specialists found
-            </h3>
-            <p className="text-gray-500">
-              Try adjusting your search terms to find what you're looking for.
-            </p>
           </div>
-        )}
-      </div>
+          {(user?.specialistId === specialistId ||
+            user?.specialistId === null) && (
+            <div className="fixed bottom-0 left-0 right-0 p-4.5 bg-white/80 backdrop-blur-md border-t border-gray-100 flex justify-center">
+              {user?.specialistId === specialistId ? (
+                <button
+                  className="w-full max-w-6xl lg:ml-[256px] cursor-pointer border-red-500 text-center hover:border-red-500 hover:bg-white hover:text-red-500  border-2 gap-2 bg-red-500 text-white py-[7px] px-8 rounded-2xl shadow-lg transition-all duration-300 text-lg"
+                  onClick={() => {
+                    fetch(
+                      `https://rafiq-container-server.wittyhill-43579268.germanywestcentral.azurecontainerapps.io/api/Specialist/${specialistId}/patients/${user?.patientId}`,
+                      {
+                        method: "DELETE",
+                      },
+                    )
+                      .then(() => {
+                        showToast(
+                          "Specialist unassigned successfully",
+                          "success",
+                        );
+                        setUser({ ...user, specialistId: null });
+                        localStorage.setItem(
+                          "user",
+                          JSON.stringify({ ...user, specialistId: null }),
+                        );
+                      })
+                      .catch((e) => {
+                        if (e) {
+                          showToast("Failed to unassign specialist", "error");
+                        }
+                      });
+                  }}
+                >
+                  Unassign This Specialist
+                </button>
+              ) : (
+                <button
+                  className="w-full max-w-6xl lg:ml-[256px] cursor-pointer border-primary text-center hover:border-primary hover:bg-white hover:text-primary  border-2 gap-2 bg-primary text-white py-[7px] px-8 rounded-2xl shadow-lg transition-all duration-300 text-lg"
+                  onClick={() => {
+                    fetch(
+                      `https://rafiq-container-server.wittyhill-43579268.germanywestcentral.azurecontainerapps.io/api/Specialist/${specialistId}/patients/${user?.patientId}`,
+                      {
+                        method: "POST",
+                      },
+                    )
+                      .then(() => {
+                        showToast(
+                          "Specialist assigned successfully",
+                          "success",
+                        );
+                        setUser({ ...user, specialistId: specialistId });
+                        localStorage.setItem(
+                          "user",
+                          JSON.stringify({
+                            ...user,
+                            specialistId: specialistId,
+                          }),
+                        );
+                      })
+                      .catch((e) => {
+                        if (e) {
+                          showToast("Failed to assign specialist", "error");
+                        }
+                      });
+                  }}
+                >
+                  Assign This Specialist
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
