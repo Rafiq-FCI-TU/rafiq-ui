@@ -143,19 +143,19 @@ export default function AppLayout() {
                       <div
                         className={`group relative flex items-center gap-3 rounded-lg transition-all duration-200 ${
                           isActive
-                            ? "bg-green-50 text-green-700"
+                            ? "bg-linear-to-r from-primary-dark to-primary-light text-white"
                             : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                         } ${sidebarCollapsed ? "justify-center px-3 py-2.5" : "px-3 py-2.5"}`}
                         title={sidebarCollapsed ? item.label : undefined}
                       >
                         {/* Active indicator */}
                         {isActive && (
-                          <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-green-500 rounded-r-full" />
+                          <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-linear-to-l from-primary-light to-primary-dark rounded-r-full" />
                         )}
                         <div
                           className={`flex items-center justify-center rounded-lg transition-all duration-200 shrink-0 ${
                             isActive
-                              ? "bg-green-100 text-primary"
+                              ? "bg-linear-to-br from-primary-light to-primary-dark text-white"
                               : "bg-slate-100 text-slate-500 group-hover:bg-slate-200 group-hover:text-slate-600"
                           } ${sidebarCollapsed ? "h-10 w-10" : "h-9 w-9"}`}
                         >
@@ -213,35 +213,33 @@ export default function AppLayout() {
             {sidebarCollapsed ? (
               // Collapsed: Stack avatar and logout vertically
               <div className="flex flex-col items-center gap-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-100 text-primary">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-primary-light to-primary-dark text-white">
                   <User className="h-5 w-5" />
                 </div>
                 <button
                   onClick={logout}
                   aria-label="Sign out"
                   title="Sign out"
-                  className="cursor-pointer flex h-10 w-10 items-center justify-center rounded-xl text-primary-dark hover:text-red-500 hover:bg-red-50 transition-all duration-300"
+                  className="cursor-pointer flex h-10 w-10 items-center justify-center rounded-xl text-primary-dark hover:text-red-200 hover:bg-red-500 transition-all duration-300"
                 >
                   <LogOut className="h-5 w-5" />
                 </button>
               </div>
             ) : (
               // Expanded: Unified card with user info and logout
-              <div className="flex items-center gap-2 rounded-xl bg-green-50 p-2.5 border border-slate-100">
+              <div className="flex items-center gap-2 rounded-xl bg-linear-to-r from-primary-dark to-primary-light p-2.5 text-white border border-slate-100">
                 {/* Avatar */}
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-green-100 text-primary-dark shrink-0">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-linear-to-br from-primary-light to-primary-dark  shrink-0">
                   <User className="h-4 w-4" />
                 </div>
 
                 {/* User Info */}
                 <div className="flex-1 min-w-0">
-                  <p className="truncate text-sm font-medium text-primary-dark">
+                  <p className="truncate text-sm font-medium ">
                     {user?.username || user?.email || "User"}
                   </p>
                   {user?.roles && user.roles.length > 0 && (
-                    <p className="truncate text-xs text-primary">
-                      {user.roles[0]}
-                    </p>
+                    <p className="truncate text-xs">{user.roles[0]}</p>
                   )}
                 </div>
 
@@ -250,7 +248,7 @@ export default function AppLayout() {
                   onClick={logout}
                   aria-label="Sign out"
                   title="Sign out"
-                  className="cursor-pointer flex h-8 w-8 items-center justify-center rounded-lg text-primary-dark hover:text-red-500 hover:bg-red-100 transition-all duration-200 shrink-0"
+                  className="cursor-pointer flex h-8 w-8 items-center justify-center rounded-lg hover:text-red-200 hover:bg-red-500 transition-all duration-200 shrink-0"
                 >
                   <LogOut className="h-4 w-4" />
                 </button>
