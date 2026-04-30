@@ -112,7 +112,7 @@ export default function AppLayout() {
             className={`flex py-5 items-center justify-between shrink-0 border-b border-slate-100 ${sidebarCollapsed ? "px-4 justify-center flex-wrap gap-3" : "px-5 "}`}
           >
             <div className="flex items-center gap-3">
-              <div className="flex p-2.5  items-center justify-center rounded-xl bg-linear-to-br from-green-500 to-teal-600 shadow-md shadow-green-500/20 shrink-0">
+              <div className="flex p-2.5  items-center justify-center rounded-2xl bg-linear-to-br from-primary-light to-primary-dark shadow-md shadow-green-500/20 shrink-0">
                 <img
                   src="logo.png"
                   alt="Rafiq Logo"
@@ -120,12 +120,14 @@ export default function AppLayout() {
                 />
               </div>
               {!sidebarCollapsed && (
-                <h1 className="text-2xl font-bold">Rafiq</h1>
+                <h1 className="text-2xl font-bold uppercase text-primary-dark">
+                  Rafiq
+                </h1>
               )}
             </div>
             <button
               onClick={() => setSidebarOpen(false)}
-              className="lg:hidden cursor-pointer p-2.5 rounded-lg hover:bg-slate-100 text-slate-500 transition-colors duration-200"
+              className="lg:hidden cursor-pointer p-2 rounded-xl text-primary-dark hover:bg-primary-dark hover:text-white transition-colors duration-300"
             >
               <X className="w-5 h-5" />
             </button>
@@ -141,7 +143,7 @@ export default function AppLayout() {
                       <div
                         className={`group relative flex items-center gap-3 rounded-lg transition-all duration-200 ${
                           isActive
-                            ? "bg-green-50/80 text-green-700"
+                            ? "bg-green-50 text-green-700"
                             : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                         } ${sidebarCollapsed ? "justify-center px-3 py-2.5" : "px-3 py-2.5"}`}
                         title={sidebarCollapsed ? item.label : undefined}
@@ -153,7 +155,7 @@ export default function AppLayout() {
                         <div
                           className={`flex items-center justify-center rounded-lg transition-all duration-200 shrink-0 ${
                             isActive
-                              ? "bg-green-100 text-green-600"
+                              ? "bg-green-100 text-primary"
                               : "bg-slate-100 text-slate-500 group-hover:bg-slate-200 group-hover:text-slate-600"
                           } ${sidebarCollapsed ? "h-10 w-10" : "h-9 w-9"}`}
                         >
@@ -211,33 +213,33 @@ export default function AppLayout() {
             {sidebarCollapsed ? (
               // Collapsed: Stack avatar and logout vertically
               <div className="flex flex-col items-center gap-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-600">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-100 text-primary">
                   <User className="h-5 w-5" />
                 </div>
                 <button
                   onClick={logout}
                   aria-label="Sign out"
                   title="Sign out"
-                  className="flex h-10 w-10 items-center justify-center rounded-xl text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all duration-200"
+                  className="cursor-pointer flex h-10 w-10 items-center justify-center rounded-xl text-primary-dark hover:text-red-500 hover:bg-red-50 transition-all duration-300"
                 >
                   <LogOut className="h-5 w-5" />
                 </button>
               </div>
             ) : (
               // Expanded: Unified card with user info and logout
-              <div className="flex items-center gap-2 rounded-xl bg-slate-50/80 p-2.5 border border-slate-100">
+              <div className="flex items-center gap-2 rounded-xl bg-green-50 p-2.5 border border-slate-100">
                 {/* Avatar */}
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-200 text-slate-600 shrink-0">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-green-100 text-primary-dark shrink-0">
                   <User className="h-4 w-4" />
                 </div>
 
                 {/* User Info */}
                 <div className="flex-1 min-w-0">
-                  <p className="truncate text-sm font-medium text-slate-800">
+                  <p className="truncate text-sm font-medium text-primary-dark">
                     {user?.username || user?.email || "User"}
                   </p>
                   {user?.roles && user.roles.length > 0 && (
-                    <p className="truncate text-xs text-slate-500">
+                    <p className="truncate text-xs text-primary">
                       {user.roles[0]}
                     </p>
                   )}
@@ -248,7 +250,7 @@ export default function AppLayout() {
                   onClick={logout}
                   aria-label="Sign out"
                   title="Sign out"
-                  className="cursor-pointer flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-100 transition-all duration-200 shrink-0"
+                  className="cursor-pointer flex h-8 w-8 items-center justify-center rounded-lg text-primary-dark hover:text-red-500 hover:bg-red-100 transition-all duration-200 shrink-0"
                 >
                   <LogOut className="h-4 w-4" />
                 </button>
@@ -268,26 +270,26 @@ export default function AppLayout() {
               <div className="flex items-center gap-4 min-w-0">
                 <button
                   onClick={() => setSidebarOpen(true)}
-                  className="lg:hidden cursor-pointer p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-all duration-200"
+                  className="lg:hidden cursor-pointer p-2 rounded-lg bg-primary-light hover:bg-primary-dark text-white transition-all duration-300"
                 >
                   <Menu className="w-5 h-5" />
                 </button>
 
                 {/* Breadcrumb */}
-                <nav className="hidden sm:flex items-center gap-2 text-sm text-slate-500">
+                <nav className="hidden sm:flex items-center gap-2 text-sm text-primary-light">
                   <Link
                     to="/dashboard"
-                    className="hover:text-green-600 transition-colors"
+                    className="hover:text-primary-dark transition-colors"
                   >
                     Home
                   </Link>
-                  <ChevronRight className="w-4 h-4" />
-                  <span className="text-slate-800 font-medium">
+                  <ChevronRight className="size-5 text-primary-dark" />
+                  <span className="text-primary-dark font-medium">
                     {currentPageTitle}
                   </span>
                 </nav>
 
-                <h2 className="sm:hidden text-lg font-semibold tracking-tight text-slate-800">
+                <h2 className="sm:hidden text-lg font-semibold tracking-tight text-primary-dark">
                   {currentPageTitle}
                 </h2>
               </div>
@@ -297,7 +299,7 @@ export default function AppLayout() {
                 {/* AI Assistant Quick Access */}
                 <Link
                   to="/ai-assistant"
-                  className="hidden sm:flex items-center gap-1.5 px-4 py-2 rounded-xl bg-linear-to-r from-green-500 to-teal-600 text-white text-sm font-medium shadow-md shadow-green-500/20 hover:shadow-lg hover:shadow-green-500/25 hover:scale-[1.02] transition-all duration-200"
+                  className="hidden sm:flex items-center gap-1.5 px-4 py-2 rounded-xl bg-linear-to-r from-primary-light to-primary-dark text-white text-sm font-medium shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/25 hover:scale-[1.02] transition-all duration-200"
                 >
                   <Sparkles className="w-3.5 h-3.5" />
                   <span>Ask AI</span>

@@ -100,15 +100,15 @@ export function CreateResourceForm({ onCreate }: CreateResourceFormProps) {
             }}
             className="w-full cursor-pointer flex items-center gap-4 p-5 text-left group"
           >
-            <div className="w-12 h-12 bg-linear-to-br from-green-500 to-teal-600 rounded-2xl flex items-center justify-center text-white shrink-0 shadow-md shadow-green-500/20 group-hover:shadow-lg group-hover:shadow-green-500/30 transition-all duration-300 group-hover:scale-105">
+            <div className="w-12 h-12 bg-linear-to-br from-primary-light to-primary-dark rounded-2xl flex items-center justify-center text-white shrink-0 shadow-md shadow-primary/20 group-hover:shadow-lg group-hover:shadow-primary/30 transition-all duration-300 group-hover:scale-105">
               <BookOpen className="w-6 h-6" />
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-gray-900 text-[15px] group-hover:text-green-700 transition-colors">
+              <h3 className="font-semibold text-gray-900 text-[15px] group-hover:text-primary-dark transition-colors">
                 Share a Resource
               </h3>
               <p className="text-xs text-gray-400 mt-0.5 flex items-center gap-1.5">
-                <Sparkles className="w-3 h-3 text-green-500" />
+                <Sparkles className="w-3 h-3 text-primary-light" />
                 Help others discover useful articles, guides & tools
               </p>
             </div>
@@ -121,7 +121,7 @@ export function CreateResourceForm({ onCreate }: CreateResourceFormProps) {
           {isExpanded && (
             <Form className="animate-in fade-in slide-in-from-top-2 duration-200">
               {/* Gradient accent line */}
-              <div className="h-1 bg-linear-to-r from-green-500 to-teal-600 mx-5 rounded-full" />
+              <div className="h-1 bg-linear-to-r from-primary-light to-primary-dark mx-5 rounded-full" />
 
               {status && (
                 <div className="mx-5 mt-4 p-3 bg-red-50 border border-red-200 rounded-xl flex items-center justify-center gap-2 text-sm text-red-600">
@@ -226,7 +226,7 @@ export function CreateResourceForm({ onCreate }: CreateResourceFormProps) {
                         }
                         className={`px-3.5 cursor-pointer py-1.5 rounded-full text-xs font-medium transition-all duration-200 ${
                           values.tags.includes(tag)
-                            ? "bg-green-600 text-white shadow-sm shadow-green-600/20 scale-105"
+                            ? "bg-primary-light text-white shadow-sm shadow-green-600/20 scale-105"
                             : "bg-gray-100 text-gray-600 hover:bg-green-50 hover:text-green-700 hover:scale-105"
                         }`}
                       >
@@ -270,7 +270,7 @@ export function CreateResourceForm({ onCreate }: CreateResourceFormProps) {
                           !tagInput.trim() ||
                           values.tags.includes(tagInput.trim())
                         }
-                        className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer p-1.5 bg-green-600 text-white rounded-full hover:bg-green-700 disabled:opacity-30 disabled:cursor-not-allowed disabled:bg-gray-300 transition-all duration-200 shadow-sm"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer p-1.5 bg-primary-light text-white rounded-full hover:bg-primary-dark disabled:opacity-30 disabled:cursor-not-allowed disabled:bg-gray-300 transition-all duration-200 shadow-sm"
                       >
                         <Plus className="w-3.5 h-3.5" />
                       </button>
@@ -282,7 +282,7 @@ export function CreateResourceForm({ onCreate }: CreateResourceFormProps) {
                       {values.tags.map((tag) => (
                         <span
                           key={tag}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-linear-to-r from-green-50 to-teal-50 text-green-700 text-xs font-medium rounded-full border border-green-200/60 shadow-sm"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-linear-to-r from-green-50 to-teal-50 text-primary text-xs font-medium rounded-full border border-green-200/60 shadow-sm"
                         >
                           #{tag}
                           <button
@@ -325,7 +325,7 @@ export function CreateResourceForm({ onCreate }: CreateResourceFormProps) {
                     !values.link.trim() ||
                     !values.description.trim()
                   }
-                  className="flex items-center cursor-pointer gap-2 px-6 py-2.5 bg-linear-to-r from-green-500 to-teal-600 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-xl transition-all duration-200 shadow-md shadow-green-500/20 hover:shadow-lg hover:shadow-green-500/30 hover:scale-105 active:scale-95"
+                  className="flex items-center cursor-pointer gap-2 px-6 py-2.5 bg-linear-to-r from-primary-light to-primary-dark disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-xl transition-all duration-200 shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 hover:scale-105 active:scale-95"
                 >
                   {isSubmitting ? (
                     <>

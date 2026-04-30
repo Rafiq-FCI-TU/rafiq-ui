@@ -57,7 +57,7 @@ export function ResourceCard({
   };
 
   return (
-    <article className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100/80 hover:shadow-lg hover:border-gray-200 transition-all duration-300">
+    <article className="flex flex-col bg-white rounded-2xl p-5 shadow-sm border border-gray-100/80 hover:shadow-lg hover:border-gray-200 transition-all duration-300">
       <div className="flex items-center gap-3 mb-4">
         <div
           className={`w-11 h-11 ${authorColor} rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0 shadow-sm ring-2 ring-white`}
@@ -124,7 +124,7 @@ export function ResourceCard({
           onCancel={() => setIsEditing(false)}
         />
       ) : (
-        <div className="flex flex-col justify-between">
+        <div className="flex flex-col justify-between h-full">
           <div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
               {resource.title}
@@ -133,30 +133,32 @@ export function ResourceCard({
               {resource.description}
             </p>
           </div>
-          {resource.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-4">
-              {resource.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="px-2.5 py-1 bg-primary/5 text-primary/80 rounded-full text-xs font-medium border border-primary/10"
-                >
-                  #{tag}
-                </span>
-              ))}
-            </div>
-          )}
+          <div>
+            {resource.tags.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-4">
+                {resource.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="px-2.5 py-1 bg-primary/5 text-primary/80 rounded-full text-xs font-medium border border-primary/10"
+                  >
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+            )}
 
-          {resource.link && (
-            <a
-              href={resource.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-green-700 bg-green-50 hover:bg-green-100 rounded-xl transition-all border border-green-200"
-            >
-              <ExternalLink className="w-4 h-4" />
-              Open Link
-            </a>
-          )}
+            {resource.link && (
+              <a
+                href={resource.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-green-700 bg-green-50 hover:bg-green-100 rounded-xl transition-all border border-green-200"
+              >
+                <ExternalLink className="w-4 h-4" />
+                Open Link
+              </a>
+            )}
+          </div>
         </div>
       )}
     </article>
