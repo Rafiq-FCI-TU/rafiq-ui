@@ -30,7 +30,13 @@ export function EditResourceForm({
     const trimmedTitle = title.trim();
     const trimmedLink = link.trim();
     const trimmedDesc = description.trim();
-    if (!trimmedTitle || !trimmedLink || !trimmedDesc) return;
+    if (
+      !trimmedTitle ||
+      !trimmedLink ||
+      !trimmedDesc ||
+      !trimmedLink.match(/^https?:\/\//)
+    )
+      return;
     const newTags = tags
       .split(",")
       .map((t) => t.trim().replace(/^#/, ""))
@@ -81,7 +87,12 @@ export function EditResourceForm({
         </button>
         <button
           onClick={handleSave}
-          disabled={!title.trim() || !link.trim() || !description.trim()}
+          disabled={
+            !title.trim() ||
+            !link.trim() ||
+            !description.trim() ||
+            !link.match(/^https?:\/\//)
+          }
           className="cursor-pointer px-4 py-2 text-sm font-medium bg-primary text-white rounded-lg hover:bg-primary-dark transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5 shadow-sm"
         >
           <Check className="w-4 h-4" />

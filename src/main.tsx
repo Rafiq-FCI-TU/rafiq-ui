@@ -28,7 +28,8 @@ import Activities from "./components/HomeComponents/Activities.tsx";
 import Care from "./components/HomeComponents/Care.tsx";
 import Community from "./pages/Community.tsx";
 import Resources from "./pages/Resources.tsx";
-import Chats from "./pages/Chats.tsx";
+import Chats from "./layouts/ChatsLayout.tsx";
+import Chat from "./pages/Chat.tsx";
 
 const router = createBrowserRouter([
   {
@@ -82,7 +83,11 @@ const router = createBrowserRouter([
           { path: "ai-assistant", element: <AIAssistant /> },
           { path: "community", element: <Community /> },
           { path: "resources", element: <Resources /> },
-          { path: "chats", element: <Chats /> },
+          {
+            path: "chats",
+            element: <Chats />,
+            children: [{ path: ":userId", element: <Chat /> ,index:true}],
+          },
         ],
       },
     ],

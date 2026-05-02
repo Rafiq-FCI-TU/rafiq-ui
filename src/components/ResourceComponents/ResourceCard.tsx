@@ -126,14 +126,14 @@ export function ResourceCard({
       ) : (
         <div className="flex flex-col justify-between h-full">
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              {resource.title}
-            </h3>
-            <p className="text-gray-600 text-sm leading-relaxed mb-4">
-              {resource.description}
-            </p>
-          </div>
-          <div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                {resource.title}
+              </h3>
+              <p className="text-gray-600 text-sm leading-relaxed mb-4">
+                {resource.description}
+              </p>
+            </div>
             {resource.tags.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-4">
                 {resource.tags.map((tag) => (
@@ -146,19 +146,19 @@ export function ResourceCard({
                 ))}
               </div>
             )}
-
-            {resource.link && (
-              <a
-                href={resource.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-green-700 bg-green-50 hover:bg-green-100 rounded-xl transition-all border border-green-200"
-              >
-                <ExternalLink className="w-4 h-4" />
-                Open Link
-              </a>
-            )}
           </div>
+
+          {resource.link && (
+            <a
+              href={resource.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-green-700 bg-green-50 hover:bg-green-100 rounded-xl transition-all border border-green-200"
+            >
+              <ExternalLink className="w-4 h-4" />
+              Open Link
+            </a>
+          )}
         </div>
       )}
     </article>
