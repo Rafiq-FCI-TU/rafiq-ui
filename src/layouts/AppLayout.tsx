@@ -20,17 +20,33 @@ import {
   Sparkles,
   MessagesSquare
 } from "lucide-react";
-import { NavLink, useLocation, Link } from "react-router";
+import { NavLink, useLocation, Link, useNavigate } from "react-router";
 import { useAuth } from "../contexts/AuthContext";
+import {
+  useNotifications,
+  getNotificationHref,
+  formatNotificationRelativeTime,
+} from "../hooks/useNotifications.ts";
+import type { Notification } from "../hooks/useNotifications.ts";
 
 export default function AppLayout() {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const notificationsRef = useRef<HTMLDivElement>(null);
   const { pathname } = useLocation();
   const isFamily: boolean = user?.roles?.includes("Family") ?? false;
+  const {
+    notifications: apiNotifications,
+    unreadCount,
+    isPending: notificationsLoading,
+    markAsRead,
+    markAllAsRead,
+    isMarkingAllRead,
+    refetch: refetchNotifications,
+  } = useNotifications();
 
   // Close dropdowns when clicking outside
   useEffect(() => {
@@ -61,32 +77,19 @@ export default function AppLayout() {
     { icon: Settings, label: "Settings", href: "/settings" },
   ];
 
-  const notifications = [
-    {
-      id: 1,
-      title: "New session scheduled",
-      desc: "Tomorrow at 2:00 PM with Dr. Smith",
-      time: "5m ago",
-      unread: true,
-    },
-    {
-      id: 2,
-      title: "Community reply",
-      desc: "Someone responded to your post",
-      time: "1h ago",
-      unread: true,
-    },
-    {
-      id: 3,
-      title: "Resource added",
-      desc: "New article in Library",
-      time: "3h ago",
-      unread: false,
-    },
-  ];
-  const currentPageTitle =
-    menuItems.find((item) => pathname.startsWith(item.href))?.label ||
-    "Activities";
+  const previewNotifications = apiNotifications.slice(0, 8);
+
+  const currentPageTitle = pathname.startsWith("/notifications")
+    ? "Notifications"
+    : menuItems.find((item) => pathname.startsWith(item.href))?.label ||
+      "Activities";
+
+  function handlePreviewClick(n: Notification) {
+    if (!n.isRead) markAsRead(n.id);
+    const href = getNotificationHref(n, user);
+    if (href) navigate(href);
+    setNotificationsOpen(false);
+  }
 
   const sidebarWidth = sidebarCollapsed ? "w-20" : "w-72";
   const mainMargin = sidebarCollapsed ? "lg:ml-20" : "lg:ml-72";
@@ -163,7 +166,7 @@ export default function AppLayout() {
                         >
                           <item.icon
                             className={
-                              sidebarCollapsed ? "size-5" : "size-[18px]"
+                              sidebarCollapsed ? "size-5" : "size-4.5"
                             }
                             strokeWidth={2}
                           />
@@ -201,7 +204,7 @@ export default function AppLayout() {
                 {sidebarCollapsed ? (
                   <ChevronRight className="w-5 h-5" />
                 ) : (
-                  <ChevronLeft className="w-[18px] h-[18px]" />
+                  <ChevronLeft className="w-4.5 h-4.5" />
                 )}
               </div>
               {!sidebarCollapsed && (
@@ -308,51 +311,108 @@ export default function AppLayout() {
                 {/* Notifications */}
                 <div className="relative" ref={notificationsRef}>
                   <button
-                    onClick={() => setNotificationsOpen(!notificationsOpen)}
+                    type="button"
+                    onClick={() => {
+                      setNotificationsOpen((prev) => {
+                        const next = !prev;
+                        if (next) void refetchNotifications();
+                        return next;
+                      });
+                    }}
                     className="relative p-2.5 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-all duration-200"
+                    aria-label="Notifications"
                   >
                     <Bell className="w-5 h-5" />
-                    <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white" />
+                    {unreadCount > 0 && (
+                      <span className="absolute top-1.5 right-1.5 min-w-4.5 h-4.5 px-1 flex items-center justify-center text-[10px] font-bold text-white bg-linear-to-br from-primary-light to-primary-dark rounded-full ring-2 ring-white shadow-sm shadow-green-900/20">
+                        {unreadCount > 9 ? "9+" : unreadCount}
+                      </span>
+                    )}
                   </button>
 
-                  {/* Notifications Dropdown */}
                   {notificationsOpen && (
-                    <div className="absolute right-0 top-full mt-2 w-80 bg-white rounded-xl shadow-xl shadow-slate-950/10 border border-slate-100 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
-                      <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100">
+                    <div className="absolute right-0 top-full mt-2 w-88 bg-white rounded-2xl shadow-xl shadow-slate-950/10 border border-slate-100 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                      <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-slate-100 bg-slate-50/40">
                         <h3 className="font-semibold text-slate-800 text-sm">
                           Notifications
                         </h3>
-                        <span className="text-xs text-green-700 font-medium bg-green-50 px-2 py-0.5 rounded-full">
-                          2 new
-                        </span>
+                        <div className="flex items-center gap-2 shrink-0">
+                          {unreadCount > 0 && (
+                            <>
+                              <span className="text-xs text-primary-dark font-semibold bg-white px-2.5 py-0.5 rounded-full border border-slate-100">
+                                {unreadCount} new
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => markAllAsRead()}
+                                disabled={isMarkingAllRead}
+                                className="text-xs font-medium text-primary-light hover:text-primary-dark disabled:opacity-50 transition-colors"
+                              >
+                                {isMarkingAllRead ? "…" : "Mark all read"}
+                              </button>
+                            </>
+                          )}
+                        </div>
                       </div>
                       <div className="max-h-80 overflow-y-auto">
-                        {notifications.map((notif) => (
-                          <div
-                            key={notif.id}
-                            className={`flex items-start gap-3 px-4 py-3 hover:bg-slate-50 transition-colors cursor-pointer border-b border-slate-50 last:border-0 ${notif.unread ? "bg-slate-50/50" : ""}`}
-                          >
-                            <div
-                              className={`w-2 h-2 rounded-full mt-2 shrink-0 ${notif.unread ? "bg-green-500" : "bg-slate-300"}`}
-                            />
-                            <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium text-slate-800">
-                                {notif.title}
-                              </p>
-                              <p className="text-xs text-slate-500 mt-1">
-                                {notif.desc}
-                              </p>
-                              <p className="text-xs text-slate-400 mt-1">
-                                {notif.time}
-                              </p>
-                            </div>
+                        {notificationsLoading && previewNotifications.length === 0 ? (
+                          <div className="p-3 space-y-2">
+                            {[1, 2, 3].map((i) => (
+                              <div
+                                key={i}
+                                className="flex gap-3 p-3 rounded-xl border border-slate-100 animate-pulse"
+                              >
+                                <div className="w-2 h-2 rounded-full bg-slate-200 mt-2 shrink-0" />
+                                <div className="flex-1 space-y-2">
+                                  <div className="h-3 bg-slate-100 rounded-full w-4/5" />
+                                  <div className="h-2.5 bg-slate-100 rounded-full w-3/5" />
+                                </div>
+                              </div>
+                            ))}
                           </div>
-                        ))}
+                        ) : previewNotifications.length === 0 ? (
+                          <div className="px-4 py-10 text-center text-sm text-slate-500">
+                            No notifications yet
+                          </div>
+                        ) : (
+                          previewNotifications.map((n) => (
+                            <button
+                              key={n.id}
+                              type="button"
+                              onClick={() => handlePreviewClick(n)}
+                              className={`flex w-full items-start gap-3 px-4 py-3 text-left transition-colors border-b border-slate-50 last:border-0 hover:bg-slate-50/80 cursor-pointer
+                                ${!n.isRead ? "bg-primary-dark/3" : ""}`}
+                            >
+                              <div
+                                className={`w-2 h-2 rounded-full mt-2 shrink-0 ring-2 ring-white ${!n.isRead ? "bg-primary-light" : "bg-slate-300"}`}
+                              />
+                              <div className="flex-1 min-w-0">
+                                <p
+                                  className={`text-sm leading-snug ${!n.isRead ? "font-semibold text-slate-800" : "font-medium text-slate-700"}`}
+                                >
+                                  {n.title}
+                                </p>
+                                {n.message ? (
+                                  <p className="text-xs text-slate-500 mt-1 line-clamp-2">
+                                    {n.message}
+                                  </p>
+                                ) : null}
+                                <p className="text-xs text-slate-400 mt-1.5">
+                                  {formatNotificationRelativeTime(n.createdAt)}
+                                </p>
+                              </div>
+                            </button>
+                          ))
+                        )}
                       </div>
                       <div className="px-4 py-3 border-t border-slate-100 bg-slate-50/50">
-                        <button className="text-sm text-green-700 font-medium hover:text-green-700 transition-colors">
+                        <Link
+                          to="/notifications"
+                          onClick={() => setNotificationsOpen(false)}
+                          className="text-sm font-medium text-primary-light hover:text-primary-dark transition-colors"
+                        >
                           View all notifications
-                        </button>
+                        </Link>
                       </div>
                     </div>
                   )}
