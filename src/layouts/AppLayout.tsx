@@ -96,14 +96,14 @@ export default function AppLayout() {
       {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
         <div
-          className="cursor-pointer fixed inset-0 bg-slate-950/30 backdrop-blur-sm z-40 lg:hidden transition-opacity duration-300"
+          className="cursor-pointer fixed inset-0 bg-slate-950/30 backdrop-blur-sm z-200 lg:hidden transition-opacity duration-300"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 ${sidebarWidth} bg-white border-r border-slate-100 shadow-[4px_0_24px_-8px_rgba(0,0,0,0.04)] transform transition-all duration-300 ease-in-out
+        className={`fixed inset-y-0 left-0 z-200 ${sidebarWidth} bg-white border-r border-slate-100 shadow-[4px_0_24px_-8px_rgba(0,0,0,0.04)] transform transition-all duration-300 ease-in-out
         lg:translate-x-0
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
       `}
@@ -263,7 +263,7 @@ export default function AppLayout() {
       {/* Main Content */}
       <div className={mainMargin}>
         {/* Modern Navbar */}
-        <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-slate-100">
+        <header className="sticky top-0 z-100 bg-white/80 backdrop-blur-xl border-b border-slate-100">
           <div className="px-6 py-5">
             <div className="flex items-center justify-between gap-4">
               {/* Left: Breadcrumb + Menu */}

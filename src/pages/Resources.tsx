@@ -14,29 +14,22 @@ export default function Library() {
     handleEditResource,
   } = useResources();
 
-  if (isPending) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 text-primary animate-spin" />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex flex-col items-center justify-center py-20 text-gray-400">
-        <AlertCircle className="w-10 h-10 mb-3" />
-        <p className="text-sm">Failed to load resources.</p>
-      </div>
-    );
-  }
-
   return (
     <div className="p-5">
       <CreateResourceForm onCreate={handleCreateResource} />
-      {resources.length === 0 ? (
+      {isPending ? (
+        <div className="flex items-center justify-center flex-col py-20">
+          <Loader2 className="size-10 text-primary animate-spin" />
+          <p className="text-sm">Loading resources...</p>
+        </div>
+      ) : error ? (
         <div className="flex flex-col items-center justify-center py-20 text-gray-400">
-          <LibraryIcon className="w-10 h-10 mb-3" />
+          <AlertCircle className="size-10 mb-3" />
+          <p className="text-sm">Failed to load resources.</p>
+        </div>
+      ) : resources.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-20 text-gray-400">
+          <LibraryIcon className="size-10 mb-3" />
           <p className="text-sm">No resources available yet.</p>
         </div>
       ) : (
