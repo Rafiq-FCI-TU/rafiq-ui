@@ -1,11 +1,70 @@
 import { NavLink } from "react-router";
-import type { ConversationItemProps } from "../../types/Chat";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import type { ConversationItemProps, Conversation } from "../../types/Chat";
 import { formatMessageTime, getInitials } from "../../lib/chatUtils";
+import { useAuth } from "../../contexts/AuthContext";
+
+const API_BASE =
+  "https://rafiq-container-server.wittyhill-43579268.germanywestcentral.azurecontainerapps.io/api";
 
 export function ConversationItem({ conversation }: ConversationItemProps) {
+  const { token } = useAuth();
+  const queryClient = useQueryClient();
+
+  const markAsReadMutation = useMutation({
+    mutationFn: async (otherUserId: string) => {
+      const res = await fetch(`${API_BASE}/Chat/read/${otherUserId}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      if (!res.ok) throw new Error("Failed to mark messages as read");
+      return res.json().catch(() => ({}));
+    },
+    onMutate: async (otherUserId: string) => {
+      await queryClient.cancelQueries({ queryKey: ["Conversations"] });
+      const previousConversations = queryClient.getQueryData(["Conversations"]);
+
+      queryClient.setQueryData(
+        ["Conversations"],
+        (old: { data?: Conversation[] } | undefined) => {
+          if (!old?.data) return old;
+          return {
+            ...old,
+            data: old.data.map((c: Conversation) =>
+              c.partnerId === otherUserId ? { ...c, unreadCount: 0 } : c,
+            ),
+          };
+        },
+      );
+
+      return { previousConversations };
+    },
+    onError: (_err, _otherUserId, context) => {
+      if (context?.previousConversations) {
+        queryClient.setQueryData(
+          ["Conversations"],
+          context.previousConversations,
+        );
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["Conversations"] });
+    },
+  });
+
+  const handleClick = () => {
+    if (conversation.unreadCount > 0) {
+      markAsReadMutation.mutate(conversation.partnerId);
+    }
+  };
+
   return (
     <NavLink
       to={conversation.partnerId}
+      onClick={handleClick}
       className={({ isActive }) =>
         `w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 group border ${
           isActive

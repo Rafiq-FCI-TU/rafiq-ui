@@ -23,6 +23,8 @@ export default function ConversationsSideBar({
     isError,
   } = useQuery({
     queryKey: ["conversations"],
+    refetchInterval: 10_000,
+    refetchIntervalInBackground: false,
     queryFn: async () => {
       const headers: Record<string, string> = {};
       if (token) {
@@ -138,9 +140,7 @@ export default function ConversationsSideBar({
           ) : isError ? (
             <div className="flex flex-col items-center justify-center py-12 text-red-400">
               <X size={48} className="mb-3 opacity-50" />
-              <p className="text-sm">
-                {"Failed to load conversations"}
-              </p>
+              <p className="text-sm">Failed to load conversations</p>
             </div>
           ) : filteredConversations.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-gray-400">
