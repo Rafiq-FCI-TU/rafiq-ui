@@ -29,6 +29,7 @@ import Care from "./components/HomeComponents/Care.tsx";
 import Community from "./pages/Community.tsx";
 import Resources from "./pages/Resources.tsx";
 import Chats from "./pages/Chats.tsx";
+import Notifications from "./pages/Notifications.tsx";
 
 const router = createBrowserRouter([
   {
@@ -82,6 +83,7 @@ const router = createBrowserRouter([
           { path: "ai-assistant", element: <AIAssistant /> },
           { path: "community", element: <Community /> },
           { path: "resources", element: <Resources /> },
+          { path: "notifications", element: <Notifications /> },
           {
             path: "chats",
             element: <Chats />,
