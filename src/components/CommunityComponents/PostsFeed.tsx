@@ -1,4 +1,4 @@
-import { LoaderCircle, XCircle } from "lucide-react";
+import { LoaderCircle, StickyNote, XCircle} from "lucide-react";
 import type { Post as PostType, UserReaction } from "../../types/Community";
 import type { User } from "../../contexts/AuthContext";
 import { PostCard } from "./Post";
@@ -55,8 +55,8 @@ export function PostsFeed({
   if (posts.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center gap-3 text-gray-500 h-[calc(100vh/2-100px)]">
-        <XCircle className="size-10" />
-        <span className="text-lg font-medium">No posts found</span>
+        <StickyNote className="size-10" />
+        <span className="text-lg font-medium">No posts available yet.</span>
       </div>
     );
   }

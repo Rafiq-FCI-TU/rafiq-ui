@@ -31,29 +31,27 @@ export default function Library() {
     );
   }
 
-  if (resources.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center py-20 text-gray-400">
-        <LibraryIcon className="w-10 h-10 mb-3" />
-        <p className="text-sm">No resources available yet.</p>
-      </div>
-    );
-  }
-
   return (
     <div className="p-5">
       <CreateResourceForm onCreate={handleCreateResource} />
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {resources.map((resource) => (
-          <ResourceCard
-            key={resource.id}
-            resource={resource}
-            onDelete={handleDeleteResource}
-            onEdit={handleEditResource}
-            currentUser={user}
-          />
-        ))}
-      </div>
+      {resources.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-20 text-gray-400">
+          <LibraryIcon className="w-10 h-10 mb-3" />
+          <p className="text-sm">No resources available yet.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {resources.map((resource) => (
+            <ResourceCard
+              key={resource.id}
+              resource={resource}
+              onDelete={handleDeleteResource}
+              onEdit={handleEditResource}
+              currentUser={user}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
