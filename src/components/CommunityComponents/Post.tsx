@@ -1,7 +1,6 @@
 import { MessageCircle, AlertTriangle, Trash2 } from "lucide-react";
 import { useState } from "react";
-import type { Post as PostType, UserReaction } from "../../types/Community";
-import type { User } from "../../contexts/AuthContext";
+import type { PostCardProps } from "../../types/Community";
 import { getInitials, getAvatarColor } from "../../lib/communityUtils";
 import { ReactionButton } from "./ReactionButton";
 import { Comment } from "./Comment";
@@ -9,21 +8,6 @@ import { ReactionsBreakdown } from "./ReactionsBreakdown";
 import { PostMenu } from "./PostMenu";
 import { EditPostForm } from "./EditPostForm";
 import { CommentInput } from "./CommentInput";
-
-interface PostCardProps {
-  post: PostType;
-  onReact: (postId: number, reaction: UserReaction) => void;
-  onCommentReact: (
-    postId: number,
-    commentId: number,
-    reaction: UserReaction,
-  ) => void;
-  onAddComment: (postId: number, content: string) => void;
-  onDeleteComment: (postId: number, commentId: number) => void;
-  onEditPost: (postId: number, newContent: string, newTags: string[]) => void;
-  onDeletePost: (postId: number) => void;
-  currentUser: User | null;
-}
 
 export function PostCard({
   post,

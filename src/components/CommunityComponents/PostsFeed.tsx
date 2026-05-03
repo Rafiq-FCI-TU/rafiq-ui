@@ -1,24 +1,8 @@
 import { LoaderCircle, StickyNote, XCircle} from "lucide-react";
-import type { Post as PostType, UserReaction } from "../../types/Community";
-import type { User } from "../../contexts/AuthContext";
+import type { PostsFeedProps } from "../../types/Community";
 import { PostCard } from "./Post";
 
-interface PostsFeedProps {
-  posts: PostType[];
-  isPending: boolean;
-  error: Error | null;
-  onReact: (postId: number, reaction: UserReaction) => void;
-  onCommentReact: (
-    postId: number,
-    commentId: number,
-    reaction: UserReaction,
-  ) => void;
-  onAddComment: (postId: number, content: string) => void;
-  onDeleteComment: (postId: number, commentId: number) => void;
-  onEditPost: (postId: number, newContent: string, newTags: string[]) => void;
-  onDeletePost: (postId: number) => void;
-  currentUser: User | null;
-}
+
 
 export function PostsFeed({
   posts,

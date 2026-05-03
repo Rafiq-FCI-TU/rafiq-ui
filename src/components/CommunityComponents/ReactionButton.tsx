@@ -1,17 +1,13 @@
 import { ThumbsUp } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
-import type { UserReaction } from "../../types/Community";
+import type { ReactionButtonProps, UserReaction } from "../../types/Community";
 import { REACTIONS, type Reactionable } from "../../lib/communityUtils";
 
 export function ReactionButton<T extends { id: number } & Reactionable>({
   item,
   onReact,
   size = "md",
-}: {
-  item: T;
-  onReact: (itemId: number, reaction: UserReaction) => void;
-  size?: "sm" | "md";
-}) {
+}: ReactionButtonProps<T>) {
   const [showPicker, setShowPicker] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);

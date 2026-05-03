@@ -1,12 +1,8 @@
 import { X, Check } from "lucide-react";
 import { useState } from "react";
-import type { Post } from "../../types/Community";
+import type { EditPostFormProps } from "../../types/Community";
 
-interface EditPostFormProps {
-  post: Post;
-  onSave: (content: string, tags: string[]) => void;
-  onCancel: () => void;
-}
+
 
 export function EditPostForm({ post, onSave, onCancel }: EditPostFormProps) {
   const [content, setContent] = useState(post.content);

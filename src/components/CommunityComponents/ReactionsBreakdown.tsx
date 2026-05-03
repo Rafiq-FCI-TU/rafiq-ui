@@ -1,9 +1,7 @@
 import { REACTIONS } from "../../lib/communityUtils";
-import type { Post } from "../../types/Community";
+import type { ReactionsBreakdownProps } from "../../types/Community";
 
-interface ReactionsBreakdownProps {
-  summary: Post["reactionSummary"];
-}
+
 
 export function ReactionsBreakdown({ summary }: ReactionsBreakdownProps) {
   const activeReactions = REACTIONS.filter(

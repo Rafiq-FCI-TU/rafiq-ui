@@ -1,15 +1,8 @@
 import { Send } from "lucide-react";
 import { useState } from "react";
+import type { CommentInputProps } from "../../types/Community";
 
-interface CommentInputProps {
-  currentUser: { username?: string } | null;
-  onSubmit: (content: string) => void;
-}
-
-export function CommentInput({
-  currentUser,
-  onSubmit,
-}: CommentInputProps) {
+export function CommentInput({ currentUser, onSubmit }: CommentInputProps) {
   const [newComment, setNewComment] = useState("");
 
   const handleSubmit = () => {

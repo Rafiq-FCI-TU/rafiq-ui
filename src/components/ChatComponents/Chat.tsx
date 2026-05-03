@@ -1,14 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import { Send } from "lucide-react";
 import { useParams } from "react-router";
-
-interface Message {
-  id: string;
-  text: string;
-  timestamp: string;
-  isMe: boolean;
-  status?: "sent" | "delivered" | "read";
-}
+import type { Message } from "../../types/Chat";
+import MessageComponent from "./Message";
+import { getInitials } from "../../lib/chatUtils";
 
 const mockMessages: Message[] = [
   {
@@ -57,15 +52,6 @@ const mockConversations = [
   { id: "6", name: "Mohamed Abdullah", status: "offline" },
   { id: "7", name: "Laila Mahmoud", status: "away" },
 ];
-
-function getInitials(name: string): string {
-  return name
-    .split(" ")
-    .map((word) => word[0])
-    .join("")
-    .toUpperCase()
-    .slice(0, 2);
-}
 
 export default function Chat() {
   const { userId } = useParams();
@@ -137,59 +123,15 @@ export default function Chat() {
 
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4 min-h-0">
-        {messages.map((message, index) => {
-          const showAvatar =
-            index === 0 || messages[index - 1].isMe !== message.isMe;
-
-          return (
-            <div
-              key={message.id}
-              className={`flex gap-3 ${message.isMe ? "flex-row-reverse" : ""}`}
-            >
-              {/* Avatar */}
-              <div className="shrink-0">
-                {showAvatar ? (
-                  <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold text-white ${
-                      message.isMe ? "bg-primary" : "bg-gray-400"
-                    }`}
-                  >
-                    {getInitials(message.isMe ? "Me" : conversation.name)}
-                  </div>
-                ) : (
-                  <div className="w-8" />
-                )}
-              </div>
-
-              {/* Message Bubble */}
-              <div
-                className={`max-w-[70%] px-4 py-2.5 rounded-2xl ${
-                  message.isMe
-                    ? "bg-primary text-white rounded-br-md"
-                    : "bg-white text-gray-800 border border-gray-200 rounded-bl-md"
-                }`}
-              >
-                <p className="text-sm leading-relaxed">{message.text}</p>
-                <div
-                  className={`flex items-center gap-1 mt-1 text-xs ${
-                    message.isMe ? "text-white/70" : "text-gray-400"
-                  }`}
-                >
-                  <span>{message.timestamp}</span>
-                  {message.isMe && message.status && (
-                    <span className="text-xs">
-                      {message.status === "read"
-                        ? "✓✓"
-                        : message.status === "delivered"
-                          ? "✓✓"
-                          : "✓"}
-                    </span>
-                  )}
-                </div>
-              </div>
-            </div>
-          );
-        })}
+        {messages.map((message, index) => (
+          <MessageComponent
+            key={message.id}
+            message={message}
+            index={index}
+            messages={messages}
+            name={conversation.name}
+          />
+        ))}
         <div ref={messagesEndRef} />
       </div>
 

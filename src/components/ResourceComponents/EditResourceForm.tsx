@@ -1,20 +1,6 @@
 import { X, Check } from "lucide-react";
 import { useState } from "react";
-import type { ResourcesCard } from "../../types/Resources";
-
-interface EditResourceFormProps {
-  resource: ResourcesCard;
-  onSave: (
-    resourceId: number,
-    values: {
-      title: string;
-      link: string;
-      description: string;
-      tags: string[];
-    },
-  ) => void;
-  onCancel: () => void;
-}
+import type { EditResourceFormProps } from "../../types/Resources";
 
 export function EditResourceForm({
   resource,

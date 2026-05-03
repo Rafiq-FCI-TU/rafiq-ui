@@ -1,13 +1,9 @@
 import { REACTIONS } from "../../lib/communityUtils";
-import type { Comment } from "../../types/Community";
-
-interface CommentReactionsBreakdownProps {
-  summary: Comment["reactionSummary"];
-}
+import type { ReactionsBreakdownProps } from "../../types/Community";
 
 export function CommentReactionsBreakdown({
   summary,
-}: CommentReactionsBreakdownProps) {
+}: ReactionsBreakdownProps) {
   const activeReactions = REACTIONS.filter(
     (r) => r.type && summary.types[r.type] > 0,
   );

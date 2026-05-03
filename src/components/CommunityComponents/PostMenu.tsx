@@ -1,10 +1,6 @@
 import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
-
-interface PostMenuProps {
-  onEdit?: () => void;
-  onDelete?: () => void;
-}
+import type { PostMenuProps } from "../../types/Community";
 
 export function PostMenu({ onEdit, onDelete }: PostMenuProps) {
   const [open, setOpen] = useState(false);

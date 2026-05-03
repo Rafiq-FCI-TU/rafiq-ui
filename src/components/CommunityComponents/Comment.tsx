@@ -1,20 +1,9 @@
 import { useState, useRef, useEffect } from "react";
-import type {
-  Comment as CommentType,
-  UserReaction,
-} from "../../types/Community";
 import { getInitials, getAvatarColor } from "../../lib/communityUtils";
 import { ReactionButton } from "./ReactionButton";
 import { CommentReactionsBreakdown } from "./CommentReactionsBreakdown";
 import { MoreHorizontal, Trash2, AlertTriangle } from "lucide-react";
-
-interface CommentProps {
-  comment: CommentType;
-  onReact: (commentId: number, reaction: UserReaction) => void;
-  onDelete?: (postId: number, commentId: number) => void;
-  postId?: number;
-  currentUser?: { id?: string } | null;
-}
+import type { CommentProps } from "../../types/Community";
 
 export function Comment({
   comment,

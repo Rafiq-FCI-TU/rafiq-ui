@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useToast } from "../../hooks/useToast";
+import type { FormValues } from "../../types/Community";
 
 // Quick tag options for post categorization
 const HASHTAGS = ["milestone", "question", "advice"];
@@ -21,10 +22,7 @@ const HASHTAGS = ["milestone", "question", "advice"];
 const API_URL =
   "https://rafiq-container-server.wittyhill-43579268.germanywestcentral.azurecontainerapps.io/api/community/posts";
 
-interface FormValues {
-  content: string;
-  tags: string[];
-}
+
 
 const validationSchema = Yup.object().shape({
   content: Yup.string()

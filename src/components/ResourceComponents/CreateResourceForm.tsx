@@ -13,15 +13,12 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { useState } from "react";
+import type {
+  CreateResourceFormProps,
+  FormValues,
+} from "../../types/Resources";
 
 const HASHTAGS = ["article", "video", "guide", "tool"];
-
-interface FormValues {
-  title: string;
-  link: string;
-  description: string;
-  tags: string[];
-}
 
 const validationSchema = Yup.object().shape({
   title: Yup.string()
@@ -35,10 +32,6 @@ const validationSchema = Yup.object().shape({
     .min(1, "Description cannot be empty"),
   tags: Yup.array().of(Yup.string().required()),
 });
-
-interface CreateResourceFormProps {
-  onCreate: (values: FormValues) => Promise<void>;
-}
 
 export function CreateResourceForm({ onCreate }: CreateResourceFormProps) {
   const [tagInput, setTagInput] = useState("");

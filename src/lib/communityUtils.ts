@@ -24,18 +24,7 @@ export const AVATAR_COLORS = [
 ];
 
 export interface Reactionable {
-  reactionSummary: {
-    userReaction: UserReaction;
-    total: number;
-    types: {
-      like: number;
-      love: number;
-      haha: number;
-      wow: number;
-      sad: number;
-      angry: number;
-    };
-  };
+  reactionSummary: ReactionSummary;
 }
 
 export function emptyReactionSummary(): ReactionSummary {

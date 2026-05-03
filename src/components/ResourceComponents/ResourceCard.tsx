@@ -1,25 +1,10 @@
 import { ExternalLink, AlertTriangle, Trash2, Calendar } from "lucide-react";
 import { useState } from "react";
-import type { ResourcesCard } from "../../types/Resources";
-import type { User } from "../../contexts/AuthContext";
+import type { ResourceCardProps } from "../../types/Resources";
 import { getInitials, getAvatarColor } from "../../lib/communityUtils";
 import { PostMenu } from "../CommunityComponents/PostMenu";
 import { EditResourceForm } from "./EditResourceForm";
 import { format } from "date-fns";
-interface ResourceCardProps {
-  resource: ResourcesCard;
-  onDelete: (resourceId: number) => void;
-  onEdit: (
-    resourceId: number,
-    values: {
-      title: string;
-      link: string;
-      description: string;
-      tags: string[];
-    },
-  ) => void;
-  currentUser: User | null;
-}
 
 export function ResourceCard({
   resource,
