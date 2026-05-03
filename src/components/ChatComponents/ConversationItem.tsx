@@ -1,11 +1,11 @@
 import { NavLink } from "react-router";
 import type { ConversationItemProps } from "../../types/Chat";
-import { getInitials } from "../../lib/chatUtils";
+import { formatMessageTime, getInitials } from "../../lib/chatUtils";
 
-export function ConversationItem({ conversation, to }: ConversationItemProps) {
+export function ConversationItem({ conversation }: ConversationItemProps) {
   return (
     <NavLink
-      to={to}
+      to={conversation.partnerId}
       className={({ isActive }) =>
         `w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 group border ${
           isActive
@@ -23,8 +23,11 @@ export function ConversationItem({ conversation, to }: ConversationItemProps) {
                 isActive ? "bg-primary" : "bg-gray-400 group-hover:bg-primary"
               }`}
             >
-              {getInitials(conversation.name)}
+              {getInitials(conversation.partnerName)}
             </div>
+            {conversation.unreadCount > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 rounded-full border-2 border-white" />
+            )}
           </div>
 
           {/* Content */}
@@ -37,10 +40,10 @@ export function ConversationItem({ conversation, to }: ConversationItemProps) {
                     : "text-gray-800 group-hover:text-primary"
                 }`}
               >
-                {conversation.name}
+                {conversation.partnerName}
               </h3>
               <span className="text-xs text-gray-400 shrink-0">
-                {conversation.timestamp}
+                {formatMessageTime(conversation.lastMessage.sentAt)}
               </span>
             </div>
             <div className="flex items-center justify-between gap-2 mt-0.5">
@@ -51,7 +54,7 @@ export function ConversationItem({ conversation, to }: ConversationItemProps) {
                     : "text-gray-500"
                 }`}
               >
-                {conversation.lastMessage}
+                {conversation.lastMessage.content}
               </p>
               {conversation.unreadCount > 0 && (
                 <span className="shrink-0 min-w-[20px] h-5 px-1.5 bg-primary text-white text-xs font-medium rounded-full flex items-center justify-center">

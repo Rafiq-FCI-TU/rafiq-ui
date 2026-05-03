@@ -1,13 +1,11 @@
 export interface Conversation {
-  id: string;
-  name: string;
-  lastMessage: string;
-  timestamp: string;
+  partnerId: string;
+  partnerName: string;
+  lastMessage: Message;
   unreadCount: number;
 }
 export interface ConversationItemProps {
   conversation: Conversation;
-  to: string;
 }
 
 export interface ConversationsSideBarProps {
@@ -16,10 +14,13 @@ export interface ConversationsSideBarProps {
 }
 export interface Message {
   id: string;
-  text: string;
-  timestamp: string;
-  isMe: boolean;
-  status?: "sent" | "delivered" | "read";
+  senderId: string;
+  senderName: string;
+  receiverId: string;
+  content: string;
+  sentAt: string;
+  isRead: boolean;
+  readAt: null | string;
 }
 export interface MessageProps {
   message: Message;

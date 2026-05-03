@@ -1,88 +1,47 @@
 import { useState, useEffect } from "react";
-import { Search, Sidebar, SidebarOpen, X } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { Search, Sidebar, SidebarOpen, X, Loader2 } from "lucide-react";
 import { ConversationItem } from "./ConversationItem";
+import { useAuth } from "../../contexts/AuthContext";
 import type { Conversation, ConversationsSideBarProps } from "../../types/Chat";
 
-const mockConversations: Conversation[] = [
-  {
-    id: "1",
-    name: "Ahmed Mohamed",
-    lastMessage: "Hello, how are you?",
-    timestamp: "10:30 AM",
-    unreadCount: 2,
-  },
-  {
-    id: "2",
-    name: "Sarah Ahmed",
-    lastMessage: "I'll send you the files tomorrow",
-    timestamp: "09:15 AM",
-    unreadCount: 0,
-  },
-  {
-    id: "3",
-    name: "Dev Team",
-    lastMessage: "Task completed successfully",
-    timestamp: "Yesterday",
-    unreadCount: 5,
-  },
-  {
-    id: "4",
-    name: "Khaled Ali",
-    lastMessage: "Thank you very much",
-    timestamp: "Yesterday",
-    unreadCount: 0,
-  },
-  {
-    id: "5",
-    name: "Nora Hassan",
-    lastMessage: "Can we meet tomorrow?",
-    timestamp: "Monday",
-    unreadCount: 1,
-  },
-  {
-    id: "6",
-    name: "Mohamed Abdullah",
-    lastMessage: "Booking confirmed",
-    timestamp: "Sunday",
-    unreadCount: 0,
-  },
-  {
-    id: "7",
-    name: "Laila Mahmoud",
-    lastMessage: "Sent you the approval",
-    timestamp: "Saturday",
-    unreadCount: 0,
-  },
-  {
-    id: "7",
-    name: "Laila Mahmoud",
-    lastMessage: "Sent you the approval",
-    timestamp: "Saturday",
-    unreadCount: 0,
-  },
-  {
-    id: "7",
-    name: "Laila Mahmoud",
-    lastMessage: "Sent you the approval",
-    timestamp: "Saturday",
-    unreadCount: 0,
-  },
-  {
-    id: "7",
-    name: "Laila Mahmoud",
-    lastMessage: "Sent you the approval",
-    timestamp: "Saturday",
-    unreadCount: 0,
-  },
-];
+const API_BASE_URL =
+  "https://rafiq-container-server.wittyhill-43579268.germanywestcentral.azurecontainerapps.io";
 
 export default function ConversationsSideBar({
   isOpen: controlledIsOpen,
   onToggle,
 }: ConversationsSideBarProps) {
+  const { token } = useAuth();
   const [isMobile, setIsMobile] = useState(false);
   const [isOpen, setIsOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+
+  const {
+    data: conversations = [],
+    isPending,
+    isError,
+  } = useQuery({
+    queryKey: ["conversations"],
+    queryFn: async () => {
+      const headers: Record<string, string> = {};
+      if (token) {
+        headers.Authorization = `Bearer ${token}`;
+      }
+      const response = await fetch(`${API_BASE_URL}/api/Chat/conversations`, {
+        headers,
+      });
+      if (!response.ok) {
+        throw new Error("Failed to fetch conversations");
+      }
+      const result = await response.json();
+      if (result.success === false) {
+        throw new Error(result.message || "Failed to fetch conversations");
+      }
+      return Array.isArray(result.data) ? result.data : (result?.data ?? []);
+    },
+    enabled: !!token,
+  });
 
   const sidebarOpen =
     controlledIsOpen !== undefined ? controlledIsOpen : isOpen;
@@ -109,8 +68,8 @@ export default function ConversationsSideBar({
     }
   };
 
-  const filteredConversations = mockConversations.filter((conv) =>
-    conv.name.toLowerCase().includes(searchQuery.toLowerCase()),
+  const filteredConversations = conversations.filter((conv: Conversation) =>
+    conv.partnerName.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   return (
@@ -171,19 +130,30 @@ export default function ConversationsSideBar({
 
         {/* Conversations List */}
         <div className="flex-1 overflow-y-auto px-4 py-2">
-          {filteredConversations.map((conversation) => (
-            <ConversationItem
-              key={conversation.id}
-              conversation={conversation}
-              to={`/chats/${conversation.id}`}
-            />
-          ))}
-
-          {filteredConversations.length === 0 && (
+          {isPending ? (
+            <div className="flex flex-col items-center justify-center py-12 text-gray-400">
+              <Loader2 size={48} className="mb-3 opacity-50 animate-spin" />
+              <p className="text-sm">Loading conversations...</p>
+            </div>
+          ) : isError ? (
+            <div className="flex flex-col items-center justify-center py-12 text-red-400">
+              <X size={48} className="mb-3 opacity-50" />
+              <p className="text-sm">
+                {"Failed to load conversations"}
+              </p>
+            </div>
+          ) : filteredConversations.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-gray-400">
               <Search size={48} className="mb-3 opacity-50" />
-              <p className="text-sm">No matching conversations</p>
+              <p className="text-sm">No conversations found</p>
             </div>
+          ) : (
+            filteredConversations.map((conversation: Conversation) => (
+              <ConversationItem
+                key={conversation.partnerId}
+                conversation={conversation}
+              />
+            ))
           )}
         </div>
       </aside>
