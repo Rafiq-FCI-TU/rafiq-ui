@@ -28,3 +28,13 @@ export interface MessageProps {
   messages: Message[];
   name: string;
 }
+
+export interface Chat {
+  messages: Message[];
+  pageNumber: number;
+  pageSize: number;
+  totalCount: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+}

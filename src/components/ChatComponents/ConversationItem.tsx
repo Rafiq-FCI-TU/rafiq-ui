@@ -8,7 +8,7 @@ const API_BASE =
   "https://rafiq-container-server.wittyhill-43579268.germanywestcentral.azurecontainerapps.io/api";
 
 export function ConversationItem({ conversation }: ConversationItemProps) {
-  const { token } = useAuth();
+  const { token, user } = useAuth();
   const queryClient = useQueryClient();
 
   const markAsReadMutation = useMutation({
@@ -113,7 +113,10 @@ export function ConversationItem({ conversation }: ConversationItemProps) {
                     : "text-gray-500"
                 }`}
               >
-                {conversation.lastMessage.content}
+                {user?.id === conversation.lastMessage.senderId
+                  ? "Me"
+                  : conversation.partnerName.split(" ")[0]}
+                : {conversation.lastMessage.content}
               </p>
               {conversation.unreadCount > 0 && (
                 <span className="shrink-0 min-w-[20px] h-5 px-1.5 bg-primary text-white text-xs font-medium rounded-full flex items-center justify-center">
