@@ -1,4 +1,4 @@
-import { format, isToday, isYesterday, parseISO } from "date-fns";
+import { format, isToday, isYesterday, isSameWeek, isSameYear } from "date-fns";
 export function getInitials(name: string) {
   return name
     .split(" ")
@@ -8,16 +8,25 @@ export function getInitials(name: string) {
 }
 
 export function formatMessageTime(dateStr: string): string {
-  const date = parseISO(dateStr);
+  const date = new Date(dateStr);
+  const timeStr = format(date, "h:mm a");
   const now = new Date();
+
   if (isToday(date)) {
-    return format(date, "h:mm a");
+    return timeStr;
   }
+
   if (isYesterday(date)) {
-    return "Yesterday";
+    return `Yesterday ${timeStr}`;
   }
-  if (date.getFullYear() !== now.getFullYear()) {
-    return format(date, "MMM d, yyyy");
+
+  if (isSameWeek(date, now)) {
+    return format(date, "EEEE h:mm a");
   }
-  return format(date, "MMM d");
+
+  if (isSameYear(date, now)) {
+    return format(date, "MMM d h:mm a");
+  }
+
+  return format(date, "MMM d, yyyy h:mm a");
 }

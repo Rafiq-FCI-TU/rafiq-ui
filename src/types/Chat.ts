@@ -22,15 +22,10 @@ export interface Message {
   isRead: boolean;
   readAt: null | string;
 }
-export interface MessageProps {
-  message: Message;
-  index: number;
-  messages: Message[];
-  name: string;
-}
 
 export interface Chat {
   messages: Message[];
+  partnerName: string;
   pageNumber: number;
   pageSize: number;
   totalCount: number;

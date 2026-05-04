@@ -1,102 +1,180 @@
-import { useState, useRef, useEffect } from "react";
-import { Send } from "lucide-react";
+import { useState, useRef, useEffect, useCallback } from "react";
+import { Send, Loader2, MessageSquare } from "lucide-react";
 import { useParams } from "react-router";
-import type { Message } from "../../types/Chat";
+import type { Message, Chat as ChatType } from "../../types/Chat";
 import MessageComponent from "./Message";
 import { getInitials } from "../../lib/chatUtils";
+import { useAuth } from "../../contexts/AuthContext";
+import { useSignalR } from "../../hooks/useSignalR";
 
-const mockMessages: Message[] = [
-  {
-    id: "1",
-    text: "Hello! How are you doing today?",
-    timestamp: "10:25 AM",
-    isMe: false,
-    status: "read",
-  },
-  {
-    id: "2",
-    text: "I'm doing great, thanks for asking! Working on the new project.",
-    timestamp: "10:27 AM",
-    isMe: true,
-    status: "read",
-  },
-  {
-    id: "3",
-    text: "That's awesome! Let me know if you need any help.",
-    timestamp: "10:28 AM",
-    isMe: false,
-    status: "read",
-  },
-  {
-    id: "4",
-    text: "Actually, could you review the design mockups I sent yesterday?",
-    timestamp: "10:30 AM",
-    isMe: true,
-    status: "delivered",
-  },
-  {
-    id: "5",
-    text: "Sure thing! I'll check them out right now.",
-    timestamp: "10:31 AM",
-    isMe: false,
-    status: "read",
-  },
-];
+const API_BASE =
+  "https://rafiq-container-server.wittyhill-43579268.germanywestcentral.azurecontainerapps.io/api";
 
-const mockConversations = [
-  { id: "1", name: "Ahmed Mohamed", status: "online" },
-  { id: "2", name: "Sarah Ahmed", status: "offline" },
-  { id: "3", name: "Dev Team", status: "online" },
-  { id: "4", name: "Khaled Ali", status: "away" },
-  { id: "5", name: "Nora Hassan", status: "online" },
-  { id: "6", name: "Mohamed Abdullah", status: "offline" },
-  { id: "7", name: "Laila Mahmoud", status: "away" },
-];
+const PAGE_SIZE = 30;
 
 export default function Chat() {
   const { userId } = useParams();
-  const [messages, setMessages] = useState<Message[]>(mockMessages);
+  const { token, user: currentUser } = useAuth();
   const [newMessage, setNewMessage] = useState("");
+  const [states, setStates] = useState<{
+    messages: Message[];
+    partnerName: string;
+    pageNumber: number;
+    hasNextPage: boolean;
+    error: string;
+    isLoading: boolean;
+    isLoadingMore: boolean;
+  }>({
+    messages: [],
+    pageNumber: 1,
+    partnerName: "",
+    hasNextPage: false,
+    error: "",
+    isLoading: false,
+    isLoadingMore: false,
+  });
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const initialScrollDone = useRef(false);
 
-  const adjustTextareaHeight = () => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 128)}px`;
+  const fetchMessages = useCallback(
+    async (page: number, appendToEnd: boolean = false) => {
+      if (!token || !userId) return;
+
+      const loadingSetter = (loading: boolean = true) =>
+        page === 1
+          ? setStates((prev) => ({ ...prev, isLoading: loading }))
+          : setStates((prev) => ({ ...prev, isLoadingMore: loading }));
+      loadingSetter(true);
+      try {
+        const res = await fetch(
+          `${API_BASE}/Chat/history/${userId}?pageNumber=${page}&pageSize=${PAGE_SIZE}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
+        );
+
+        if (!res.ok) throw new Error("Failed to fetch messages");
+
+        const result: unknown = await res.json();
+
+        const data = (
+          result && typeof result === "object" && "messages" in result
+            ? result
+            : result && typeof result === "object" && "data" in result
+              ? (result as { data: ChatType }).data
+              : null
+        ) as ChatType | null;
+        console.log(data);
+        if (!data || !Array.isArray(data.messages)) {
+          throw new Error("Invalid response format");
+        }
+
+        const reversedMessages = data.messages.slice().reverse();
+
+        if (appendToEnd) {
+          setStates((prev) => ({
+            ...prev,
+            messages: [...reversedMessages, ...prev.messages],
+          }));
+        } else {
+          setStates((prev) => ({ ...prev, messages: reversedMessages }));
+        }
+        setStates((prev) => ({
+          ...prev,
+          pageNumber: data.pageNumber ?? page,
+          hasNextPage: data.hasNextPage ?? false,
+          partnerName: data.partnerName ?? "",
+        }));
+      } catch (error) {
+        if (error instanceof Error)
+          setStates((prev) => ({ ...prev, error: error.message }));
+      } finally {
+        loadingSetter(false);
+      }
+    },
+    [token, userId],
+  );
+
+  useEffect(() => {
+    if (token && userId) {
+      initialScrollDone.current = false;
+      fetchMessages(1);
     }
-  };
+  }, [token, userId, fetchMessages]);
 
   useEffect(() => {
-    adjustTextareaHeight();
-  }, [newMessage]);
+    if (
+      states.messages.length > 0 &&
+      !initialScrollDone.current &&
+      !states.isLoading
+    ) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
+      initialScrollDone.current = true;
+    }
+  }, [states.messages, states.isLoading]);
 
-  const conversation = mockConversations.find((c) => c.id === userId) || {
-    id: userId,
-    name: `User ${userId}`,
-    status: "offline",
-  };
+  const handleScroll = useCallback(() => {
+    const container = messagesContainerRef.current;
+    if (!container || states.isLoadingMore || !states.hasNextPage) return;
+
+    const scrollTop = container.scrollTop;
+    const scrollThreshold = 100;
+
+    if (
+      scrollTop < scrollThreshold &&
+      states.hasNextPage &&
+      !states.isLoadingMore
+    ) {
+      fetchMessages(states.pageNumber + 1, true);
+    }
+  }, [
+    fetchMessages,
+    states.hasNextPage,
+    states.isLoadingMore,
+    states.pageNumber,
+  ]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    const container = messagesContainerRef.current;
+    if (!container) return;
 
-  const handleSend = () => {
-    if (!newMessage.trim()) return;
+    container.addEventListener("scroll", handleScroll);
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
 
-    const message: Message = {
-      id: Date.now().toString(),
-      text: newMessage,
-      timestamp: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      isMe: true,
-      status: "sent",
-    };
+  const handleReceiveMessage = useCallback((message: Message) => {
+    setStates((prev) => ({ ...prev, messages: [...prev.messages, message] }));
+    setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 0);
+  }, []);
 
-    setMessages([...messages, message]);
+  const { sendMessage } = useSignalR({
+    token,
+    onReceiveMessage: handleReceiveMessage,
+  });
+
+  const handleSend = async () => {
+    if (!newMessage.trim() || !userId) return;
+
+    const content = newMessage;
     setNewMessage("");
+
+    const message = await sendMessage({
+      receiverId: userId,
+      content,
+    });
+
+    if (message) {
+      setStates((prev) => ({
+        ...prev,
+        messages: [...prev.messages, message],
+      }));
+      setTimeout(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      }, 0);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -106,32 +184,96 @@ export default function Chat() {
     }
   };
 
+  const markMessagesAsRead = useCallback(async () => {
+    if (!token || !userId) return;
+
+    try {
+      await fetch(`${API_BASE}/Chat/read/${userId}`, {
+        method: "PUT",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+    } catch {
+      // Silently fail - read status is not critical
+    }
+  }, [token, userId]);
+
+  useEffect(() => {
+    if (states.messages.length === 0 || !currentUser) return;
+
+    const lastMessage = states.messages[states.messages.length - 1];
+    const isFromOtherUser = lastMessage.senderId !== currentUser.id;
+
+    if (isFromOtherUser && !lastMessage.isRead) {
+      markMessagesAsRead().then(() => {
+        setStates((prev) => ({
+          ...prev,
+          messages: prev.messages.map((msg) => ({
+            ...msg,
+            isRead: isFromOtherUser ? true : msg.isRead,
+          })),
+        }));
+      });
+    }
+  }, [states.messages, currentUser, markMessagesAsRead, fetchMessages]);
   return (
     <div className="flex flex-col h-full bg-gray-50">
       {/* Chat Header */}
       <div className="shrink-0 bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-semibold text-sm">
-            {getInitials(conversation.name)}
+            {getInitials(userId || "User")}
           </div>
           <div>
-            <h3 className="font-semibold text-gray-800">{conversation.name}</h3>
+            <h3 className="font-semibold text-gray-800">
+              {states.partnerName || "User"}
+            </h3>
           </div>
         </div>
         <div className="flex items-center gap-2"></div>
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4 min-h-0">
-        {messages.map((message, index) => (
-          <MessageComponent
-            key={message.id}
-            message={message}
-            index={index}
-            messages={messages}
-            name={conversation.name}
-          />
-        ))}
+      <div
+        ref={messagesContainerRef}
+        className="flex-1 overflow-y-auto px-4 py-6 space-y-4 min-h-0"
+      >
+        {states.isLoadingMore && (
+          <div className="flex justify-center py-2">
+            <Loader2 className="w-5 h-5 animate-spin text-primary" />
+          </div>
+        )}
+        {states.error && (
+          <div className="flex justify-center items-center py-4">
+            <div className="text-red-500 text-sm bg-red-50 px-4 py-2 rounded-lg">
+              {states.error}
+            </div>
+          </div>
+        )}
+        {states.isLoading && !states.error ? (
+          <div className="flex justify-center items-center h-[calc(100%-80px)]">
+            <Loader2 className="w-8 h-8 animate-spin text-primary" />
+          </div>
+        ) : states.messages.length === 0 && !states.error ? (
+          <div className="flex flex-col items-center justify-center gap-3 h-[calc(100%-80px)]">
+            <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center">
+              <MessageSquare className="w-8 h-8 text-gray-400" />
+            </div>
+            <div className="text-center">
+              <p className="text-gray-600 font-medium">No messages yet</p>
+              <p className="text-gray-400 text-sm mt-1">
+                Start the conversation by sending a message
+              </p>
+            </div>
+          </div>
+        ) : (
+          states.messages.map((message) => (
+            <MessageComponent
+              key={message.id}
+              message={message}
+              isMe={message.senderId === currentUser?.id}
+            />
+          ))
+        )}
         <div ref={messagesEndRef} />
       </div>
 
@@ -139,13 +281,20 @@ export default function Chat() {
       <div className="shrink-0 flex items-end gap-2 bg-white border-t border-gray-200 px-4 py-3">
         <div className="flex-1 bg-gray-100 rounded-2xl flex items-end px-4 py-2">
           <textarea
-            ref={textareaRef}
             value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
             onKeyDown={handleKeyPress}
             placeholder="Type a message..."
-            className="flex-1 bg-transparent outline-none text-sm text-gray-800 placeholder-gray-400 resize-none overflow-y-auto"
             style={{ minHeight: "20px", maxHeight: "128px" }}
+            onChange={(e) => {
+              e.target.style.height = "auto";
+              e.target.style.height = `${Math.min(e.target.scrollHeight, 128)}px`;
+              if (e.target.style.height === "128px") {
+                e.target.style.overflowY = "scroll";
+              }
+              console.log(e.target.style.height);
+              setNewMessage(e.target.value);
+            }}
+            className="flex-1 bg-transparent outline-none text-sm text-gray-800 placeholder-gray-400 resize-none  overflow-hidden"
             rows={1}
           />
         </div>

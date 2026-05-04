@@ -23,7 +23,7 @@ export default function ConversationsSideBar({
     isError,
   } = useQuery({
     queryKey: ["conversations"],
-    refetchInterval: 10_000,
+    refetchInterval: 3_000,
     refetchIntervalInBackground: false,
     queryFn: async () => {
       const headers: Record<string, string> = {};
