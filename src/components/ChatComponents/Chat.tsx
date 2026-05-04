@@ -150,23 +150,35 @@ export default function Chat() {
     }, 0);
   }, []);
 
-  const { sendMessage } = useSignalR({
+  useSignalR({
     token,
     onReceiveMessage: handleReceiveMessage,
   });
 
   const handleSend = async () => {
-    if (!newMessage.trim() || !userId) return;
+    if (!newMessage.trim() || !userId || !token) return;
 
     const content = newMessage;
     setNewMessage("");
 
-    const message = await sendMessage({
-      receiverId: userId,
-      content,
-    });
+    try {
+      const res = await fetch(`${API_BASE}/Chat/send`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          receiverId: userId,
+          content,
+        }),
+      });
 
-    if (message) {
+      if (!res.ok) throw new Error("Failed to send message");
+
+      const result = (await res.json()) as { data: Message };
+      const message = result.data;
+
       setStates((prev) => ({
         ...prev,
         messages: [...prev.messages, message],
@@ -174,6 +186,8 @@ export default function Chat() {
       setTimeout(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
       }, 0);
+    } catch {
+      // Optionally surface error; keeping current behavior minimal
     }
   };
 

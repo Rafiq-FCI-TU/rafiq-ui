@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as signalR from "@microsoft/signalr";
 import type { Message } from "../types/Chat";
 
@@ -11,25 +11,39 @@ interface UseSignalROptions {
   onError?: (error: Error) => void;
 }
 
-export function useSignalR({ token, onReceiveMessage }: UseSignalROptions) {
+export function useSignalR({
+  token,
+  onReceiveMessage,
+  onError,
+}: UseSignalROptions) {
   const connectionRef = useRef<signalR.HubConnection | null>(null);
   const [isConnected, setIsConnected] = useState(false);
+  const onReceiveMessageRef = useRef(onReceiveMessage);
+  const onErrorRef = useRef(onError);
+
+  useEffect(() => {
+    onReceiveMessageRef.current = onReceiveMessage;
+  }, [onReceiveMessage]);
+
+  useEffect(() => {
+    onErrorRef.current = onError;
+  }, [onError]);
 
   useEffect(() => {
     if (!token) return;
 
     const connection = new signalR.HubConnectionBuilder()
-      .withUrl(`${API_BASE}/hub`, {
-        
-        accessTokenFactory: () => token,
+      .withUrl(`${API_BASE}/hub?access_token=${token}`, {
+        transport: signalR.HttpTransportType.WebSockets,
+        skipNegotiation: true,
       })
       .withAutomaticReconnect()
       .build();
 
     connectionRef.current = connection;
 
-    connection.on("ReceiveMessage", (message: Message) => {
-      onReceiveMessage(message);
+    connection.on("ReceiveMessage", (data) => {
+      console.log(data);
     });
 
     connection
@@ -37,8 +51,9 @@ export function useSignalR({ token, onReceiveMessage }: UseSignalROptions) {
       .then(() => {
         setIsConnected(true);
       })
-      .catch(() => {
+      .catch((err) => {
         setIsConnected(false);
+        onErrorRef.current?.(err);
       });
 
     connection.onreconnecting(() => {
@@ -49,33 +64,15 @@ export function useSignalR({ token, onReceiveMessage }: UseSignalROptions) {
       setIsConnected(true);
     });
 
-    return () => {
-      connection.stop();
-    };
-  }, [token, onReceiveMessage]);
-
-  const sendMessage = useCallback(
-    async (body: {
-      receiverId: string;
-      content: string;
-    }): Promise<Message | null> => {
-      const connection = connectionRef.current;
-      if (
-        !connection ||
-        connection.state !== signalR.HubConnectionState.Connected
-      ) {
-        return null;
+    connection.onclose((err) => {
+      setIsConnected(false);
+      if (err) {
+        onErrorRef.current?.(err);
       }
+    });
+  }, [token]);
 
-      try {
-        const result = await connection.invoke<Message>("SendMessage", body);
-        return result;
-      } catch {
-        return null;
-      }
-    },
-    [],
-  );
 
-  return { sendMessage, isConnected };
+
+  return {  isConnected };
 }
