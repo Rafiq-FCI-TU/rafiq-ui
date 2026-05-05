@@ -30,7 +30,13 @@ export function useSignalR({
   }, [onError]);
 
   useEffect(() => {
-    if (!token) return;
+    if (!token) {
+      console.log("[SignalR] No token, skipping connection");
+      return;
+    }
+
+    const hubUrl = `${API_BASE}/hub?access_token=${token}`;
+    console.log("[SignalR] Connecting to:", hubUrl);
 
     const connection = new signalR.HubConnectionBuilder()
       .withUrl(`${API_BASE}/hub?access_token=${token}`, {
@@ -38,41 +44,50 @@ export function useSignalR({
         skipNegotiation: true,
       })
       .withAutomaticReconnect()
+      .configureLogging(signalR.LogLevel.Information)
       .build();
 
     connectionRef.current = connection;
 
-    connection.on("ReceiveMessage", (data) => {
-      console.log(data);
+    connection.on("newmessage", (data) => {
+      console.log("[SignalR] Received message:", data);
+      onReceiveMessageRef.current?.(data);
     });
 
     connection
       .start()
       .then(() => {
+        console.log("[SignalR] Connected successfully");
         setIsConnected(true);
       })
       .catch((err) => {
+        console.error("[SignalR] Connection error:", err);
         setIsConnected(false);
         onErrorRef.current?.(err);
       });
 
-    connection.onreconnecting(() => {
+    connection.onreconnecting((err) => {
+      console.log("[SignalR] Reconnecting...", err);
       setIsConnected(false);
     });
 
     connection.onreconnected(() => {
+      console.log("[SignalR] Reconnected");
       setIsConnected(true);
     });
 
     connection.onclose((err) => {
+      console.log("[SignalR] Connection closed", err);
       setIsConnected(false);
       if (err) {
         onErrorRef.current?.(err);
       }
     });
+
+    return () => {
+      connection.stop();
+    };
   }, [token]);
 
-
-
-  return {  isConnected };
+  return { isConnected };
 }

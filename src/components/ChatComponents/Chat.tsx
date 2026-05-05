@@ -65,7 +65,6 @@ export default function Chat() {
               ? (result as { data: ChatType }).data
               : null
         ) as ChatType | null;
-        console.log(data);
         if (!data || !Array.isArray(data.messages)) {
           throw new Error("Invalid response format");
         }
@@ -75,7 +74,12 @@ export default function Chat() {
         if (appendToEnd) {
           setStates((prev) => ({
             ...prev,
-            messages: [...reversedMessages, ...prev.messages],
+            messages: [
+              ...reversedMessages,
+              ...prev.messages.filter(
+                (m) => !reversedMessages.some((rm) => rm.id === m.id),
+              ),
+            ],
           }));
         } else {
           setStates((prev) => ({ ...prev, messages: reversedMessages }));
@@ -146,7 +150,10 @@ export default function Chat() {
   const handleReceiveMessage = useCallback((message: Message) => {
     setStates((prev) => ({ ...prev, messages: [...prev.messages, message] }));
     setTimeout(() => {
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      messagesContainerRef.current?.scrollTo({
+        top: messagesContainerRef.current?.scrollHeight + 100,
+        behavior: "smooth",
+      });
     }, 0);
   }, []);
 
@@ -184,7 +191,10 @@ export default function Chat() {
         messages: [...prev.messages, message],
       }));
       setTimeout(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        messagesContainerRef.current?.scrollTo({
+          top: messagesContainerRef.current?.scrollHeight + 100,
+          behavior: "smooth",
+        });
       }, 0);
     } catch {
       // Optionally surface error; keeping current behavior minimal
@@ -223,7 +233,7 @@ export default function Chat() {
           ...prev,
           messages: prev.messages.map((msg) => ({
             ...msg,
-            isRead: isFromOtherUser ? true : msg.isRead,
+            isRead: true,
           })),
         }));
       });
@@ -305,7 +315,6 @@ export default function Chat() {
               if (e.target.style.height === "128px") {
                 e.target.style.overflowY = "scroll";
               }
-              console.log(e.target.style.height);
               setNewMessage(e.target.value);
             }}
             className="flex-1 bg-transparent outline-none text-sm text-gray-800 placeholder-gray-400 resize-none  overflow-hidden"
