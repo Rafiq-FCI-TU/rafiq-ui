@@ -56,6 +56,10 @@ export default function Chat() {
             headers: { Authorization: `Bearer ${token}` },
           },
         );
+        if (!res.ok && res.status === 403) {
+          const error = await res.json();
+          throw new Error(error.message);
+        }
 
         if (!res.ok) throw new Error("Failed to fetch messages");
 
