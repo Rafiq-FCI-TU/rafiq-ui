@@ -7,6 +7,7 @@ import { getInitials } from "../../lib/chatUtils";
 import { useAuth } from "../../contexts/AuthContext";
 import { useSignalR } from "../../hooks/useSignalR";
 import { useToast } from "../../hooks/useToast";
+import { useConversation } from "../../hooks/useConversation";
 
 const API_BASE =
   "https://rafiq-container-server.wittyhill-43579268.germanywestcentral.azurecontainerapps.io/api";
@@ -38,7 +39,7 @@ export default function Chat() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const initialScrollDone = useRef(false);
-
+  const { conversation } = useConversation();
   const fetchMessages = useCallback(
     async (page: number, appendToEnd: boolean = false) => {
       if (!token || !userId) return;
@@ -231,7 +232,11 @@ export default function Chat() {
     const lastMessage = states.messages[states.messages.length - 1];
     const isFromOtherUser = lastMessage.senderId !== currentUser.id;
 
-    if (isFromOtherUser && !lastMessage.isRead) {
+    if (
+      (isFromOtherUser && !lastMessage.isRead) ||
+      (conversation?.lastMessage.isRead &&
+        lastMessage.senderId === currentUser.id)
+    ) {
       markMessagesAsRead().then(() => {
         setStates((prev) => ({
           ...prev,
@@ -242,7 +247,13 @@ export default function Chat() {
         }));
       });
     }
-  }, [states.messages, currentUser, markMessagesAsRead, fetchMessages]);
+  }, [
+    states.messages,
+    currentUser,
+    markMessagesAsRead,
+    fetchMessages,
+    conversation,
+  ]);
   return (
     <div className="flex flex-col h-full bg-gray-50">
       {/* Chat Header */}

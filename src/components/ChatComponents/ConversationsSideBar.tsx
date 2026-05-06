@@ -4,6 +4,8 @@ import { Search, Sidebar, SidebarOpen, X, Loader2 } from "lucide-react";
 import { ConversationItem } from "./ConversationItem";
 import { useAuth } from "../../contexts/AuthContext";
 import type { Conversation, ConversationsSideBarProps } from "../../types/Chat";
+import { useConversation } from "../../hooks/useConversation";
+import { useParams } from "react-router";
 
 const API_BASE_URL =
   "https://rafiq-container-server.wittyhill-43579268.germanywestcentral.azurecontainerapps.io";
@@ -16,7 +18,8 @@ export default function ConversationsSideBar({
   const [isMobile, setIsMobile] = useState(false);
   const [isOpen, setIsOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-
+  const { userId } = useParams();
+  const { setConversation } = useConversation();
   const {
     data: conversations = [],
     isPending,
@@ -44,7 +47,6 @@ export default function ConversationsSideBar({
     },
     enabled: !!token,
   });
-
   const sidebarOpen =
     controlledIsOpen !== undefined ? controlledIsOpen : isOpen;
   useEffect(() => {
@@ -69,9 +71,17 @@ export default function ConversationsSideBar({
       setIsOpen(!isOpen);
     }
   };
+  useEffect(() => {
+    if (userId && (conversations as Conversation[]).length > 0) {
+      setConversation(
+        conversations.find((conv: Conversation) => conv.partnerId === userId),
+      );
+    }
+  }, [userId, conversations, setConversation]);
 
-  const filteredConversations = conversations.filter((conv: Conversation) =>
-    conv.partnerName.toLowerCase().includes(searchQuery.toLowerCase()),
+  const filteredConversations: Conversation[] = conversations.filter(
+    (conv: Conversation) =>
+      conv.partnerName.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   return (
