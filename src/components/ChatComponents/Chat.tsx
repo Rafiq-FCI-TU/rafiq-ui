@@ -231,12 +231,9 @@ export default function Chat() {
 
     const lastMessage = states.messages[states.messages.length - 1];
     const isFromOtherUser = lastMessage.senderId !== currentUser.id;
+    const isFromMe = lastMessage.senderId === currentUser.id;
 
-    if (
-      (isFromOtherUser && !lastMessage.isRead) ||
-      (conversation?.lastMessage.isRead &&
-        lastMessage.senderId === currentUser.id)
-    ) {
+    if (isFromOtherUser && !lastMessage.isRead) {
       markMessagesAsRead().then(() => {
         setStates((prev) => ({
           ...prev,
@@ -246,6 +243,19 @@ export default function Chat() {
           })),
         }));
       });
+    }
+    if (
+      isFromMe &&
+      !lastMessage.isRead &&
+      conversation?.lastMessage.id === lastMessage.id
+    ) {
+      setStates((prev) => ({
+        ...prev,
+        messages: prev.messages.map((msg) => ({
+          ...msg,
+          isRead: true,
+        })),
+      }));
     }
   }, [
     states.messages,
