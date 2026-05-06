@@ -319,7 +319,7 @@ export default function AppLayout() {
                         return next;
                       });
                     }}
-                    className="relative p-2.5 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-all duration-200"
+                    className="cursor-pointer relative p-2.5 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-all duration-200"
                     aria-label="Notifications"
                   >
                     <Bell className="w-5 h-5" />
