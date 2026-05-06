@@ -1,4 +1,4 @@
-import {  Award, Check, Eye, UserPlus } from "lucide-react";
+import { Award, Check, Eye, MessageSquareText, UserPlus } from "lucide-react";
 import type { Specialist } from "../../types/Specialist";
 import { Link } from "react-router";
 import { useAuth } from "../../contexts/AuthContext";
@@ -56,14 +56,24 @@ export default function SpecialistCard({
 
           <p className="text-gray-600">{specialist.professionalBio}</p>
         </div>
-
-        <Link
-          to={`/specialists/${specialist.id}`}
-          className="shadow-md border-primary text-center hover:border-primary hover:bg-white hover:text-primary transition-all duration-300 border-2 gap-2 bg-primary text-white px-6 py-4 rounded-2xl flex items-center justify-center"
-        >
-          <Eye className="size-5" />
-          View Details
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            to={`/specialists/${specialist.id}`}
+            className="w-1/2 shadow-md border-primary text-center hover:border-primary hover:bg-white hover:text-primary transition-all duration-300 border-2 gap-2 bg-primary text-white px-6 py-4 rounded-2xl flex items-center justify-center"
+          >
+            <Eye className="size-5" />
+            Details
+          </Link>
+          {user?.specialistId === specialist.id && (
+            <Link
+              to={`/chats/${specialist.id}`}
+              className="w-1/2 shadow-md border-primary text-center hover:border-primary hover:bg-white hover:text-primary transition-all duration-300 border-2 gap-2 bg-primary text-white px-6 py-4 rounded-2xl flex items-center justify-center"
+            >
+              <MessageSquareText className="size-5" />
+              Message
+            </Link>
+          )}
+        </div>
       </div>
     </div>
   );

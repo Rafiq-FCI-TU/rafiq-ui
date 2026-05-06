@@ -9,9 +9,11 @@ export function getInitials(name: string) {
 
 export function formatMessageTime(dateStr: string): string {
   const date = new Date(dateStr);
+  date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
+
   const timeStr = format(date, "h:mm a");
   const now = new Date();
-
+  now.setMinutes(now.getMinutes() + now.getTimezoneOffset());
   if (isToday(date)) {
     return timeStr;
   }

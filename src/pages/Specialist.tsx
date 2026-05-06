@@ -138,7 +138,7 @@ export default function Specialist() {
             <div className="p-4.5 bg-white border-t border-gray-100 flex justify-center shadow-sm rounded-2xl">
               {user?.specialistId === specialistId ? (
                 <button
-                  className="w-full  cursor-pointer border-red-500 text-center hover:border-red-500 hover:bg-white hover:text-red-500  border-2 gap-2 bg-red-500 text-white py-[7px] px-8 rounded-2xl shadow-lg transition-all duration-300 text-lg"
+                  className="w-full cursor-pointer border-red-500 text-center hover:border-red-500 hover:bg-white hover:text-red-500  border-2 gap-2 bg-red-500 text-white py-[7px] px-8 rounded-2xl shadow-lg transition-all duration-300 text-lg"
                   onClick={() => {
                     fetch(
                       `https://rafiq-container-server.wittyhill-43579268.germanywestcentral.azurecontainerapps.io/api/Specialist/${specialistId}/patients/${user?.patientId}`,

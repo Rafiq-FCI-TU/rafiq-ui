@@ -28,7 +28,9 @@ export default function Patients() {
       if (req.status === 404) {
         return [];
       }
-      return (await req.json()).data || [];
+      const res = await req.json();
+      console.log(res)
+      return res.data || [];
     },
   });
   const filteredPatients = useMemo(() => {

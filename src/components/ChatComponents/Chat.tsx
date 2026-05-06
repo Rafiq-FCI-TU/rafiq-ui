@@ -198,9 +198,8 @@ export default function Chat() {
           behavior: "smooth",
         });
       }, 0);
-    } catch (e){
-      if(e instanceof Error)
-      showToast(e.message, "error");
+    } catch (e) {
+      if (e instanceof Error) showToast(e.message, "error");
 
       // Optionally surface error; keeping current behavior minimal
     }
@@ -329,7 +328,7 @@ export default function Chat() {
         <button
           onClick={handleSend}
           disabled={!newMessage.trim()}
-          className="p-3 bg-primary text-white rounded-full hover:bg-primary-light transition-colors disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+          className="cursor-pointer  p-3 bg-primary text-white rounded-full hover:bg-primary-light transition-colors disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
         >
           <Send size={18} />
         </button>

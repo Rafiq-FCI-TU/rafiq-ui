@@ -1,7 +1,7 @@
 import type { PatientCard } from "../../types/Patient";
 import { format } from "date-fns";
 import { Link } from "react-router";
-import { Eye, Mail, Calendar } from "lucide-react";
+import { Eye, Mail, Calendar, MessageSquareText, User } from "lucide-react";
 
 export default function PatientCard({ patient }: { patient: PatientCard }) {
   const getBarColor = (score: number) => {
@@ -76,6 +76,17 @@ export default function PatientCard({ patient }: { patient: PatientCard }) {
           <div className="flex items-center justify-between group/item hover:bg-gray-50 p-2 -mx-2 rounded-2xl transition-colors duration-300">
             <div className="flex items-center gap-3 text-gray-500">
               <div className="w-8 h-8 rounded-2xl bg-blue-100 flex items-center justify-center group-hover/item:bg-blue-200 transition-colors duration-300">
+                <User className="w-4 h-4 text-blue-600" />
+              </div>
+              <span className="text-sm font-medium">Family Account</span>
+            </div>
+            <span className="text-sm font-semibold text-gray-900">
+              {patient.familyName}
+            </span>
+          </div>
+          <div className="flex items-center justify-between group/item hover:bg-gray-50 p-2 -mx-2 rounded-2xl transition-colors duration-300">
+            <div className="flex items-center gap-3 text-gray-500">
+              <div className="w-8 h-8 rounded-2xl bg-blue-100 flex items-center justify-center group-hover/item:bg-blue-200 transition-colors duration-300">
                 <Calendar className="w-4 h-4 text-blue-600" />
               </div>
               <span className="text-sm font-medium">Assigned</span>
@@ -85,14 +96,22 @@ export default function PatientCard({ patient }: { patient: PatientCard }) {
             </span>
           </div>
         </div>
-
-        <Link
-          to={`/patients/${patient.patientId}`}
-          className="shadow-md border-primary text-center hover:border-primary hover:bg-white hover:text-primary transition-all duration-300 border-2 gap-2 bg-primary text-white px-6 py-4 rounded-2xl flex items-center justify-center"
-        >
-          <Eye className="size-5" />
-          View Details
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            to={`/patients/${patient.patientId}`}
+            className="w-1/2 shadow-md border-primary text-center hover:border-primary hover:bg-white hover:text-primary transition-all duration-300 border-2 gap-2 bg-primary text-white px-6 py-4 rounded-2xl flex items-center justify-center"
+          >
+            <Eye className="size-5" />
+            Details
+          </Link>
+          <Link
+            to={`/chats/${patient.familyId}`}
+            className="w-1/2 shadow-md border-primary text-center hover:border-primary hover:bg-white hover:text-primary transition-all duration-300 border-2 gap-2 bg-primary text-white px-6 py-4 rounded-2xl flex items-center justify-center"
+          >
+            <MessageSquareText className="size-5" />
+            Message
+          </Link>
+        </div>
       </div>
     </div>
   );

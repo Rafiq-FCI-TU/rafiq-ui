@@ -18,4 +18,6 @@ export interface PatientCard {
   totalScore: number;
   assignedAt: string;
   familyEmail: string;
+  familyId: string;
+  familyName: string;
 }
