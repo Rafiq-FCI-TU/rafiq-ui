@@ -30,6 +30,7 @@ import Community from "./pages/Community.tsx";
 import Resources from "./pages/Resources.tsx";
 import Chats from "./pages/Chats.tsx";
 import Notifications from "./pages/Notifications.tsx";
+import Games from "./pages/Games.tsx";
 
 const router = createBrowserRouter([
   {
@@ -84,6 +85,7 @@ const router = createBrowserRouter([
           { path: "community", element: <Community /> },
           { path: "resources", element: <Resources /> },
           { path: "notifications", element: <Notifications /> },
+          { path: "games", element: <Games /> },
           {
             path: "chats",
             element: <Chats />,
