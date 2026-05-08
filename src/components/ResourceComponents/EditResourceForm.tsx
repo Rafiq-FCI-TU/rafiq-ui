@@ -74,8 +74,7 @@ export function EditResourceForm({
         rows={3}
       />
       <label className="text-sm font-medium" htmlFor="tags">
-        Tags <span className="text-red-500">*</span>{" "}
-        <span className="text-xs font-normal text-gray-500">
+        Tags <span className="text-xs font-normal text-gray-500">
           (comma separated)
         </span>
       </label>

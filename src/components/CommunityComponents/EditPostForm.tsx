@@ -20,15 +20,26 @@ export function EditPostForm({ post, onSave, onCancel }: EditPostFormProps) {
 
   return (
     <div className="mb-4 p-4 bg-blue-50/50 rounded-xl border border-blue-100 space-y-3">
+      <label className="text-sm font-medium" htmlFor="content">
+        Content <span className="text-red-500">*</span>
+      </label>{" "}
       <textarea
+        id="content"
         value={content}
         onChange={(e) => setContent(e.target.value)}
         className="w-full px-4 py-3 bg-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:bg-white transition-all resize-none shadow-sm"
         rows={4}
         placeholder="Edit your post..."
       />
+      <label className="text-sm font-medium" htmlFor="tags">
+        Tags{" "}
+        <span className="text-xs font-normal text-gray-500">
+          (comma separated)
+        </span>
+      </label>
       <input
         type="text"
+        id="tags"
         value={tags}
         onChange={(e) => setTags(e.target.value)}
         placeholder="Tags (comma separated)"
