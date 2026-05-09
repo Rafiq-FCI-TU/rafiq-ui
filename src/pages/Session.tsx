@@ -4,6 +4,7 @@ import type { Session } from "../types/Session";
 import { ArrowLeft, LoaderCircle, Sparkles, XCircle } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import SessionAttempt from "../components/SessionComponents/PatientSessionComponents/SessionAttempt";
+import { MediaPlayer } from "../components/Player";
 
 export default function Session() {
   const { user } = useAuth();
@@ -84,16 +85,11 @@ export default function Session() {
           </div>
         </div>
 
-        <div className="bg-white rounded-3xl shadow-md overflow-hidden">
-          <video
-            controls
-            poster={session.thumbnailUrl || "cards.png"}
-            className="w-full h-full aspect-video  bg-black"
-          >
-            <source src={session.videoUrl} type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-        </div>
+        <MediaPlayer
+          src={session.videoUrl}
+          poster={session.thumbnailUrl || "cards.png"}
+        />
+
         <div className="bg-white shadow-md rounded-3xl px-6 sm:px-8 py-5 sm:py-6">
           <div className="space-y-2 max-w-2xl">
             <h1 className="text-lg sm:text-xl md:text-2xl font-semibold sm:font-bold text-gray-900">
