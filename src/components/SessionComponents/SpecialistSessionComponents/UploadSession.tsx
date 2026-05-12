@@ -105,7 +105,7 @@ export default function UploadSession() {
       </section>
 
       {uploadFormToggle && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto">
+        <div className="fixed inset-0 z-200 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto">
           <div className="bg-white w-full max-w-2xl rounded-2xl shadow-2xl relative my-auto overflow-hidden">
             {/* Header */}
             <div className="bg-gray-50 px-8 py-6 border-b border-gray-100">
