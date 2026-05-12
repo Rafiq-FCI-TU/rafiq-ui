@@ -31,7 +31,11 @@ export default function SpecialistDetailsCard({ isLoading, error, specialistData
   return (
     <div className="bg-white rounded-[20px] shadow-sm border border-gray-200 p-6 mb-8 flex flex-col md:flex-row gap-6 hover:shadow-lg transition-shadow duration-300">
       <img
-        src="mdoctor.png"
+        src={
+          specialistData.gender.toLowerCase() === "male"
+            ? "/mdoctor.png"
+            : "/fdoctor.jpg"
+        }
         alt={specialistData.fullName}
         className="w-full md:w-48 md:h-48 rounded-xl object-cover border border-gray-100"
         onError={(e) => { e.currentTarget.src = 'https://i.pravatar.cc/300' }}
