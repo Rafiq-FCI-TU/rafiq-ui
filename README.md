@@ -9,6 +9,10 @@
 </p>
 
 <p align="center">
+  <a href="https://rafiq-org.netlify.app" target="_blank"><strong>🌐 Live Demo</strong></a>
+</p>
+
+<p align="center">
   <a href="#features">Features</a> •
   <a href="#tech-stack">Tech Stack</a> •
   <a href="#getting-started">Getting Started</a> •
